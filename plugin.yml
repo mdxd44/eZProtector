@@ -1,0 +1,90 @@
+name: eZProtector
+main: ez.plugins.dan.Main
+softDepend: [Vault]
+depend: [ProtocolLib]
+version: 4.0.1
+author: Dvargas135
+description: An essential plugin for server protection.
+commands:
+  ezp:
+    usage: /ezp
+    description: Shows the plugin information.
+    permission: ezprotector.info
+permissions:
+  ezprotector.*:
+    children:
+      ezprotector.info: true
+      ezprotector.bypass.*: true
+      ezprotector.reload: true
+      ezprotector.notify.*: true
+    default: op
+  ezprotector.bypass.command.server:
+    default: true
+  ezprotector.bypass.signhack:
+    default: op
+  ezprotector.bypass.mod.wdl:
+    default: op
+  ezprotector.bypass.mod.schematica:
+    default: op
+  ezprotector.bypass.mod.damageindicators:
+    default: op
+  ezprotector.bypass.mod.reiminimap:
+    default: op
+  ezprotector.bypass.mod.voxelmap:
+    default: op
+  ezprotector.bypass.mod.5zig:
+    default: op
+  ezprotector.bypass.mod.bettersprinting:
+    default: op
+  ezprotector.bypass.mod.labymod:
+    default: op
+  ezprotector.bypass.mod.forge:
+    default: op
+  ezprotector.bypass.mod.liteloader:
+    default: op
+  ezprotector.bypass.mod.betterpvp:
+    default: op
+  ezprotector.bypass.mod.smartmoving:
+    default: op
+  ezprotector.bypass.tabcompletion:
+    default: op
+  ezprotector.bypass.hiddensyntaxes:
+    default: op
+  ezprotector.bypass.blockedcommands:
+    default: op
+  ezprotector.bypass.command.plugins:
+    default: op
+  ezprotector.bypass.command.version:
+    default: op
+  ezprotector.bypass.command.help:
+    default: op
+  ezprotector.bypass.command.unknown:
+    default: op
+  ezprotector.bypass.command.about:
+    default: op
+  ezprotector.notify.update:
+    default: op
+  ezprotector.notify.signhack:
+    default: op
+  ezprotector.notify.mod.wdl:
+    default: op
+  ezprotector.notify.blockedcommands:
+    default: op
+  ezprotector.notify.hiddensyntaxes:
+    default: op
+  ezprotector.notify.command.plugins:
+    default: op
+  ezprotector.notify.command.version:
+    default: op
+  ezprotector.notify.command.help:
+    default: op
+  ezprotector.notify.command.unknown:
+    default: op
+  ezprotector.notify.command.about:
+    default: op
+  ezprotector.reload:
+    description: Reloads the config.
+    default: op
+  ezprotector.info:
+    description: Shows Information about the plugin.
+    default: op
