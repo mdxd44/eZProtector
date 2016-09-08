@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,10 +31,9 @@ public class Main extends JavaPlugin implements Listener {
 	public static final String WDLCONTROL = "WDL|CONTROL";
 	public static final String MCBRAND = "MC|Brand";
 	public static final String WDLREQ = "WDL|REQUEST";
-	public static ArrayList<String> plugins = new ArrayList<String>();
     public static final String SCHEMATICA = "schematica";
+	public static ArrayList<String> plugins = new ArrayList<String>();
     boolean setup = new Setup().setupEZP();
-    public static Main instance;
     public static Plugin plugin;
     private static JavaPlugin JavaPlugin;
     private IPluginMessageListener pluginMessageListener = new IPluginMessageListener();
@@ -44,17 +42,17 @@ public class Main extends JavaPlugin implements Listener {
     public void onEnable() {
     	plugin = this;
     	log = getLogger();
-    	instance = this;
     	
     	if (setup == true) {
-    		
-    		getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
-    			public void run() {
-    				UpdateChecker.checkUpdate();
+    		if (this.getConfig().getBoolean("updater")) {
+    			getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
+    				public void run() {
+    					UpdateChecker.checkUpdate();
+    				}
     			}
+    			, 20L);
     		}
-    		, 20L);
-
+    		
     		loadConfig();
     		
     		getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
@@ -73,18 +71,11 @@ public class Main extends JavaPlugin implements Listener {
     		getCommand("ezp").setExecutor(new ICommandExecutor());
 		  
     		MetricsChecker.tryMetrics();
-
-    		if (this.getConfig().getBoolean("block-op-commands.op-bypassed-players-on-startup")) {
-    			for (int iops = 0; iops < this.getConfig().getList("block-op-commands.bypassed-players").size(); iops++) {
-    				String oppedPlayers = (String)this.getConfig().getList("block-op-commands.bypassed-players").get(iops);
-    				Player ops = Bukkit.getPlayer(oppedPlayers);
-    				ops.setOp(true);
-    			}
-    		}
     		
     		for (String string : getConfig().getStringList("block-commands.commands")) {
     			this.blocked.add(string);
     		}
+    		
     		this.blocked.add("all");
     		this.blocked.add("/plugins");
     		this.blocked.add("/pl");
@@ -97,10 +88,7 @@ public class Main extends JavaPlugin implements Listener {
     		this.blocked.add("/help");
     		
     		if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-    			
     			setupProtocolLibHooks(this.blocked);
-    			
-
     		} else {
     			log.warning("ProtocolLib not found.");
     			log.warning("The plugin needs ProtocolLib to work.");
@@ -124,7 +112,6 @@ public class Main extends JavaPlugin implements Listener {
     public void onDisable() {
     	log = getLogger();
     	saveDefaultConfig();
-    	log.info("Plugin disabled.");
 		getServer().getMessenger().unregisterIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
 		getServer().getMessenger().unregisterIncomingPluginChannel(this, BSM, this.pluginMessageListener);
 		getServer().getMessenger().unregisterIncomingPluginChannel(this, WDLINIT, this.pluginMessageListener);
@@ -134,7 +121,13 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getMessenger().unregisterOutgoingPluginChannel(this, WDLCONTROL);
 		getServer().getMessenger().unregisterOutgoingPluginChannel(this, BSM);
 		getServer().getMessenger().unregisterOutgoingPluginChannel(this, SCHEMATICA);
+		log.info("Plugin disabled.");
     	plugin = null;
+    }
+    public static void registerEvents(org.bukkit.plugin.Plugin plugin, Listener... listeners) {
+    	for (Listener listener : listeners) {
+    		Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
+    	}
     }
     public static Plugin getPlugin() {
     	return plugin;
@@ -142,15 +135,8 @@ public class Main extends JavaPlugin implements Listener {
     public static JavaPlugin getJavaPlugin() {
     	return JavaPlugin;
     }
-    
     public void setupProtocolLibHooks(List<String> protocolList) {
       IPacketEvent.protocolLibHook(protocolList);
-    }
-    
-    public static void registerEvents(org.bukkit.plugin.Plugin plugin, Listener... listeners) {
-    	for (Listener listener : listeners) {
-    		Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
-    	}
     }
     private void loadConfig() {
     	log = getLogger();
