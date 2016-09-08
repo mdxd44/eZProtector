@@ -18,7 +18,7 @@ import ez.plugins.dan.Compatibility.R1_9_R2;
 
 public class Setup {
 	public static Compatibility IeZP;
-    public boolean setupEZP() {
+	public boolean setupEZP() {
 
     	String version;
 
@@ -28,7 +28,6 @@ public class Setup {
     		return false;
     	}
     	Logger.getLogger("Minecraft").info("[eZProtector] Your server is running version " + version);
-    	
     	if (version.equals("v1_7_R1")) {
     		IeZP = new R1_7_R1();
     	} else if (version.equals("v1_7_R2")) {
@@ -37,7 +36,7 @@ public class Setup {
     		IeZP = new R1_7_R3();
     	} else if (version.equals("v1_7_R4")) {
     		IeZP = new R1_7_R4();
-    	} else if (version.equals("v1_8_R1")) {
+        } else if (version.equals("v1_8_R1")) {
     		IeZP = new R1_8_R1();
     	} else if (version.equals("v1_8_R2")) {
     		IeZP = new R1_8_R2();
