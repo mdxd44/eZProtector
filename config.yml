@@ -4,17 +4,20 @@
 #
 # Plugin prefix for warns/notifies
 prefix: '&3[&beZProtector&3] &b'
-#
-# Update notifier
+##
+# Console update notifier
 updater: true
-#
+##
 # If you have all the mods enabled, your console will be spammed by logging all the mods.
 log-blocked-mods: false
-#
+##
 # The default notify message, will only be used for the commands
 # /plugins, /pl, /a, /about, /?, /ver, /version, /help, /icanhasbukkit,
 # and the ones specified in block-commands
 default-notify-message: '&e%player% tried to do the command %command%'
+##
+# Error message displayed to the players without any access of the plugin.
+error-message: '&cNo permission.'
 #
 # Customised plugin list, commas are imperative.
 # Showed if the 'custom-plugins' option is set to true.
@@ -25,16 +28,16 @@ custom-plugins:
   message: '&4Your abuse has been sent to the admins.'
   # Notify to all the players with the permission ezprotector.notify.command.plugins
   notify: true
-#
+##
 # Block the tab completion or not. (permission ezprotector.bypass.tab-completion)
 tab-completion:
   # disabled = blocked; if it's true, the tab completion will be blocked. (dumb explanation)
   disable: true
-  message: '&cYou don''t have permission to do this.'
-#
-# Error message displayed to the players without any access of the plugin.
-error-message: '&cNo permission.'
-#
+  warn:
+    enabled: false
+    # If players spam the tab key they'll also get spammed with the below message. ONLY if warn is set to true.
+    message: '&cYou don''t have permission to do this.'
+##
 # Message showed for every command including ':' in it. 
 # An example could be "/bukkit:help", "/essentials:warp", etc.
 # This will only work if the option "block-hidden-syntaxes" is set to true.
@@ -46,7 +49,7 @@ block-hidden-syntaxes:
   # For YAML, if you want to add a message with an apostrophe such as "don't",
   # you have to type double apostrophe: don''t.
   notify-message: '&e%player% tried to do a command with bukkit''s hidden syntax. (%command%)'
-#
+##
 # Will deny the listed commands showing the message set in 'error-message'.
 block-commands:
   enabled: true
@@ -59,14 +62,14 @@ block-commands:
   - about
 # - help
   - icanhasbukkit
-  #- pl      # These two commands are handled by the customized plugins section.
-  #- plugins # They don't need to be added here. (/plugins and /pl).
+##- pl      # These two commands are handled by the customized plugins section.
+##- plugins # They don't need to be added here. (/plugins and /pl).
   - ver
   - version
   - '?'
   - op
   - plugman list
-#
+##
 # Blockage of commands for opped players
 block-op-commands:
   enabled: true
@@ -82,12 +85,10 @@ block-op-commands:
   - featherboard resetconfig
   - command_without_slash
   # Who can bypass this option?
-  # This only applies to the op commands section.
+  # This only applies to the op commands section and to opped players.
   bypassed-players:
   - Notch
-  # Will op the above players (Bypassed players)
-  op-bypassed-players-on-startup: false
-#
+##
 # Sign exploit blockage
 block-anti-sign-hack:
   enabled: true
@@ -96,7 +97,7 @@ block-anti-sign-hack:
   warning-message: '&4WARN &c- &f%player% attempted to do the sign exploit, but failed.'
   # The command that will be executed if someone attempts to do the sign exploit.
   punish-command: kick %player% &4This exploit is forbidden!
-#
+##
 # Mod blocker
 mods:
   wdl:
@@ -129,5 +130,5 @@ mods:
     block: false
   smartmoving:
     block: false
-#
+##
 # Thanks for using eZProtector, don't forget to leave a review! :)
