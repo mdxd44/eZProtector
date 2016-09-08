@@ -9,13 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.Plugin;
 
 import ez.plugins.dan.Main;
 import ez.plugins.dan.Extras.Setup;
 import ez.plugins.dan.ModBlockage.LabyMod.EnumLabyModFeature;
-import ez.plugins.dan.SpigotUpdater.SpigotUpdater;
-import ez.plugins.dan.SpigotUpdater.UpdateChecker;
 
 public class IPlayerJoinEvent implements Listener {
 	private FileConfiguration config = Main.getPlugin().getConfig();
@@ -72,17 +69,5 @@ public class IPlayerJoinEvent implements Listener {
     			Setup.IeZP.sendSmartMove(p);
     		}
     	}
-		// UPDATER SEPARATOR - ON LATE JOIN
-		if (config.getBoolean("updater")) {
-			if(p.hasPermission("ezprotector.notify.update") && SpigotUpdater.updateAvailable) {
-				Bukkit.getScheduler().runTaskLater((Plugin) this, new Runnable() {
-					public void run() {
-						p2.sendMessage(ChatColor.GREEN + "A new update for eZProtector is available. Version " + UpdateChecker.version);
-						p2.sendMessage(ChatColor.GREEN + "- Current version: " + Main.getPlugin().getDescription().getVersion());
-						p2.sendMessage(ChatColor.GREEN + "- Download it at: http://bit.ly/eZProtector");
-					}
-				}, 20L);
-			}
-		}
     }
 }
