@@ -35,7 +35,10 @@ public class ModLogger {
 			log.info("Blockage for the mod \"Better PvP\" activated.");
 		} if (config.getBoolean("mods.labymod.block")) {
 			log.info("Blockage for the mod \"LabyMod\" activated.");
-			log.warning("Warning: for some servers the LabyMod blockage may throw errors.");
+			log.warning("Warning: for some servers the LabyMod blockage may throw errors.");	
+			log.warning("LabyMod blockage won't work in 1.7 versions");
+			log.warning("The reason of this is because LabyMod for 1.7 "
+					+ "didn't implement the blockage features as it did for 1.8 and above.");
 		}
     		 
 		if ((config.getBoolean("mods.liteloader.block", false)) && 
