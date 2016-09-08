@@ -2,7 +2,7 @@ name: eZProtector
 main: ez.plugins.dan.Main
 softDepend: [Vault]
 depend: [ProtocolLib]
-version: 4.0.1
+version: 4.0.4
 author: Dvargas135
 description: An essential plugin for server protection.
 commands:
