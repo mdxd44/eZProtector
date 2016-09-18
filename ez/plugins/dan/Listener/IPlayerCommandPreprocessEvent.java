@@ -54,7 +54,7 @@ public class IPlayerCommandPreprocessEvent implements Listener {
                 }
             }
             if(plugin.getConfig().getBoolean("hidden-syntaxes.blocked")) {
-                if (event.getMessage().split(" ")[0].contains(":")) {
+                if (command.split(" ")[0].contains(":")) {
                     if(!player.hasPermission("ezprotector.bypass.hiddensyntaxes")) {
                         event.setCancelled(true);
                         String errorMessage = plugin.getConfig().getString("hidden-syntaxes.error-message");
@@ -77,14 +77,14 @@ public class IPlayerCommandPreprocessEvent implements Listener {
                     }
                 }
             }
-            if (plugin.getConfig().getBoolean("opped-player-commands.enabled")) {
+            if (plugin.getConfig().getBoolean("opped-player-commands.blocked")) {
                 if (player.isOp()) {
                     for (int iop = 0; iop < plugin.getConfig().getList("opped-player-commands.bypassed-players").size(); iop++) {
                         String opped = plugin.getConfig().getList("opped-player-commands.bypassed-players").get(iop).toString();
                         if(!opped.contains(player.getName())) {
                             for (int i = 0; i < plugin.getConfig().getStringList("opped-player-commands.commands").size(); i++) {
-                                String opcommand = plugin.getConfig().getStringList("opped-player-commands.commands").get(i).toString();
-                                if (command.split(" ")[0].toLowerCase().equals("/" + opcommand.toLowerCase())) {
+                                Main.playerCommand = plugin.getConfig().getList("opped-player-commands.commands").get(i).toString();
+                                if (command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
                                     event.setCancelled(true);
                                     String errorMessage = plugin.getConfig().getString("opped-player-commands.error-message");
                                     if (!errorMessage.trim().equals("")) {
