@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -38,10 +39,15 @@ public class Main extends JavaPlugin implements Listener {
     private static JavaPlugin JavaPlugin;
     private IPluginMessageListener pluginMessageListener = new IPluginMessageListener();
     private List<String> blocked = new ArrayList<String>();
+    public static String prefix;
+    public static String player = "";
+    public static String playerCommand = "";
+    public static String errorMessage = "";
     
     public void onEnable() {
     	plugin = this;
     	log = getLogger();
+    	prefix = plugin.getConfig().getString("prefix");
     	
     	if (setup == true) {
     		if (this.getConfig().getBoolean("updater")) {
@@ -65,8 +71,7 @@ public class Main extends JavaPlugin implements Listener {
     		getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
     		getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
 		  
-    		registerEvents(this, new IPlayerJoinEvent(), new IPlayerLoginEvent(), new ISignChangeEvent());
-    		getServer().getPluginManager().registerEvents(new IPlayerCommandPreprocessEvent(this), this);
+    		registerEvents(this, new IPlayerCommandPreprocessEvent(this), new IPlayerJoinEvent(this), new IPlayerLoginEvent(), new ISignChangeEvent(this));
     		
     		getCommand("ezp").setExecutor(new ICommandExecutor());
 		  
@@ -145,4 +150,11 @@ public class Main extends JavaPlugin implements Listener {
     	this.saveDefaultConfig();
     	log.info("Reloading config...");
     }
+    public static String placeholders(String args) {
+    	String newString = StringEscapeUtils.unescapeJava(
+    		args.replace("%prefix%", prefix).replace("%player%", player).replace("%errormessage%", errorMessage).replace("%command%", 
+    				new StringBuilder("/").append(playerCommand).toString()).replaceAll("&", "§"));
+        return newString;
+    }
+
 }
