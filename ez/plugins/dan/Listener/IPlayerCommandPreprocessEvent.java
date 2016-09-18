@@ -2,111 +2,161 @@ package ez.plugins.dan.Listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
 import ez.plugins.dan.Main;
 
 public class IPlayerCommandPreprocessEvent implements Listener {
-	private FileConfiguration config = Main.getPlugin().getConfig();
+	private Main plugin;
+	public IPlayerCommandPreprocessEvent (Main plugin) {
+		this.plugin = plugin;
+	}
 	
 	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onCommand(PlayerCommandPreprocessEvent event) {
 		
+		Main.player = event.getPlayer().getName();
 		Player player = event.getPlayer();
-		String prefix = config.getString("prefix").replaceAll("&", "§");
 		String command = event.getMessage();
 		
 		boolean plugins = command.split(" ")[0].toLowerCase().equals("/plugins");
-    		boolean pl = command.split(" ")[0].toLowerCase().equals("/pl");
+		boolean pl = command.split(" ")[0].toLowerCase().equals("/pl");
 		
-		for (int i = 0; i < config.getList("block-commands.commands").size(); i++) {
-			String playerCommand = config.getList("block-commands.commands").get(i).toString();
-			if (command.split(" ")[0].toLowerCase().equals("/" + playerCommand.toUpperCase())) {
-				if(!player.hasPermission("ezprotector.bypass.blocked-commands")) {
-					event.setCancelled(true);
-					player.sendMessage(config.getString("error-message").replaceAll("&", "§"));
-					for (Player p : Bukkit.getOnlinePlayers()){
-						if (p.hasPermission("ezprotector.notify.blocked-commands")) {
-							p.sendMessage(prefix + config.getString("default-notify-message").replaceAll("&","§").replaceAll("%command%", new StringBuilder("/").append(playerCommand).toString()).replaceAll("%player%", player.getName()));
+		for (Player admin : Bukkit.getOnlinePlayers()) {
+			if (plugin.getConfig().getBoolean("custom-commands.blocked")) {
+				for (int i = 0; i < plugin.getConfig().getList("custom-commands.commands").size(); i++) {
+					Main.playerCommand = plugin.getConfig().getList("custom-commands.commands").get(i).toString();
+					if (command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
+						if(!player.hasPermission("ezprotector.bypass.custom-commands")) {
+							event.setCancelled(true);
+							String errorMessage = plugin.getConfig().getString("custom-commands.error-message");
+							if (!errorMessage.trim().equals("")) {
+								player.sendMessage(Main.placeholders(errorMessage));
+							}
+							if (plugin.getConfig().getBoolean("custom-commands.punish-player.enabled")) {
+								String punishCommand = plugin.getConfig().getString("custom-commands.punish-player.command");
+								Main.errorMessage = plugin.getConfig().getString("custom-commands.error-message");
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+							}
+							if (plugin.getConfig().getBoolean("custom-commands.notify-admins.enabled")) {
+								if (admin.hasPermission("ezprotector.notify.custom-commands")) {
+									String notifyMessage = plugin.getConfig().getString("custom-commands.notify-admins.message");
+									if (!notifyMessage.trim().equals("")) {
+										admin.sendMessage(Main.placeholders(notifyMessage));
+									}
+								}	
+							}
 						}
 					}
 				}
 			}
-		}
-    	if(config.getBoolean("block-hidden-syntaxes.enabled")) {
-    		if (event.getMessage().split(" ")[0].contains(":")) {
-    			if(!player.hasPermission("ezprotector.bypass.hiddensyntaxes")) {
-    				event.setCancelled(true);
-    				player.sendMessage(config.getString("block-hidden-syntaxes.message").replaceAll("&", "§"));
-    				for (Player p : Bukkit.getOnlinePlayers()){
-    					if (config.getBoolean("block-hidden-syntaxes.notify")) {
-    						if (p.hasPermission("ezprotector.notify.hiddensyntaxes")) {
-    							p.sendMessage(prefix + config.getString("block-hidden-syntaxes.notify-message").replaceAll("&", "§").replaceAll("%command%", command).replaceAll("%player%", player.getName()));
-    						}
-    					}
-    				}
-    			}
-    		}
-    	}
-    	if (config.getBoolean("block-op-commands.enabled")) {
-    		if(player.isOp()) {
-    			for (int iop = 0; iop < config.getList("block-op-commands.bypassed-players").size(); iop++) {
-    				String opped = config.getList("block-op-commands.bypassed-players").get(iop).toString();
-    				if(!opped.contains(player.getName())) {
-    					for (int i = 0; i < config.getList("block-op-commands.commands").size(); i++) {
-    						String opcommand = config.getList("block-op-commands.commands").get(i).toString;
-    						if (command.split(" ")[0].toLowerCase().equals("/" + opcommand.toUpperCase())) {
-    							Player p = event.getPlayer();
-    							p.sendMessage(config.getString("block-op-commands.message").replaceAll("&", "§"));
-    							event.setCancelled(true);
-    							for (int iops = 0; iops < config.getList("block-op-commands.bypassed-players").size(); iops++) {
-    								String oppedPlayers = config.getList("block-op-commands.bypassed-players").get(iops).toString();
-    								Player ops = Bukkit.getPlayer(oppedPlayers);
-    								if (config.getBoolean("block-op-commands.notify")) {
-    									if (ops != null) {
-    										ops.sendMessage(prefix + config.getString("block-op-commands.notify-message").replaceAll("&", "§").replaceAll("%command%", new StringBuilder("/").append(opcommand).toString()).replaceAll("%player%", player.getName()));
-    									}
-    								}
-    							}
-    						}
-    					}
-    				}
-    			}
-    		}
-    	}
-		if (config.getBoolean("custom-plugins.enabled")) { 
-			if ((plugins) || (pl)) {
-				if(!player.hasPermission("ezprotector.bypass.command.plugins")) {
-					event.setCancelled(true);
-					String defaultMessage = "§a";
-					for (String plugin : Main.plugins) {
-						defaultMessage = defaultMessage + plugin + ", ";
-					}
-					defaultMessage = defaultMessage.substring(0, defaultMessage.lastIndexOf(", "));
-					player.sendMessage(ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder().append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString()));
-					for (Player p : Bukkit.getOnlinePlayers()){
-						if (config.getBoolean("custom-plugins.notify")){
-							if (p.hasPermission("ezprotector.notify.command.plugins")){
-								p.sendMessage(prefix + config.getString("default-notify-message").replaceAll("&", "§").replaceAll("%command%", command).replaceAll("%player%", player.getName()));
+			if(plugin.getConfig().getBoolean("hidden-syntaxes.blocked")) {
+				if (event.getMessage().split(" ")[0].contains(":")) {
+					if(!player.hasPermission("ezprotector.bypass.hiddensyntaxes")) {
+						event.setCancelled(true);
+						String errorMessage = plugin.getConfig().getString("hidden-syntaxes.error-message");
+						if (!errorMessage.trim().equals("")) {
+							player.sendMessage(Main.placeholders(errorMessage));
+						}
+						if (plugin.getConfig().getBoolean("hidden-syntaxes.punish-player.enabled")) {
+							String punishCommand = plugin.getConfig().getString("hidden-syntaxes.punish-player.command");
+							Main.errorMessage = plugin.getConfig().getString("hidden-syntaxes.error-message");
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+						}
+						if (plugin.getConfig().getBoolean("hidden-syntaxes.notify-admins.enabled")) {
+							if (admin.hasPermission("ezprotector.notify.hidden-syntaxes")) {
+								String notifyMessage = plugin.getConfig().getString("hidden-syntaxes.notify-admins.message");
+								if (!notifyMessage.trim().equals("")) {
+									admin.sendMessage(Main.placeholders(notifyMessage));
+								}
 							}
 						}
 					}
-				} 	
+				}
 			}
-		} else {
-			if ((plugins) || (pl)) {
-				if(!player.hasPermission("ezprotector.bypass.command.plugins")) {
-					event.setCancelled(true);
-					player.sendMessage(config.getString("custom-plugins.message").replaceAll("&", "§"));
-					for (Player p : Main.getPlugin().getServer().getOnlinePlayers()) {
-						if (config.getBoolean("custom-plugins.notify")) {
-							if (p.hasPermission("ezprotector.notify.command.plugins")) {
-								p.sendMessage(prefix + config.getString("default-notify-message").replaceAll("&", "§").replaceAll("%command%", command).replaceAll("%player%", player.getName()));
+			if (plugin.getConfig().getBoolean("opped-player-commands.enabled")) {
+				if (player.isOp()) {
+					for (int iop = 0; iop < plugin.getConfig().getList("opped-player-commands.bypassed-players").size(); iop++) {
+						String opped = plugin.getConfig().getList("opped-player-commands.bypassed-players").get(iop).toString();
+						if(!opped.contains(player.getName())) {
+							for (int i = 0; i < plugin.getConfig().getStringList("opped-player-commands.commands").size(); i++) {
+								String opcommand = plugin.getConfig().getStringList("opped-player-commands.commands").get(i).toString();
+								if (command.split(" ")[0].toLowerCase().equals("/" + opcommand.toLowerCase())) {
+									event.setCancelled(true);
+									String errorMessage = plugin.getConfig().getString("opped-player-commands.error-message");
+									if (!errorMessage.trim().equals("")) {
+										player.sendMessage(Main.placeholders(errorMessage));
+									}
+									if (plugin.getConfig().getBoolean("opped-player-commands.punish-player.enabled")) {
+										String punishCommand = plugin.getConfig().getString("opped-player-commands.punish-player.command");
+										Main.errorMessage = plugin.getConfig().getString("opped-player-commands.error-message");
+										Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+									}
+									Player ops = Bukkit.getPlayer(opped);
+									if (plugin.getConfig().getBoolean("opped-player-commands.notify-bypassed-players.enabled")) {
+										if (ops != null) {
+											String notifyMessage = plugin.getConfig().getString("opped-player-commands.notify-bypassed-players.message");
+											if (!notifyMessage.trim().equals("")) {
+												admin.sendMessage(Main.placeholders(notifyMessage));
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			if (plugin.getConfig().getBoolean("custom-plugins.enabled")) {
+				if ((plugins) || (pl)) {
+					if(!player.hasPermission("ezprotector.bypass.command.plugins")) {
+						event.setCancelled(true);
+						String defaultMessage = "§a";
+						for (String plugin : Main.plugins) {
+							defaultMessage = defaultMessage + plugin + ", ";
+						}
+						defaultMessage = defaultMessage.substring(0, defaultMessage.lastIndexOf(", "));
+						String customPlugins = ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): " 
+							+ ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder()
+								.append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString());
+						player.sendMessage(customPlugins);
+						if (plugin.getConfig().getBoolean("custom-plugins.punish-player.enabled")) {
+							String punishCommand = plugin.getConfig().getString("custom-plugins.punish-player.command");
+							Main.errorMessage = plugin.getConfig().getString("custom-plugins.error-message");
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+						}
+						if (plugin.getConfig().getBoolean("custom-plugins.notify.enabled")){
+							if (admin.hasPermission("ezprotector.notify.command.plugins")){
+								String notifyMessage = plugin.getConfig().getString("custom-plugins.notify-admins.message");
+								if (!notifyMessage.trim().equals("")) {
+									admin.sendMessage(Main.placeholders(notifyMessage));
+								}
+							}
+						}
+					}
+				}
+			} else {
+				if ((plugins) || (pl)) {
+					if(!player.hasPermission("ezprotector.bypass.command.plugins")) {
+						event.setCancelled(true);
+						String errorMessage = plugin.getConfig().getString("custom-plugins.error-message");
+						if (!errorMessage.trim().equals("")) {
+							player.sendMessage(Main.placeholders(errorMessage));
+						}
+						if (plugin.getConfig().getBoolean("custom-plugins.punish-player.enabled")) {
+							String punishCommand = plugin.getConfig().getString("custom-plugins.punish-player.command");
+							Main.errorMessage = plugin.getConfig().getString("custom-plugins.error-message");
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+						}
+						if (plugin.getConfig().getBoolean("custom-plugins.notify-admins.enabled")) {
+							if (admin.hasPermission("ezprotector.notify.custom-plugins")) {
+								String notifyMessage = plugin.getConfig().getString("custom-plugins.notify-admins.message");
+								if (!notifyMessage.trim().equals("")) {
+									admin.sendMessage(Main.placeholders(notifyMessage));
+								}
 							}
 						}
 					}
