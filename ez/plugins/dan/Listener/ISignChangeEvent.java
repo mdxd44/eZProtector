@@ -1,9 +1,6 @@
 package ez.plugins.dan.Listener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,51 +10,83 @@ import org.bukkit.event.block.SignChangeEvent;
 import ez.plugins.dan.Main;
 
 public class ISignChangeEvent implements Listener {
-	private FileConfiguration config = Main.getPlugin().getConfig();
-
+	private Main plugin;
+	public ISignChangeEvent (Main plugin) {
+		this.plugin = plugin;
+	}
 	@EventHandler(priority = EventPriority.HIGHEST)
-    public void onSignChange(SignChangeEvent e) {
-    	if(config.getBoolean("block-anti-sign-hack.enabled")){
-			
-    		Player p = e.getPlayer();
-    		String pName = p.getName();
-			  
-    		for (int i = 0; i < 4; i++)
-    			if (e.getLine(i).matches("^[a-zA-Z0-9_]*$")) {
-    				if (e.getLine(i).toString().length() > 16) {
-    					e.setCancelled(true);
-    					if (!p.hasPermission("ezprotector.bypass.signhack")) {
-    						ConsoleCommandSender console = Main.getPlugin().getServer().getConsoleSender();
-    						Bukkit.getServer().broadcast(ChatColor.translateAlternateColorCodes('&', config.getString
-    								("block-anti-sign-hack.warning-message").replace("%player%", pName)), "ezprotector.notify.signhack");
-							  
-    						Bukkit.getServer().dispatchCommand(console, ChatColor.translateAlternateColorCodes('&', config.getString
-    								("block-anti-sign-hack.punish-command")).replace("%player%", pName));
-    					}
-    				}
-    			} else if (e.getLine(i).matches("^[a-zA-Z0-9_]*$")) {
-    				if (e.getLine(i).length() > 20) {
-    					e.setCancelled(true);
-    					if (!p.hasPermission("ezprotector.bypass.signhack")) {
-    						ConsoleCommandSender console = Main.getPlugin().getServer().getConsoleSender();
-    						Bukkit.getServer().broadcast(ChatColor.translateAlternateColorCodes('&', config.getString
-    								("block-anti-sign-hack.warning-message").replace("%player%", pName)), "ezprotector.notify.signhack");
-							  
-    						Bukkit.getServer().dispatchCommand(console, ChatColor.translateAlternateColorCodes('&', config.getString
-    								("block-anti-sign-hack.punish-command")).replace("%player%", pName));
-    					}
-    				}
-    			} else if (e.getLine(i).length() > 50) {
-    				e.setCancelled(true);
-    				if (!p.hasPermission("ezprotector.bypass.signhack")) {
-    					ConsoleCommandSender console = Main.getPlugin().getServer().getConsoleSender();
-    					Bukkit.getServer().broadcast(ChatColor.translateAlternateColorCodes('&', config.getString
-    							("block-anti-sign-hack.warning-message").replace("%player%", pName)), "ezprotector.notify.signhack");
-    					
-    					Bukkit.getServer().dispatchCommand(console, ChatColor.translateAlternateColorCodes('&', config.getString
-    							("block-anti-sign-hack.punish-command")).replace("%player%", pName));
-    				}
-    			}
-    	}
-    }
+	public void onSignChange(SignChangeEvent event) {
+		
+		Player player = event.getPlayer();
+		
+		if(plugin.getConfig().getBoolean("sign-hack.blocked")) {
+			if (!player.hasPermission("ezprotector.bypass.signhack")) {
+				for (Player admin : Bukkit.getOnlinePlayers()) {
+					for (int i = 0; i < 4; i++)
+					if (event.getLine(i).matches("^[a-zA-Z0-9_]*$")) {
+						if (event.getLine(i).toString().length() > 16) {
+							event.setCancelled(true);
+							String errorMessage = plugin.getConfig().getString("sign-hack.error-message");
+							if (!errorMessage.trim().equals("")) {
+								player.sendMessage(Main.placeholders(errorMessage));
+							}
+							if (plugin.getConfig().getBoolean("sign-hack.punish-player.enabled")) {
+								String punishCommand = plugin.getConfig().getString("sign-hack.punish-player.command");
+								Main.errorMessage = plugin.getConfig().getString("sign-hack.error-message");
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+							}
+							if (plugin.getConfig().getBoolean("sign-hack.notify-admins.enabled")) {
+								if (admin.hasPermission("ezprotector.notify.sign-hack")) {
+									String notifyMessage = plugin.getConfig().getString("sign-hack.notify-admins.message");
+									if (!notifyMessage.trim().equals("")) {
+										admin.sendMessage(Main.placeholders(notifyMessage));
+									}
+								}	
+							}
+						}
+					} else if (event.getLine(i).matches("^[a-zA-Z0-9_]*$")) {
+						if (event.getLine(i).length() > 20) {
+							event.setCancelled(true);
+							String errorMessage = plugin.getConfig().getString("sign-hack.error-message");
+							if (!errorMessage.trim().equals("")) {
+								player.sendMessage(Main.placeholders(errorMessage));
+							}
+							if (plugin.getConfig().getBoolean("sign-hack.punish-player.enabled")) {
+								String punishCommand = plugin.getConfig().getString("sign-hack.punish-player.command");
+								Main.errorMessage = plugin.getConfig().getString("sign-hack.error-message");
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+							}
+							if (plugin.getConfig().getBoolean("sign-hack.notify-admins.enabled")) {
+								if (admin.hasPermission("ezprotector.notify.sign-hack")) {
+									String notifyMessage = plugin.getConfig().getString("sign-hack.notify-admins.message");
+									if (!notifyMessage.trim().equals("")) {
+										admin.sendMessage(Main.placeholders(notifyMessage));
+									}
+								}	
+							}
+						}
+					} else if (event.getLine(i).length() > 50) {
+						event.setCancelled(true);
+						String errorMessage = plugin.getConfig().getString("sign-hack.error-message");
+						if (!errorMessage.trim().equals("")) {
+							player.sendMessage(Main.placeholders(errorMessage));
+						}
+						if (plugin.getConfig().getBoolean("sign-hack.punish-player.enabled")) {
+							String punishCommand = plugin.getConfig().getString("sign-hack.punish-player.command");
+							Main.errorMessage = plugin.getConfig().getString("sign-hack.error-message");
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+						}
+						if (plugin.getConfig().getBoolean("sign-hack.notify-admins.enabled")) {
+							if (admin.hasPermission("ezprotector.notify.sign-hack")) {
+								String notifyMessage = plugin.getConfig().getString("sign-hack.notify-admins.message");
+								if (!notifyMessage.trim().equals("")) {
+									admin.sendMessage(Main.placeholders(notifyMessage));
+								}
+							}	
+						}
+					}
+				}
+			}
+		}
+	}
 }
