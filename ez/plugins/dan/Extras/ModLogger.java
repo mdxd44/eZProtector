@@ -41,7 +41,7 @@ public class ModLogger {
 					+ "didn't implement the blockage features as it did for 1.8 and above.");
 		}
     		 
-		if ((config.getBoolean("mods.liteloader.block", false)) && 
+		if (!((config.getBoolean("mods.liteloader.block", false)) && 
 			(config.getBoolean("mods.betterpvp.block", false)) &&
     			(config.getBoolean("mods.schematica.block", false)) &&
     				(config.getBoolean("mods.reiminimap.block", false)) &&
@@ -51,7 +51,7 @@ public class ModLogger {
     								(config.getBoolean("mods.forge.block", false)) &&
     									(config.getBoolean("mods.wdl.block", false)) &&
     										(config.getBoolean("mods.betterpvp.block", false)) &&
-    											(config.getBoolean("mods.labymod.block", false))) {
+    											(config.getBoolean("mods.labymod.block", false)))) {
 			log.info("You don't have any mods blocked.");										 
 		}												 
 	}
