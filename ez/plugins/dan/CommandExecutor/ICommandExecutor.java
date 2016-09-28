@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import ez.plugins.dan.Main;
 
 public class ICommandExecutor implements CommandExecutor {
@@ -19,7 +18,6 @@ public class ICommandExecutor implements CommandExecutor {
     				sender.sendMessage(ChatColor.RED + "No permission.");
     				return true;
     			}
-    			
     			sender.sendMessage("" + ChatColor.DARK_BLUE + ChatColor.STRIKETHROUGH +
     				"-----------------------------------------------------");
     			sender.sendMessage(ChatColor.AQUA + "eZ" + ChatColor.DARK_AQUA + "Protector " +
@@ -31,19 +29,16 @@ public class ICommandExecutor implements CommandExecutor {
     				"-----------------------------------------------------");
     			return true;
     		}
-    		
     		if (args.length > 0) {
     			if(args[0].equalsIgnoreCase("reload")) {
     				if (!sender.hasPermission("ezprotector.reload")) {
     					sender.sendMessage(ChatColor.RED + "No permission.");
     					return true;
     				}
-    				
     				Main.getPlugin().reloadConfig();
 					sender.sendMessage(prefix + "Config reloaded. Plugin version: " + this.currentVersion);
 					return true;
     			}
-    			
     			sender.sendMessage(ChatColor.RED + "Invalid argument. /ezp");
 				return true;
     		}
