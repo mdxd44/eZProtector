@@ -105,9 +105,7 @@ public class IPlayerCommandPreprocessEvent implements Listener {
 									if (ops != null) {
 										String notifyMessage = plugin.getConfig().getString("opped-player-commands.notify-bypassed-players.message");
 										if (!notifyMessage.trim().equals("")) {
-											for (Player admin : Bukkit.getOnlinePlayers()) {
-												admin.sendMessage(Main.placeholders(notifyMessage));
-											}
+											ops.sendMessage(Main.placeholders(notifyMessage));
 										}
 									}
 								}
