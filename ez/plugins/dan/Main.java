@@ -41,8 +41,10 @@ public class Main extends JavaPlugin implements Listener {
 	private List<String> blocked = new ArrayList<String>();
 	public static String prefix;
 	public static String player = "";
+	public static String oppedPlayer = "";
 	public static String playerCommand = "";
 	public static String errorMessage = "";
+	public static String opCommand = "";
 	
 	public void onEnable() {
 		plugin = this;
@@ -152,8 +154,9 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	public static String placeholders(String args) {
 		String newString = StringEscapeUtils.unescapeJava(args.replace("%prefix%", prefix)
-				.replace("%player%", player).replace("%errormessage%", errorMessage)
-				.replace("%command%",new StringBuilder("/").append(playerCommand).toString()).replaceAll("&", "§"));
+				.replace("%player%", player).replace("%player%", oppedPlayer).replace("%errormessage%", errorMessage)
+				.replace("%command%",new StringBuilder("/").append(playerCommand).toString())
+				.replace("%command%",new StringBuilder("/").append(opCommand).toString()).replaceAll("&", "§"));
 		return newString;
 	}
 }
