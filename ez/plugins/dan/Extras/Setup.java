@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 
 import ez.plugins.dan.Compatibility.Compatibility;
-import ez.plugins.dan.Compatibility.R1_10_R1;
 import ez.plugins.dan.Compatibility.R1_7_R1;
 import ez.plugins.dan.Compatibility.R1_7_R2;
 import ez.plugins.dan.Compatibility.R1_7_R3;
@@ -37,6 +36,8 @@ import ez.plugins.dan.Compatibility.R1_8_R2;
 import ez.plugins.dan.Compatibility.R1_8_R3;
 import ez.plugins.dan.Compatibility.R1_9_R1;
 import ez.plugins.dan.Compatibility.R1_9_R2;
+import ez.plugins.dan.Compatibility.R1_10_R1;
+import ez.plugins.dan.Compatibility.R1_11_R1;
 
 public class Setup {
 	public static Compatibility IeZP;
@@ -70,6 +71,8 @@ public class Setup {
     		IeZP = new R1_9_R2();
     	} else if (version.equals("v1_10_R1")) {
     		IeZP = new R1_10_R1();
+    	} else if (version.equals("v1_11_R1")) {
+    		IeZP = new R1_11_R1();
     	}
     	// This will return true if the server version was compatible with one of our NMS classes
     	// because if it is, our IeZP would not be null
