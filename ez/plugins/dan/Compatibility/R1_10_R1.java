@@ -86,14 +86,7 @@ public class R1_10_R1 implements Compatibility {
 			e.printStackTrace();
 		}
 	}
-
 	public void sendSmartMove(Player p) {
-	 /*     IChatBaseComponent icbc = IChatBaseComponent.ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', json));
-
-	      PacketPlayOutChat chat = new PacketPlayOutChat(icbc, (byte)0);
-
-	      ((CraftPlayer)p).getHandle().playerConnection.sendPacket(chat);
-	    }*/
 		try {
 			String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§1§0§1§2§f§f\"},{\"text\":\"§0§1§3§4§f§f\"},"
 					+ "{\"text\":\"§0§1§5§f§f\"},{\"text\":\"§0§1§6§f§f\"},{\"text\":\"§0§1§8§9§a§b§f§f\"}]}";
