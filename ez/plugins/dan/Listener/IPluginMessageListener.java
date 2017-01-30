@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 dvargas135
+Copyright (c) 2016-2017 dvargas135
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package ez.plugins.dan.Listener;
 import java.io.UnsupportedEncodingException;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -37,11 +36,16 @@ import com.google.common.io.ByteStreams;
 import ez.plugins.dan.Main;
 
 public class IPluginMessageListener implements PluginMessageListener {
-	
+	private Main plugin;
+	public IPluginMessageListener (Main plugin) {
+		this.plugin = plugin;
+	}
 	public void onPluginMessageReceived(String channel, Player player, byte[] value) {
-    	String pName = player.getName();
-    	FileConfiguration config = Main.getPlugin().getConfig();
-    	ConsoleCommandSender console = Main.getPlugin().getServer().getConsoleSender();
+		Main.player = player.getName();
+    	FileConfiguration config = plugin.getConfig();
+    	ConsoleCommandSender console = Bukkit.getConsoleSender();
+    	String punishCommand;
+    	String notifyMessage;
 		  
     	if (config.getBoolean("mods.bettersprinting.block")) {
     		if (!player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
@@ -80,19 +84,50 @@ public class IPluginMessageListener implements PluginMessageListener {
     			}
     		}
     	}
-		  
     	if (config.getBoolean("mods.wdl.block")) {
     		if (!player.hasPermission("ezprotector.bypass.mod.wdl")) {
-    			if ((channel.equalsIgnoreCase("WDL|INIT")) || (channel.equalsIgnoreCase("WDL|CONTROL")) || (channel.contains("WDL"))) {
-    				Bukkit.getServer().broadcast(ChatColor.translateAlternateColorCodes('&', config.getString
-    						("mods.wdl.warning-message").replace("%player%", pName)), "ezprotector.notify.mod.wdl");
-					  	
-    				Bukkit.getServer().dispatchCommand(console, ChatColor.translateAlternateColorCodes('&', config.getString
-    						("mods.wdl.punish-command")).replace("%player%", pName));
+    			if ((channel.equalsIgnoreCase(Main.WDLINIT)) || (channel.equalsIgnoreCase(Main.WDLCONTROL)) ||
+    					(channel.equalsIgnoreCase(Main.WDLREQ)) || (channel.contains("WDL"))) {
+    				punishCommand = config.getString("mods.wdl.punish-command");
+    				Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+    				for (Player admin : Bukkit.getOnlinePlayers()) {
+    					if (admin.hasPermission("ezprotector.notify.mod.wdl")) {
+    						notifyMessage = config.getString("mods.wdl.warning-message");
+    						if (!notifyMessage.trim().equals("")) {
+								admin.sendMessage(Main.placeholders(notifyMessage));
+							}
+    					}
+    				}
     			}
     		}
     	}
-    	if (channel.equalsIgnoreCase("MC|Brand")) {
+/*    	if (channel.equalsIgnoreCase("REGISTER")) {
+    		String msg;
+    		msg = "REGISTER CHANNEL";
+    		Bukkit.broadcastMessage(msg);
+    	}
+    	if (channel.equalsIgnoreCase("UNREGISTER")) {
+    		String msg;
+    		msg = "UNREGISTER CHANNEL";
+    		Bukkit.broadcastMessage(msg);
+    	}
+*/    	if (config.getBoolean("mods.forge.block")) {
+    		if (channel.equalsIgnoreCase(Main.FML) || (channel.equalsIgnoreCase(Main.FMLHS))) {
+    			if (!player.hasPermission("ezprotector.bypass.mod.forge")) {
+    				punishCommand = config.getString("mods.forge.punish-command");
+    				Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+    				for (Player admin : Bukkit.getOnlinePlayers()) {
+    					if (admin.hasPermission("ezprotector.notify.mod.forge")) {
+    						notifyMessage = config.getString("mods.forge.warning-message");
+    						if (!notifyMessage.trim().equals("")) {
+    							admin.sendMessage(Main.placeholders(notifyMessage));
+    						}
+        				}
+        			}
+        		}
+    		}
+    	}
+    	if (channel.equalsIgnoreCase(Main.MCBRAND)) {
     		String brand;
     		try {
     			brand = new String(value, "UTF-8");
@@ -102,33 +137,48 @@ public class IPluginMessageListener implements PluginMessageListener {
     		if (config.getBoolean("mods.wdl.block")) {
     			if (!player.hasPermission("ezprotector.bypass.mod.wdl")) {
     				if (brand.equalsIgnoreCase("worlddownloader-vanilla")) {
-    					Bukkit.getServer().broadcast(ChatColor.translateAlternateColorCodes('&', config.getString
-    							("mods.wdl.warning-message").replace("%player%", pName)), "ezprotector.notify.mod.wdl");
-						  
-    					Bukkit.getServer().dispatchCommand(console, ChatColor.translateAlternateColorCodes('&', config.getString
-    							("mods.wdl.punish-command")).replace("%player%", pName));
+    					punishCommand = config.getString("mods.wdl.punish-command");
+            			Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+            			for (Player admin : Bukkit.getOnlinePlayers()) {
+        					if (admin.hasPermission("ezprotector.notify.mod.wdl")) {
+        						notifyMessage = config.getString("mods.wdl.warning-message");
+        						if (!notifyMessage.trim().equals("")) {
+    								admin.sendMessage(Main.placeholders(notifyMessage));
+    							}
+        					}
+        				}
     				}
     			}
     		}
     		if (config.getBoolean("mods.forge.block")) {
     			if (!player.hasPermission("ezprotector.bypass.mod.forge")) {
-    				if ((brand.contains("fml")) || (brand.contains("forge")) || (brand.equalsIgnoreCase("fml,forge"))) {
-    					Bukkit.getServer().broadcast(ChatColor.translateAlternateColorCodes('&', config.getString
-    							("mods.forge.warning-message").replace("%player%", pName)), "ezprotector.notify.mod.forge");
-						  	
-    					Bukkit.getServer().dispatchCommand(console, ChatColor.translateAlternateColorCodes('&', config.getString
-    							("mods.forge.punish-command")).replace("%player%", pName));
+    				if ((brand.equalsIgnoreCase("fml,forge")) || (brand.contains("fml")) || (brand.contains("forge"))) {
+    					punishCommand = config.getString("mods.forge.punish-command");
+            			Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+            			for (Player admin : Bukkit.getOnlinePlayers()) {
+        					if (admin.hasPermission("ezprotector.notify.mod.forge")) {
+        						notifyMessage = config.getString("mods.forge.warning-message");
+        						if (!notifyMessage.trim().equals("")) {
+    								admin.sendMessage(Main.placeholders(notifyMessage));
+    							}
+        					}
+        				}
     				}
     			}
     		}
     		if (config.getBoolean("mods.liteloader.block")) {
     			if (!player.hasPermission("ezprotector.bypass.mod.liteloader")) {
-    				if ((brand.contains("LiteLoader")) || (brand.equalsIgnoreCase("LiteLoader"))) {
-    					Bukkit.getServer().broadcast(ChatColor.translateAlternateColorCodes('&', config.getString
-    							("mods.liteloader.warning-message").replace("%player%", pName)), "ezprotector.notify.mod.liteloader");
-				  
-    					Bukkit.getServer().dispatchCommand(console, ChatColor.translateAlternateColorCodes('&', config.getString
-    							("mods.liteloader.punish-command")).replace("%player%", pName));
+    				if ((brand.contains("Lite")) || (brand.equalsIgnoreCase("LiteLoader"))) {
+    					punishCommand = config.getString("mods.liteloader.punish-command");
+            			Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+            			for (Player admin : Bukkit.getOnlinePlayers()) {
+        					if (admin.hasPermission("ezprotector.notify.mod.liteloader")) {
+        						notifyMessage = config.getString("mods.liteloader.warning-message");
+        						if (!notifyMessage.trim().equals("")) {
+    								admin.sendMessage(Main.placeholders(notifyMessage));
+    							}
+        					}
+        				}
     				}
     			}
     		}
