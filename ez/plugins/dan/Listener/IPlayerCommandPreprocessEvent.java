@@ -166,7 +166,7 @@ public class IPlayerCommandPreprocessEvent implements Listener {
 							Main.errorMessage = config.getString("custom-plugins.error-message");
 							Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
 						}
-						if (config.getBoolean("custom-plugins.notify.enabled")){
+						if (config.getBoolean("custom-plugins.notify-admins.enabled")){
 							for (Player admin : Bukkit.getOnlinePlayers()) {
 								if (admin.hasPermission("ezprotector.notify.command.plugins")) {
 									notifyMessage = config.getString("custom-plugins.notify-admins.message");
