@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 dvargas135
+Copyright (c) 2016-2017 dvargas135
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package ez.plugins.dan.Listener;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -38,42 +39,47 @@ import ez.plugins.dan.Main;
 
 public class IPacketEvent {
 	private static FileConfiguration config = Main.getPlugin().getConfig();
-	
 	public static void protocolLibHook(final List<String> list) {
-		
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter
-			(Main.instance, ListenerPriority.HIGHEST, new PacketType[] { 
+			(Main.plugin, ListenerPriority.HIGHEST, new PacketType[] { 
 		PacketType.Play.Client.TAB_COMPLETE }) {
-			public void onPacketReceiving(PacketEvent e) {
-				String prefix = config.getString("prefix").replaceAll("&", "§");
-				Player p = e.getPlayer();
-				
-				if (e.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) {
-					PacketContainer packet = e.getPacket();
-					String message = ((String)packet.getSpecificModifier(String.class).read(0)).toLowerCase();
-					if (!e.getPlayer().hasPermission("ezprotector.bypass.tabcompletion")) {
-						for (String command : list) {
-							if (message.startsWith(command)) {
-								if (config.getBoolean("tab-completion.notify-admins")) {
-									for (Player admins : Main.getPlugin().getServer().getOnlinePlayers()) {
-										if (admins.hasPermission("ezprotector.notify.tabcompletion")) {
-											admins.sendMessage(prefix + config.getString("tab-completion.notify-admins.message")
-		    								.replaceAll("&", "§").replaceAll("%player%", p.getName())
-		    									.replaceAll("%message%", "'" + message + "<tab>'"));
+			public void onPacketReceiving(PacketEvent event) {
+				if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) {
+					if (config.getBoolean("tab-completion.blocked")) {
+						Player player = event.getPlayer();
+						PacketContainer packet = event.getPacket();
+						String message = ((String)packet.getSpecificModifier(String.class).read(0)).toLowerCase();
+						if (!event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete")) {
+							for (String command : list) {
+								if (message.startsWith(command)) {
+									if (config.getBoolean("tab-completion.warn.enabled")) {
+										String errorMessage = plugin.getConfig().getString("tab-completion.warn.message");
+										if (!errorMessage.trim().equals("")) {
+											player.sendMessage(Main.placeholders(errorMessage));
+										}
+										if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
+											String punishCommand = plugin.getConfig().getString("tab-completion.punish-player.command");
+											Main.errorMessage = plugin.getConfig().getString("tab-completion.error-message");
+											Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+										}
+										if (plugin.getConfig().getBoolean("tab-completion.notify-admins.enabled")) {
+											for (Player admin : Bukkit.getOnlinePlayers()) {
+												if (admin.hasPermission("ezprotector.notify.command.tabcomplete")) {
+													String notifyMessage = plugin.getConfig().getString("tab-completion.notify-admins.message");
+													if (!notifyMessage.trim().equals("")) {
+														admin.sendMessage(Main.placeholders(notifyMessage));
+													}
+												}
+											}
 										}
 									}
 								}
-								if (config.getBoolean("tab-completion.warn-player.enabled")) {
-									p.sendMessage(config.getString("tab-completion.message")
-										.replaceAll("&", "§").replaceAll("%player%", p.getName())
-	    									.replaceAll("%message%", "'" + message + "<tab>'"));
+								if ((message.startsWith(command)) || ((message.startsWith("/")) && ((!message.contains(" ")) || 
+										(message.contains(":"))))) {
+									event.setCancelled(true);
 								}
 							}
-							if ((message.startsWith(command)) || ((message.startsWith("/")) && ((!message.contains(" ")) || 
-									(message.contains(":"))))) {
-								e.setCancelled(true);
-							}
-						} 
+						}
 					}
 				}
 			}
