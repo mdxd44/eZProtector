@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 dvargas135
+Copyright (c) 2016-2017 dvargas135
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,22 @@ import ez.plugins.dan.Main;
 import ez.plugins.dan.ModBlockage.Schematica;
 
 public class IPlayerLoginEvent implements Listener {
+	private Main plugin;
+	public IPlayerLoginEvent (Main plugin) {
+		this.plugin = plugin;
+	}
+	
     @EventHandler
     public void onPlayerLogin(final PlayerLoginEvent event) {
-    	final Player player = event.getPlayer();
-    	final byte[] payload = Schematica.getPayload(player);
-    	if (payload != null) {
-    		Schematica.sendCheatyPluginMessage(Main.getPlugin(), player, Main.SCHEMATICA, payload);
+    	if (plugin.getConfig().getBoolean("mods.schematica.block")) {
+    		final Player player = event.getPlayer();
+    		final byte[] payload = Schematica.getPayload(player);
+    		if (payload != null) {
+    			Schematica.sendCheatyPluginMessage(Main.getPlugin(), player, Main.SCHEMATICA, payload);
+    			Schematica.sendCheatyPluginMessage(Main.plugin, player, Main.SCHEMATICA, payload);
+    		}
+    		player.sendPluginMessage(Main.plugin, Main.SCHEMATICA, payload);
+    		player.sendPluginMessage(Main.getPlugin(), Main.SCHEMATICA, payload);
     	}
     }
 }
