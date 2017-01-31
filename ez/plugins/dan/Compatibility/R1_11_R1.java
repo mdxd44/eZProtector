@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 dvargas135
+Copyright (c) 2016-2017 dvargas135
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ public class R1_11_R1 implements Compatibility {
 			e.printStackTrace();
 		}
 	}
-	public void sendSchematica(Player p) {
+	public void sendSchematica(Player p) {a
 		try {
 			String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§2§0§0§e§f\"},{\"text\":\"§0§2§1§0§e§f\"},{\"text\":\"§0§2§1§1§e§f\"}]}";
 			IChatBaseComponent icbc = IChatBaseComponent.ChatSerializer.a(json);
