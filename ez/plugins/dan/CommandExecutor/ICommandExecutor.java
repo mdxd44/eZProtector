@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 dvargas135
+Copyright (c) 2016-2017 dvargas135
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,13 +30,12 @@ import ez.plugins.dan.Main;
 
 public class ICommandExecutor implements CommandExecutor {
 	private String currentVersion = Main.getPlugin().getDescription().getVersion();
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String prefix = Main.getPlugin().getConfig().getString("prefix").replaceAll("&", "§");
     	if (command.getName().equalsIgnoreCase("ezp")) {
     		if (args.length == 0) {
-    			if (!sender.hasPermission("ezprotector.info")) {
+    			if (!sender.hasPermission("ezprotector.bypass.command.ezprotector")) {
     				sender.sendMessage(ChatColor.RED + "No permission.");
     				return true;
     			}
