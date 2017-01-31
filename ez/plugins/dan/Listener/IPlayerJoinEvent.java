@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 dvargas135
+Copyright (c) 2016-2017 dvargas135
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,52 +24,50 @@ package ez.plugins.dan.Listener;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
 import ez.plugins.dan.Main;
 import ez.plugins.dan.Extras.Setup;
 import ez.plugins.dan.ModBlockage.LabyMod.EnumLabyModFeature;
 
 public class IPlayerJoinEvent implements Listener {
-	private FileConfiguration config = Main.getPlugin().getConfig();
+	private Main plugin;
+	public IPlayerJoinEvent (Main plugin) {
+		this.plugin = plugin;
+	}
 	
 	@EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
     	Player p = e.getPlayer();
-    	final Player p2 = e.getPlayer();
     	
-    	if (config.getBoolean("mods.betterpvp.block")) {
+    	if (plugin.getConfig().getBoolean("mods.betterpvp.block")) {
     		if (!p.hasPermission("ezprotector.bypass.mod.betterpvp")) {
     			Setup.IeZP.sendBetterPvP(p);
     		}
     	}
-    	if (config.getBoolean("mods.schematica.block")) {
+    	if (plugin.getConfig().getBoolean("mods.schematica.block")) {
     		if (!p.hasPermission("ezprotector.bypass.mod.schematica")) {
     			Setup.IeZP.sendSchematica(p);
     		}
     	}
-    	if (config.getBoolean("mods.reiminimap.block")) {
+    	if (plugin.getConfig().getBoolean("mods.reiminimap.block")) {
     		if (!p.hasPermission("ezprotector.bypass.mod.reiminimap")) {
     			Setup.IeZP.sendReiMiniMap(p);
     		}
     	}
-    	if (config.getBoolean("mods.damageindicators.block")) {
+    	if (plugin.getConfig().getBoolean("mods.damageindicators.block")) {
     		if (!p.hasPermission("ezprotector.bypass.mod.damageindicators")) {
     			Setup.IeZP.sendDamageIndicators(p);
     		}
     	}
-    	if (config.getBoolean("mods.voxelmap.block")) {
+    	if (plugin.getConfig().getBoolean("mods.voxelmap.block")) {
     		if (!p.hasPermission("ezprotector.bypass.mod.voxelmap")) {
     			Setup.IeZP.sendVoxelMap(p);
     		}
     	}
-    	if (config.getBoolean("mods.labymod.block")) {
+    	if (plugin.getConfig().getBoolean("mods.labymod.block")) {
     		if (!p.hasPermission("ezprotector.bypass.mod.labymod")) {
     			HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
     			list.put(EnumLabyModFeature.ANIMATIONS, Boolean.valueOf(false));
@@ -86,7 +84,7 @@ public class IPlayerJoinEvent implements Listener {
     			Setup.IeZP.setLabyModFeature(p, list);
     		}
     	}
-    	if (config.getBoolean("mods.smartmoving.block")) {
+    	if (plugin.getConfig().getBoolean("mods.smartmoving.block")) {
     		if (!p.hasPermission("ezprotector.bypass.mod.smartmoving")) {
     			Setup.IeZP.sendSmartMove(p);
     		}
