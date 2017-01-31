@@ -22,30 +22,22 @@ SOFTWARE.
 
 package ez.plugins.dan.Compatibility;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import ez.plugins.dan.ModBlockage.LabyMod.EnumLabyModFeature;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import net.minecraft.server.v1_8_R1.ChatSerializer;
-import net.minecraft.server.v1_8_R1.IChatBaseComponent;
-import net.minecraft.server.v1_8_R1.PacketDataSerializer;
-import net.minecraft.server.v1_8_R1.PacketPlayOutChat;
-import net.minecraft.server.v1_8_R1.PacketPlayOutCustomPayload;
+import net.minecraft.server.v1_7_R4.ChatSerializer;
+import net.minecraft.server.v1_7_R4.IChatBaseComponent;
+import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
 
-public class R1_8_R1 implements Compatibility {
-	
+public class R1_7_R4 implements Compatibility {
 	public void sendBetterPvP(Player p) {
 		try {
 			String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§c §r§5 §r§1 §r§f §r§0\"}]}";
 			IChatBaseComponent icbc = ChatSerializer.a(json);
-			PacketPlayOutChat chat = new PacketPlayOutChat(icbc, (byte)0);
+			PacketPlayOutChat chat = new PacketPlayOutChat(icbc);
 			((CraftPlayer)p).getHandle().playerConnection.sendPacket(chat);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -55,7 +47,7 @@ public class R1_8_R1 implements Compatibility {
 		try {
 			String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§2§0§0§e§f\"},{\"text\":\"§0§2§1§0§e§f\"},{\"text\":\"§0§2§1§1§e§f\"}]}";
 			IChatBaseComponent icbc = ChatSerializer.a(json);
-			PacketPlayOutChat chat = new PacketPlayOutChat(icbc, (byte)0);
+			PacketPlayOutChat chat = new PacketPlayOutChat(icbc);
 			((CraftPlayer)p).getHandle().playerConnection.sendPacket(chat);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,7 +57,7 @@ public class R1_8_R1 implements Compatibility {
 		try {
 			String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§0§1§2§3§5§e§f\"},{\"text\":\"§0§0§2§3§4§5§6§7§e§f\"},{\"text\":\"§A§n§t§i§M§i§n§i§m§a§p\"}]}";
 			IChatBaseComponent icbc = ChatSerializer.a(json);
-			PacketPlayOutChat chat = new PacketPlayOutChat(icbc, (byte)0);
+			PacketPlayOutChat chat = new PacketPlayOutChat(icbc);
 			((CraftPlayer)p).getHandle().playerConnection.sendPacket(chat);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,7 +67,7 @@ public class R1_8_R1 implements Compatibility {
 		try {
 			String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§0§c§d§e§f\"}]}";
 			IChatBaseComponent icbc = ChatSerializer.a(json);
-			PacketPlayOutChat chat = new PacketPlayOutChat(icbc, (byte)0);
+			PacketPlayOutChat chat = new PacketPlayOutChat(icbc);
 			((CraftPlayer)p).getHandle().playerConnection.sendPacket(chat);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,26 +77,9 @@ public class R1_8_R1 implements Compatibility {
 		try {
 			String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§3 §6 §3 §6 §3 §6 §d\"},{\"text\":\"§3 §6 §3 §6 §3 §6 §e\"}]}";
 			IChatBaseComponent icbc = ChatSerializer.a(json);
-			PacketPlayOutChat chat = new PacketPlayOutChat(icbc, (byte)0);
+			PacketPlayOutChat chat = new PacketPlayOutChat(icbc);
 			((CraftPlayer)p).getHandle().playerConnection.sendPacket(chat);
 		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public void setLabyModFeature(Player p, HashMap<EnumLabyModFeature, Boolean> list) {
-		try {
-			HashMap<String, Boolean> nList = new HashMap<String, Boolean>();
-			for(EnumLabyModFeature f : list.keySet()) {
-				nList.put(f.name(), list.get(f));
-			}
-			ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-			ObjectOutputStream out = new ObjectOutputStream(byteOut);
-			out.writeObject(nList);
-			ByteBuf a = Unpooled.copiedBuffer(byteOut.toByteArray());
-			PacketDataSerializer b = new PacketDataSerializer(a);
-			PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("LABYMOD", b);
-			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -117,5 +92,8 @@ public class R1_8_R1 implements Compatibility {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public void setLabyModFeature(Player paramPlayer, HashMap<EnumLabyModFeature, Boolean> paramHasMap) {
 	}
 }
