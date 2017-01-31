@@ -50,7 +50,7 @@ public class R1_11_R1 implements Compatibility {
 			e.printStackTrace();
 		}
 	}
-	public void sendSchematica(Player p) {a
+	public void sendSchematica(Player p) {
 		try {
 			String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§2§0§0§e§f\"},{\"text\":\"§0§2§1§0§e§f\"},{\"text\":\"§0§2§1§1§e§f\"}]}";
 			IChatBaseComponent icbc = IChatBaseComponent.ChatSerializer.a(json);
