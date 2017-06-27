@@ -77,8 +77,6 @@ public class Setup {
 		} else if (version.equals("v1_12_R1")) {
 			IeZP = new R1_12_R1();
 		}
-		// This will return true if the server version was compatible with one of our NMS classes
-		// because if it is, our IeZP would not be null
 		return IeZP != null;
 	}
 }
