@@ -42,7 +42,7 @@ import ez.plugins.dan.Listener.IPlayerLoginEvent;
 import ez.plugins.dan.Listener.IPluginMessageListener;
 import ez.plugins.dan.Listener.ISignChangeEvent;
 import ez.plugins.dan.Metrics.MetricsChecker;
-import ez.plugins.dan.SpigotUpdater.UpdateChecker;
+import ez.plugins.dan.Updater.GitUpdateChecker;
 
 public class Main extends JavaPlugin implements Listener {
 	public static Plugin plugin;
@@ -71,12 +71,13 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		plugin = this;
 		log = getLogger();
+		log.info("Unofficial version by Dvargas135");
 		prefix = this.getConfig().getString("prefix");
 		if (setup == true) {
 			if (this.getConfig().getBoolean("updater")) {
 				getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
 					public void run() {
-						UpdateChecker.checkUpdate();
+						GitUpdateChecker.checkUpdate();
 					}
 				}
 				, 20L);
