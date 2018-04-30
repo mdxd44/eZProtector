@@ -22,12 +22,10 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Updater;
 
-import java.util.logging.Logger;
-
-import com.github.donotspampls.ezprotector.Updater.SpigotUpdater;
+import com.github.donotspampls.ezprotector.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.github.donotspampls.ezprotector.Main;
+import java.util.logging.Logger;
 
 public class UpdateChecker {
 

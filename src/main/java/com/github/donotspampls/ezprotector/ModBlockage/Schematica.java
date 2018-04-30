@@ -22,17 +22,16 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.ModBlockage;
 
+import com.github.donotspampls.ezprotector.Main;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
-
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
-import com.github.donotspampls.ezprotector.Main;
 
 public class Schematica {
 

@@ -22,10 +22,10 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Extras;
 
-import java.util.logging.Logger;
-
 import com.github.donotspampls.ezprotector.Compatibility.*;
 import org.bukkit.Bukkit;
+
+import java.util.logging.Logger;
 
 public class Setup {
 

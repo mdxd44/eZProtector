@@ -22,13 +22,12 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Listener;
 
+import com.github.donotspampls.ezprotector.Main;
+import com.github.donotspampls.ezprotector.ModBlockage.Schematica;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
-
-import com.github.donotspampls.ezprotector.Main;
-import com.github.donotspampls.ezprotector.ModBlockage.Schematica;
 
 public class IPlayerLoginEvent implements Listener {
 	private Main plugin;

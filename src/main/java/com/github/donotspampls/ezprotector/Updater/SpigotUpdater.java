@@ -19,6 +19,9 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Updater;
 
+import com.github.donotspampls.ezprotector.Main;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,10 +29,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-
-import org.bukkit.plugin.java.JavaPlugin;
-
-import com.github.donotspampls.ezprotector.Main;
 
 public class SpigotUpdater {
 

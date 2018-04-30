@@ -22,11 +22,10 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Compatibility;
 
-import java.util.HashMap;
-
+import com.github.donotspampls.ezprotector.ModBlockage.LabyMod.EnumLabyModFeature;
 import org.bukkit.entity.Player;
 
-import com.github.donotspampls.ezprotector.ModBlockage.LabyMod.EnumLabyModFeature;
+import java.util.HashMap;
 
 public interface Compatibility {
 

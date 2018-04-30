@@ -22,18 +22,16 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Listener;
 
-import java.io.UnsupportedEncodingException;
-
+import com.github.donotspampls.ezprotector.Main;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
-import com.github.donotspampls.ezprotector.Main;
+import java.io.UnsupportedEncodingException;
 
 public class IPluginMessageListener implements PluginMessageListener {
 	private Main plugin;

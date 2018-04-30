@@ -22,9 +22,7 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Listener;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.github.donotspampls.ezprotector.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -35,7 +33,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import com.github.donotspampls.ezprotector.Main;
+import java.util.Arrays;
+import java.util.List;
 
 public class IPlayerCommandPreprocessEvent implements Listener {
 	private Main plugin;

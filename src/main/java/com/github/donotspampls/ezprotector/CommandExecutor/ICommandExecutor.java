@@ -22,11 +22,11 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.CommandExecutor;
 
+import com.github.donotspampls.ezprotector.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import com.github.donotspampls.ezprotector.Main;
 
 public class ICommandExecutor implements CommandExecutor {
 

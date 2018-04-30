@@ -22,20 +22,18 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Listener;
 
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-
 import com.github.donotspampls.ezprotector.Main;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class IPacketEvent {
 	private static FileConfiguration config = Main.getPlugin().getConfig();

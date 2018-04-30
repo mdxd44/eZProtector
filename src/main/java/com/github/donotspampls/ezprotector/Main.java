@@ -22,10 +22,10 @@
 
 package com.github.donotspampls.ezprotector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
+import com.github.donotspampls.ezprotector.CommandExecutor.ICommandExecutor;
+import com.github.donotspampls.ezprotector.Extras.ModLogger;
+import com.github.donotspampls.ezprotector.Extras.Setup;
+import com.github.donotspampls.ezprotector.Listener.*;
 import com.github.donotspampls.ezprotector.Updater.UpdateChecker;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bstats.bukkit.Metrics;
@@ -34,15 +34,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.donotspampls.ezprotector.CommandExecutor.ICommandExecutor;
-import com.github.donotspampls.ezprotector.Extras.ModLogger;
-import com.github.donotspampls.ezprotector.Extras.Setup;
-import com.github.donotspampls.ezprotector.Listener.IPacketEvent;
-import com.github.donotspampls.ezprotector.Listener.IPlayerCommandPreprocessEvent;
-import com.github.donotspampls.ezprotector.Listener.IPlayerJoinEvent;
-import com.github.donotspampls.ezprotector.Listener.IPlayerLoginEvent;
-import com.github.donotspampls.ezprotector.Listener.IPluginMessageListener;
-import com.github.donotspampls.ezprotector.Listener.ISignChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class Main extends JavaPlugin implements Listener {
 

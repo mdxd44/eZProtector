@@ -22,15 +22,15 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Listener;
 
-import java.util.HashMap;
-
+import com.github.donotspampls.ezprotector.Extras.Setup;
+import com.github.donotspampls.ezprotector.Main;
+import com.github.donotspampls.ezprotector.ModBlockage.LabyMod.EnumLabyModFeature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import com.github.donotspampls.ezprotector.Main;
-import com.github.donotspampls.ezprotector.Extras.Setup;
-import com.github.donotspampls.ezprotector.ModBlockage.LabyMod.EnumLabyModFeature;
+
+import java.util.HashMap;
 
 public class IPlayerJoinEvent implements Listener {
 	private Main plugin;
