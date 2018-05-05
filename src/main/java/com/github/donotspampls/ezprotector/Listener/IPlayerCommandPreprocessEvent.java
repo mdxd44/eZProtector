@@ -33,9 +33,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class IPlayerCommandPreprocessEvent implements Listener {
 	private Main plugin;
 	public IPlayerCommandPreprocessEvent (Main plugin) {
@@ -43,6 +40,7 @@ public class IPlayerCommandPreprocessEvent implements Listener {
 	}
 	
 	@EventHandler(priority=EventPriority.HIGHEST)
+	@SuppressWarnings("deprecated")
 	public void onCommand(PlayerCommandPreprocessEvent event) {
 		
 		Main.player = event.getPlayer().getName();
@@ -114,7 +112,7 @@ public class IPlayerCommandPreprocessEvent implements Listener {
 			Main.errorMessage = config.getString("opped-player-commands.error-message");
 			if (player.isOp()) {
 				for (int i2 = 0; i2 < config.getStringList("opped-player-commands.bypassed-players").size(); i2++) {
-					String opped = config.getStringList("opped-player-commands.bypassed-players").get(i2).toString();
+					String opped = config.getStringList("opped-player-commands.bypassed-players").get(i2);
 					if(!opped.contains(Main.oppedPlayer)) {
 						for (int i = 0; i < config.getStringList("opped-player-commands.commands").size(); i++) {
 							Main.playerCommand = config.getList("opped-player-commands.commands").get(i).toString();
@@ -144,28 +142,26 @@ public class IPlayerCommandPreprocessEvent implements Listener {
 		}
 		
 		String[] plu = new String[] {"pl", "plugins"};
-		List<String> list = (List<String>) Arrays.asList(plu);
-		for (int i = 0; i < list.size(); i++) {
-			Main.playerCommand = list.get(i).toString();
+		for (String aList : plu) {
+			Main.playerCommand = aList;
 			if (command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
 				if (config.getBoolean("custom-plugins.enabled")) {
-					if(!player.hasPermission("ezprotector.bypass.command.plugins")) {
+					if (!player.hasPermission("ezprotector.bypass.command.plugins")) {
 						event.setCancelled(true);
-						String defaultMessage = "§a";
+						StringBuilder defaultMessage = new StringBuilder("§a");
 						for (String plugin : Main.plugins) {
-							defaultMessage = defaultMessage + plugin + ", ";
-						}	
-						defaultMessage = defaultMessage.substring(0, defaultMessage.lastIndexOf(", "));
-						String customPlugins = ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): " 
-								+ ChatColor.GREEN + defaultMessage.replaceAll(", ", new StringBuilder()
-										.append(ChatColor.WHITE).append(", ").append(ChatColor.GREEN).toString());
+							defaultMessage.append(plugin).append(", ");
+						}
+						defaultMessage = new StringBuilder(defaultMessage.substring(0, defaultMessage.lastIndexOf(", ")));
+						String customPlugins = ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): "
+								+ ChatColor.GREEN + defaultMessage.toString().replaceAll(", ", String.valueOf(ChatColor.WHITE) + ", " + ChatColor.GREEN);
 						player.sendMessage(customPlugins);
 						if (config.getBoolean("custom-plugins.punish-player.enabled")) {
 							punishCommand = config.getString("custom-plugins.punish-player.command");
 							Main.errorMessage = config.getString("custom-plugins.error-message");
 							Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
 						}
-						if (config.getBoolean("custom-plugins.notify-admins.enabled")){
+						if (config.getBoolean("custom-plugins.notify-admins.enabled")) {
 							for (Player admin : Bukkit.getOnlinePlayers()) {
 								if (admin.hasPermission("ezprotector.notify.command.plugins")) {
 									notifyMessage = config.getString("custom-plugins.notify-admins.message");
@@ -177,7 +173,7 @@ public class IPlayerCommandPreprocessEvent implements Listener {
 						}
 					}
 				} else {
-					if(!player.hasPermission("ezprotector.bypass.command.plugins")) {
+					if (!player.hasPermission("ezprotector.bypass.command.plugins")) {
 						event.setCancelled(true);
 						Main.errorMessage = config.getString("custom-plugins.error-message");
 						if (!Main.errorMessage.trim().equals("")) {

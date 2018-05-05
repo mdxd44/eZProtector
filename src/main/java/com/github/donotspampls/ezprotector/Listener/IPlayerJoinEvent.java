@@ -22,17 +22,15 @@ SOFTWARE.
 
 package com.github.donotspampls.ezprotector.Listener;
 
-import com.github.donotspampls.ezprotector.Extras.Setup;
 import com.github.donotspampls.ezprotector.Main;
-import com.github.donotspampls.ezprotector.ModBlockage.LabyMod.EnumLabyModFeature;
+import com.github.donotspampls.ezprotector.ModBlockage.DamageIndicators;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.HashMap;
-
 public class IPlayerJoinEvent implements Listener {
+
 	private Main plugin;
 	public IPlayerJoinEvent (Main plugin) {
 		this.plugin = plugin;
@@ -40,54 +38,48 @@ public class IPlayerJoinEvent implements Listener {
 	
 	@EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-    	Player p = e.getPlayer();
-    	
-    	if (plugin.getConfig().getBoolean("mods.betterpvp.block")) {
-    		if (!p.hasPermission("ezprotector.bypass.mod.betterpvp")) {
-    			Setup.IeZP.sendBetterPvP(p);
-    		}
-    	}
-    	if (plugin.getConfig().getBoolean("mods.schematica.block")) {
-    		if (!p.hasPermission("ezprotector.bypass.mod.schematica")) {
-    			Setup.IeZP.sendSchematica(p);
-    		}
-    	}
-    	if (plugin.getConfig().getBoolean("mods.reiminimap.block")) {
-    		if (!p.hasPermission("ezprotector.bypass.mod.reiminimap")) {
-    			Setup.IeZP.sendReiMiniMap(p);
-    		}
-    	}
-    	if (plugin.getConfig().getBoolean("mods.damageindicators.block")) {
-    		if (!p.hasPermission("ezprotector.bypass.mod.damageindicators")) {
-    			Setup.IeZP.sendDamageIndicators(p);
-    		}
-    	}
-    	if (plugin.getConfig().getBoolean("mods.voxelmap.block")) {
-    		if (!p.hasPermission("ezprotector.bypass.mod.voxelmap")) {
-    			Setup.IeZP.sendVoxelMap(p);
-    		}
-    	}
-    	if (plugin.getConfig().getBoolean("mods.labymod.block")) {
-    		if (!p.hasPermission("ezprotector.bypass.mod.labymod")) {
-    			HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
-    			list.put(EnumLabyModFeature.ANIMATIONS, Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.ARMOR , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.BLOCKBUILD , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.CHAT , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.DAMAGEINDICATOR , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.EXTRAS , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.FOOD , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.GUI , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.MINIMAP_RADAR , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.NICK , Boolean.valueOf(false));
-    			list.put(EnumLabyModFeature.POTIONS , Boolean.valueOf(false));
-    			Setup.IeZP.setLabyModFeature(p, list);
-    		}
-    	}
-    	if (plugin.getConfig().getBoolean("mods.smartmoving.block")) {
-    		if (!p.hasPermission("ezprotector.bypass.mod.smartmoving")) {
-    			Setup.IeZP.sendSmartMove(p);
-    		}
-    	}
+	    Player p = e.getPlayer();
+		DamageIndicators damageIndicators = new DamageIndicators();
+
+        if (plugin.getConfig().getBoolean("mods.betterpvp.block")) {
+            if (!p.hasPermission("ezprotector.bypass.mod.betterpvp")) {
+                p.sendMessage(" §c §r§5 §r§1 §r§f §r§0 ");
+            }
+        }
+
+        /*
+        if (plugin.getConfig().getBoolean("mods.schematica.block")) {
+            if (!p.hasPermission("ezprotector.bypass.mod.schematica")) {
+                Setup.IeZP.sendSchematica(p);
+            }
+        }
+
+        if (plugin.getConfig().getBoolean("mods.reiminimap.block")) {
+            if (!p.hasPermission("ezprotector.bypass.mod.reiminimap")) {
+                Setup.IeZP.sendReiMiniMap(p);
+            }
+        }
+        */
+
+        if (plugin.getConfig().getBoolean("mods.damageindicators.block")) {
+            if (!p.hasPermission("ezprotector.bypass.mod.damageindicators")) {
+                damageIndicators.set(p);
+            }
+        }
+
+        /*
+        if (plugin.getConfig().getBoolean("mods.voxelmap.block")) {
+            if (!p.hasPermission("ezprotector.bypass.mod.voxelmap")) {
+                Setup.IeZP.sendVoxelMap(p);
+            }
+        }
+
+        if (plugin.getConfig().getBoolean("mods.smartmoving.block")) {
+            if (!p.hasPermission("ezprotector.bypass.mod.smartmoving")) {
+                Setup.IeZP.sendSmartMove(p);
+            }
+        }
+        */
     }
+
 }

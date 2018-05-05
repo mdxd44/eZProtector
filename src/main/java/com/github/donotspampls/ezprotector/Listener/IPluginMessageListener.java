@@ -25,6 +25,9 @@ package com.github.donotspampls.ezprotector.Listener;
 import com.github.donotspampls.ezprotector.Main;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.google.gson.JsonObject;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -59,56 +62,13 @@ public class IPluginMessageListener implements PluginMessageListener {
     	if (config.getBoolean("mods.5zig.block")) {
     		if (!player.hasPermission("ezprotector.bypass.mod.5zig")) {
     			if ((channel.equalsIgnoreCase(Main.ZIG)) || (channel.contains("5zig"))) {
-    				ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
-    				out1.writeByte(0x01);
-    				ByteArrayDataOutput out2 = ByteStreams.newDataOutput();
-    				out2.writeByte(0x02);
-    				ByteArrayDataOutput out4 = ByteStreams.newDataOutput();
-    				out4.writeByte(0x04);
-    				ByteArrayDataOutput out8 = ByteStreams.newDataOutput();
-    				out8.writeByte(0x08);
-    				ByteArrayDataOutput out10 = ByteStreams.newDataOutput();
-    				out10.writeByte(0x010);
-					  
     				ByteArrayDataOutput all = ByteStreams.newDataOutput();
     				all.writeByte(0x01 | 0x02 | 0x04 | 0x08 | 0x010);
-					  	
-    				player.sendPluginMessage(Main.getPlugin(), Main.ZIG, out1.toByteArray());
-    				player.sendPluginMessage(Main.getPlugin(), Main.ZIG, out2.toByteArray());
-    				player.sendPluginMessage(Main.getPlugin(), Main.ZIG, out4.toByteArray());
-    				player.sendPluginMessage(Main.getPlugin(), Main.ZIG, out8.toByteArray());
-    				player.sendPluginMessage(Main.getPlugin(), Main.ZIG, out10.toByteArray());
     				player.sendPluginMessage(Main.getPlugin(), Main.ZIG, all.toByteArray());
     			}
     		}
     	}
-    	if (config.getBoolean("mods.wdl.block")) {
-    		if (!player.hasPermission("ezprotector.bypass.mod.wdl")) {
-    			if ((channel.equalsIgnoreCase(Main.WDLINIT)) || (channel.equalsIgnoreCase(Main.WDLCONTROL)) ||
-    					(channel.equalsIgnoreCase(Main.WDLREQ)) || (channel.contains("WDL"))) {
-    				punishCommand = config.getString("mods.wdl.punish-command");
-    				Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-    				for (Player admin : Bukkit.getOnlinePlayers()) {
-    					if (admin.hasPermission("ezprotector.notify.mod.wdl")) {
-    						notifyMessage = config.getString("mods.wdl.warning-message");
-    						if (!notifyMessage.trim().equals("")) {
-								admin.sendMessage(Main.placeholders(notifyMessage));
-							}
-    					}
-    				}
-    			}
-    		}
-    	}
-/*    	if (channel.equalsIgnoreCase("REGISTER")) {
-    		String msg;
-    		msg = "REGISTER CHANNEL";
-    		Bukkit.broadcastMessage(msg);
-    	}
-    	if (channel.equalsIgnoreCase("UNREGISTER")) {
-    		String msg;
-    		msg = "UNREGISTER CHANNEL";
-    		Bukkit.broadcastMessage(msg);
-    	}
+/*
 */    	if (config.getBoolean("mods.forge.block")) {
     		if (channel.equalsIgnoreCase(Main.FML) || (channel.equalsIgnoreCase(Main.FMLHS))) {
     			if (!player.hasPermission("ezprotector.bypass.mod.forge")) {
@@ -125,28 +85,13 @@ public class IPluginMessageListener implements PluginMessageListener {
         		}
     		}
     	}
+
     	if (channel.equalsIgnoreCase(Main.MCBRAND)) {
     		String brand;
     		try {
     			brand = new String(value, "UTF-8");
     		} catch (UnsupportedEncodingException e) {
     			throw new Error(e);
-    		}
-    		if (config.getBoolean("mods.wdl.block")) {
-    			if (!player.hasPermission("ezprotector.bypass.mod.wdl")) {
-    				if (brand.equalsIgnoreCase("worlddownloader-vanilla")) {
-    					punishCommand = config.getString("mods.wdl.punish-command");
-            			Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-            			for (Player admin : Bukkit.getOnlinePlayers()) {
-        					if (admin.hasPermission("ezprotector.notify.mod.wdl")) {
-        						notifyMessage = config.getString("mods.wdl.warning-message");
-        						if (!notifyMessage.trim().equals("")) {
-    								admin.sendMessage(Main.placeholders(notifyMessage));
-    							}
-        					}
-        				}
-    				}
-    			}
     		}
     		if (config.getBoolean("mods.forge.block")) {
     			if (!player.hasPermission("ezprotector.bypass.mod.forge")) {

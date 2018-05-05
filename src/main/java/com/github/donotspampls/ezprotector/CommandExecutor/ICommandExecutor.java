@@ -32,33 +32,31 @@ public class ICommandExecutor implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
 		String prefix = Main.getPlugin().getConfig().getString("prefix").replaceAll("&", "§");
     	if (command.getName().equalsIgnoreCase("ezp")) {
+
     		if (args.length == 0) {
 				if (!sender.hasPermission("ezprotector.bypass.command.ezprotector")) {
-					sender.sendMessage(ChatColor.RED + "No permission.");
+					sender.sendMessage(ChatColor.GREEN + "eZProtector |" + ChatColor.AQUA + "Version " + ChatColor.WHITE + Main.getPlugin().getDescription().getVersion());
 					return true;
-				}
-				sender.sendMessage("" + ChatColor.DARK_BLUE + ChatColor.STRIKETHROUGH +
-						"-----------------------------------------------------");
-				sender.sendMessage(ChatColor.AQUA + "eZ" + ChatColor.DARK_AQUA + "Protector " +
-						ChatColor.AQUA + "Version: " + ChatColor.WHITE + Main.getPlugin().getDescription().getVersion());
-				sender.sendMessage(ChatColor.GREEN + "There's only one simple command:");
-				sender.sendMessage(ChatColor.YELLOW + "/ezp reload - Reloads the plugin");
-				sender.sendMessage(ChatColor.AQUA + "The best server protector ever made.");
-				sender.sendMessage("" + ChatColor.DARK_BLUE + ChatColor.STRIKETHROUGH +
-						"-----------------------------------------------------");
+				} else {
+                    sender.sendMessage(ChatColor.GREEN + "eZProtector |" + ChatColor.AQUA + "Version " + ChatColor.WHITE + Main.getPlugin().getDescription().getVersion());
+                    sender.sendMessage(ChatColor.GREEN + "/ezp reload" + ChatColor.WHITE + "- " + ChatColor.AQUA + " Reloads the plugin configuration");
+                }
 				return true;
 			} else if(args[0].equalsIgnoreCase("reload")) {
     			if (!sender.hasPermission("ezprotector.reload")) {
-    				sender.sendMessage(ChatColor.RED + "No permission.");
+    				sender.sendMessage(ChatColor.RED + "You don't have the required permission to run this command.");
     				return true;
     			}
+
     			Main.getPlugin().reloadConfig();
-    			sender.sendMessage(prefix + "Config reloaded!");
+    			sender.sendMessage(prefix + " The config was reloaded!");
     			return true;
     		}
-    		sender.sendMessage(ChatColor.RED + "Invalid argument. /ezp");
+
+    		sender.sendMessage(ChatColor.RED + "You have typed an invalid argument. Type /ezp to see a list of available commands.");
     		return true;
     	}
     	return false;

@@ -31,6 +31,11 @@
             <url>https://repo.bstats.org/content/repositories/releases/</url>
         </repository>
         <repository>
+            <id>inventive-repo</id>
+            <url>https://repo.inventivetalent.org/content/groups/public/</url>
+        </repository>
+        <!-- NMS, more information in README.md -->
+        <repository>
             <id>project.local</id>
             <url>file:${project.basedir}\lib</url>
         </repository>
@@ -45,7 +50,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Different NMS versions -->
+        <!-- Different NMS versions
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit_1_12_2</artifactId>
@@ -82,6 +87,7 @@
             <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        -->
 
         <!-- ProtocolLib API -->
         <dependency>
@@ -90,12 +96,25 @@
             <version>4.3.0</version>
             <scope>provided</scope>
         </dependency>
+
         <!-- bStats Metrics -->
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>1.2</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- Netty and GSON libraries -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.21.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.4</version>
         </dependency>
 
     </dependencies>
@@ -122,7 +141,6 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <!-- Replace this with your package! -->
                             <shadedPattern>com.github.donotspampls.ezprotector.Metrics</shadedPattern>
                         </relocation>
                     </relocations>

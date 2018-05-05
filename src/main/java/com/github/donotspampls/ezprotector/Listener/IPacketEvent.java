@@ -39,14 +39,13 @@ public class IPacketEvent {
 	private static FileConfiguration config = Main.getPlugin().getConfig();
 	public static void protocolLibHook(final List<String> list) {
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter
-			(Main.plugin, ListenerPriority.HIGHEST, new PacketType[] {
-		 PacketType.Play.Client.TAB_COMPLETE }) {
+			(Main.plugin, ListenerPriority.HIGHEST, PacketType.Play.Client.TAB_COMPLETE) {
 			public void onPacketReceiving(PacketEvent event) {
 				if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) {
 					if (config.getBoolean("tab-completion.blocked")) {
 						Player player = event.getPlayer();
 						PacketContainer packet = event.getPacket();
-						String message = ((String)packet.getSpecificModifier(String.class).read(0)).toLowerCase();
+						String message = packet.getSpecificModifier(String.class).read(0).toLowerCase();
 						if (!event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete")) {
 							for (String command : list) {
 								if (message.startsWith(command)) {

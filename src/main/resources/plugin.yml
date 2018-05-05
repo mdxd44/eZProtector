@@ -6,7 +6,7 @@ website: https://spigotmc.org/threads/ezprotector.94301/
 
 main: com.github.donotspampls.ezprotector.Main
 database: false
-softDepend: [ProtocolLib, Vault]
+softDepend: [ProtocolLib]
 
 commands:
   ezp:
@@ -27,7 +27,6 @@ permissions:
     children:
       ezprotector.notify.command.*: true
       ezprotector.notify.mod.*: true
-      ezprotector.notify.signhack: true
   ezprotector.notify.command.*:
     description: Gives access to all the notifies that eZProtector embodies for commands.
     children:
@@ -46,18 +45,15 @@ permissions:
     children:
       ezprotector.bypass.mod.*: true
       ezprotector.bypass.command.*: true
-      ezprotector.bypass.signhack: true
   ezprotector.bypass.mod.*:
     description: Bypasses of all the mods blocked by eZProtector.
     children:
-      ezprotector.bypass.mod.wdl: true
       ezprotector.bypass.mod.schematica: true
       ezprotector.bypass.mod.damageindicators: true
       ezprotector.bypass.mod.reiminimap: true
       ezprotector.bypass.mod.voxelmap: true
       ezprotector.bypass.mod.5zig: true
       ezprotector.bypass.mod.bettersprinting: true
-      ezprotector.bypass.mod.labymod: true
       ezprotector.bypass.mod.forge: true
       ezprotector.bypass.mod.liteloader: true
       ezprotector.bypass.mod.betterpvp: true
@@ -85,23 +81,11 @@ permissions:
   ezprotector.notify.command.plugins:
     description: Notifies who attempted to use the plugins command.
     default: op
-  ezprotector.notify.mod.wdl:
-    description: Notifies who attempted to join with the World Downloader mod.
-    default: op
   ezprotector.notify.mod.forge:
     description: Notifies who attempted to join with the Forge mod.
     default: op
   ezprotector.notify.mod.liteloader:
     description: Notifies who attempted to join with the LiteLoader mod.
-    default: op
-  ezprotector.notify.signhack:
-    description: Notifies who attempted to abuse the sign hack exploit.
-    default: op
-  ezprotector.bypass.signhack:
-    description: Bypasses the sign hack.
-    default: op
-  ezprotector.bypass.mod.wdl:
-    description: Bypasses the World Downloader mod.
     default: op
   ezprotector.bypass.mod.schematica:
     description: Bypasses the Schematica mod.
@@ -120,9 +104,6 @@ permissions:
     default: op
   ezprotector.bypass.mod.bettersprinting:
     description: Bypasses the BetterSprinting mod.
-    default: op
-  ezprotector.bypass.mod.labymod:
-    description: Bypasses the LabyMod.
     default: op
   ezprotector.bypass.mod.forge:
     description: Bypasses the Forge mod.

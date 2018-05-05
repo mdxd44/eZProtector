@@ -29,7 +29,6 @@ import org.bukkit.plugin.Plugin;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
@@ -57,8 +56,8 @@ public class Schematica {
     	return null;
     }
 
-    public static void sendCheatyPluginMessage(Plugin plugin, final Player player, final String channel, final byte[] payload) {
-    	plugin = Main.getPlugin();
+    public static void sendCheatyPluginMessage(final Player player, final String channel, final byte[] payload) {
+		Plugin plugin = Main.getPlugin();
     	log = Main.getPlugin().getLogger();
     	try {
     		final Class<? extends Player> playerClass = player.getClass();
@@ -70,12 +69,6 @@ public class Schematica {
     			player.sendPluginMessage(plugin, channel, payload);
     			removeChannel.invoke(player, channel);
     		}
-    	} catch (final NoSuchMethodException nsme) {
-    		log.throwing(Main.class.getName(), "sendCheatyPluginMessage", nsme);
-    	} catch (final InvocationTargetException ite) {
-    		log.throwing(Main.class.getName(), "sendCheatyPluginMessage", ite);
-    	} catch (final IllegalAccessException iae) {
-    		log.throwing(Main.class.getName(), "sendCheatyPluginMessage", iae);
     	} catch (final Exception e) {
     		log.throwing(Main.class.getName(), "sendCheatyPluginMessage", e);
     	}
