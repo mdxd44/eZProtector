@@ -1,7 +1,8 @@
 name: ${project.name}
 version: ${project.version}
 description: ${project.description}
-author: [dvargas135, Gianluca, DoNotSpamPls]
+authors: [DoNotSpamPls, dvargas135, Gianluca]
+website: https://bit.ly/eZProtector
 
 main: com.github.donotspampls.ezprotector.Main
 database: false
@@ -33,6 +34,7 @@ permissions:
       ezprotector.notify.command.custom: true
       ezprotector.notify.command.hiddensyntax: true
       ezprotector.notify.command.plugins: true
+      ezprotector.notify.command.version: true
   ezprotector.notify.mod.*:
     description: Gives access to all the notifies that eZProtector embodies for blocked mods.
     children:
@@ -63,6 +65,7 @@ permissions:
       ezprotector.bypass.command.custom: true
       ezprotector.bypass.command.hiddensyntax: true
       ezprotector.bypass.command.plugins: true
+      ezprotector.bypass.command.version: true
       ezprotector.bypass.command.ezprotector: true
   ezprotector.reload:
     description: Reloads the plugin
@@ -78,6 +81,9 @@ permissions:
     default: op
   ezprotector.notify.command.plugins:
     description: Notifies who attempted to use the plugins command.
+    default: op
+  ezprotector.notify.command.plugins:
+    description: Notifies who attempted to use the version command.
     default: op
   ezprotector.notify.mod.forge:
     description: Notifies who attempted to join with the Forge mod.
@@ -126,6 +132,9 @@ permissions:
     default: op
   ezprotector.bypass.command.plugins:
     description: Bypasses the use of the plugins command.
+    default: op
+  ezprotector.bypass.command.plugins:
+    description: Bypasses the use of the version command.
     default: op
   ezprotector.bypass.command.ezprotector:
     description: Bypasses the use of ezp command.

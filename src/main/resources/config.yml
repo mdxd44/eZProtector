@@ -52,6 +52,21 @@ custom-plugins:
     enabled: false
     command: 'kick %player% %prefix% You don''t have permission to do this. (%command%)'
 
+# Same deal as with the custom plugins above, but for the version command!
+# It shows up as "This server is running server version Custom Version"
+custom-version:
+  enabled: false
+  version: "Custom Version"
+  # If the enabled option above is set to false, this message will be shown instead.
+  error-message: '%prefix% &4You are not allowed to see this server''s version.'
+  notify-admins:
+    enabled: true
+    message: '%prefix% %player% tried to do the command &4%command%'
+  # The punish feature will only work if you have the custom-version feature set to false.
+  punish-player:
+    enabled: false
+    command: 'kick %player% %prefix% You don''t have permission to do this. (%command%)'
+
 # This option allows you to block any command you wish! Just add it to the list to
 custom-commands:
   blocked: true
@@ -62,8 +77,8 @@ custom-commands:
   - icanhasbukkit
  #- pl      # These two commands are handled by the customized plugins section, so you don't need to add them here!
  #- plugins
-  - ver
-  - version
+ #- ver     # These two commands are handled by the customized version section, so you don't need to add them here!
+ #- version
   - '?'
   - plugman list
   - command_without_slash

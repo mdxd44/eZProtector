@@ -201,5 +201,60 @@ public class IPlayerCommandPreprocessEvent implements Listener {
                 }
             }
         }
+
+        String[] ver = new String[]{"ver", "version"};
+        for (String aList : ver) {
+            Main.playerCommand = aList;
+            if (command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
+                if (config.getBoolean("custom-version.enabled")) {
+                    if (!player.hasPermission("ezprotector.bypass.command.version")) {
+                        event.setCancelled(true);
+                        String version = Main.getPlugin().getConfig().getString("custom-version.version");
+                        player.sendMessage("This server is running server version " + version);
+                        if (config.getBoolean("custom-version.punish-player.enabled")) {
+                            punishCommand = config.getString("custom-version.punish-player.command");
+                            Main.errorMessage = config.getString("custom-version.error-message");
+                            Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                        }
+                        if (config.getBoolean("custom-version.notify-admins.enabled")) {
+                            for (Player admin : Bukkit.getOnlinePlayers()) {
+                                if (admin.hasPermission("ezprotector.notify.command.version")) {
+                                    notifyMessage = config.getString("custom-version.notify-admins.message");
+                                    if (!notifyMessage.trim().equals("")) {
+                                        admin.sendMessage(Main.placeholders(notifyMessage));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (!player.hasPermission("ezprotector.bypass.command.version")) {
+                        event.setCancelled(true);
+                        Main.errorMessage = config.getString("custom-version.error-message");
+                        if (!Main.errorMessage.trim().equals("")) {
+                            player.sendMessage(Main.placeholders(Main.errorMessage));
+                        }
+
+                        if (config.getBoolean("custom-version.punish-player.enabled")) {
+                            punishCommand = config.getString("custom-version.punish-player.command");
+                            Main.errorMessage = config.getString("custom-version.error-message");
+                            Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                        }
+
+                        if (config.getBoolean("custom-version.notify-admins.enabled")) {
+                            for (Player admin : Bukkit.getOnlinePlayers()) {
+                                if (admin.hasPermission("ezprotector.notify.command.version")) {
+                                    notifyMessage = config.getString("custom-version.notify-admins.message");
+                                    if (!notifyMessage.trim().equals("")) {
+                                        admin.sendMessage(Main.placeholders(notifyMessage));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
