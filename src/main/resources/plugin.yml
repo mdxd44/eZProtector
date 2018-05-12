@@ -82,7 +82,7 @@ permissions:
   ezprotector.notify.command.plugins:
     description: Notifies who attempted to use the plugins command.
     default: op
-  ezprotector.notify.command.plugins:
+  ezprotector.notify.command.version:
     description: Notifies who attempted to use the version command.
     default: op
   ezprotector.notify.mod.forge:
@@ -133,7 +133,7 @@ permissions:
   ezprotector.bypass.command.plugins:
     description: Bypasses the use of the plugins command.
     default: op
-  ezprotector.bypass.command.plugins:
+  ezprotector.bypass.command.version:
     description: Bypasses the use of the version command.
     default: op
   ezprotector.bypass.command.ezprotector:
