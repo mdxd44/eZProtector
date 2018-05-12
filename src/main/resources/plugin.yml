@@ -1,8 +1,7 @@
 name: ${project.name}
 version: ${project.version}
-description: An essential plugin for server protection.
+description: ${project.description}
 author: [dvargas135, Gianluca, DoNotSpamPls]
-website: https://spigotmc.org/threads/ezprotector.94301/
 
 main: com.github.donotspampls.ezprotector.Main
 database: false
@@ -37,7 +36,6 @@ permissions:
   ezprotector.notify.mod.*:
     description: Gives access to all the notifies that eZProtector embodies for blocked mods.
     children:
-      ezprotector.notify.mod.wdl: true
       ezprotector.notify.mod.forge: true
       ezprotector.notify.mod.liteloader: true
   ezprotector.bypass.*:

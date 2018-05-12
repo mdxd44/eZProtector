@@ -1,8 +1,8 @@
-# eZProtector version ${project.version}
-# For more information on how to configure this (and placeholder information), please read https://git.io/xxxxx
+# eZProtector | Version ${project.version}
+# To see what are the placeholders available to you, read the information page here: https://git.io/vpDio
 
 # Here you can modify the prefix of the plugin.
-prefix: '&4[eZProtector]&c'
+prefix: '&7[&aeZProtector&7]&f'
 
 # If enabled, you'll get a message in console that the plugin is outdated.
 updater: true
@@ -96,6 +96,7 @@ opped-player-commands:
 mods:
   5zig:
     block: false
+  # This option also blocks Xaero's Minimap!
   betterpvp:
     block: false
   bettersprinting:
@@ -110,13 +111,13 @@ mods:
     block: false
     warning-message: '&4WARN &c- &f%player% tried to join with the LiteLoader mod, but failed.'
     punish-command: kick %player% &4The LiteLoader mod is not allowed.
-  schematica:
-    block: false
-  voxelmap:
-    block: false
   reiminimap:
     block: false
+  schematica:
+    block: false
   smartmoving:
+    block: false
+  voxelmap:
     block: false
 
 # This is the end of the config! Yay!
