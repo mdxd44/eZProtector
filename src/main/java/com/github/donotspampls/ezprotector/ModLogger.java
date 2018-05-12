@@ -7,8 +7,6 @@ package com.github.donotspampls.ezprotector;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.logging.Logger;
-
 class ModLogger {
 
     private static FileConfiguration config = Main.getPlugin().getConfig();
