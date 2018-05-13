@@ -85,6 +85,10 @@ public class Main extends JavaPlugin implements Listener {
         plugin = this;
         prefix = this.getConfig().getString("prefix");
 
+        // Save the default config
+        this.saveDefaultConfig();
+        this.reloadConfig();
+
         // Check if ProtocolLib is on the server.
         if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
             setupProtocolLibHooks(this.blocked);
@@ -93,16 +97,6 @@ public class Main extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-
-        // A (very) simple check if the plugin has an update!
-        if (plugin.getDescription().getVersion().equals(checkVersion())) return;
-        else {
-            log.info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
-        }
-
-        // Save the default config
-        saveDefaultConfig();
-        reloadConfig();
 
         // Register plugin channels
         getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
@@ -119,15 +113,38 @@ public class Main extends JavaPlugin implements Listener {
         registerEvents(this, new IPlayerCommandPreprocessEvent(this), new IPlayerJoinEvent(this), new IPlayerLoginEvent(this));
         this.getCommand("ezp").setExecutor(new EZPCommand());
 
-        // Initiate metrics
-        new Metrics(this);
-
         // Add blocked commands and custom plugin list to the internal ArrayLists
         blocked.addAll(getConfig().getStringList("block-commands.commands"));
         plugins.addAll(Arrays.asList(this.getConfig().getString("custom-plugins.plugins").split(", ")));
 
         // Log blocked mods (if enabled)
         if (this.getConfig().getBoolean("log-blocked-mods")) { ModLogger.logMods(); }
+
+        // A (very) simple check if the plugin has an update!
+        checkVersion();
+
+        // Initiate metrics
+        Metrics metrics = new Metrics(this);
+
+        // Get config variables
+        Boolean updater = getConfig().getBoolean("updater");
+        Boolean mods = getConfig().getBoolean("log-blocked-mods");
+        Boolean tabcompletion = getConfig().getBoolean("tab-completion.blocked");
+        Boolean hiddensyntaxes = getConfig().getBoolean("hidden-syntaxes.blocked");
+        Boolean customplugins = getConfig().getBoolean("custom-plugins.enabled");
+        Boolean customversion = getConfig().getBoolean("custom-version.enabled");
+        Boolean customcommands = getConfig().getBoolean("custom-commands.blocked");
+        Boolean oppedcommands = getConfig().getBoolean("opped-player-commands.blocked");
+
+        // Add custom charts
+        metrics.addCustomChart(new Metrics.SimplePie("updater_enabled", updater::toString));
+        metrics.addCustomChart(new Metrics.SimplePie("log_blocked_mods", mods::toString));
+        metrics.addCustomChart(new Metrics.SimplePie("tab_completion", tabcompletion::toString));
+        metrics.addCustomChart(new Metrics.SimplePie("hidden_syntaxes", hiddensyntaxes::toString));
+        metrics.addCustomChart(new Metrics.SimplePie("custom_plugins", customplugins::toString));
+        metrics.addCustomChart(new Metrics.SimplePie("custom_version", customversion::toString));
+        metrics.addCustomChart(new Metrics.SimplePie("custom_commands", customcommands::toString));
+        metrics.addCustomChart(new Metrics.SimplePie("opped_commands", oppedcommands::toString));
 
     }
 
@@ -147,17 +164,19 @@ public class Main extends JavaPlugin implements Listener {
         IPacketEvent.protocolLibHook(protocolList);
     }
 
-    private String checkVersion() {
-        try {
-            HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=12663").openConnection();
-            con.setDoOutput(true);
-            con.setRequestMethod("GET");
-            String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-            if (version.length() <= 13) return version;
-        } catch (Exception e) {
-            log.info("Failed to check for an update.");
-        }
-        return getDescription().getVersion();
-    }
+    private void checkVersion() {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=12663").openConnection();
+                con.setRequestMethod("GET");
+                String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
 
+                if (!(version.equals(this.getDescription().getVersion()))) {
+                    log.info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
+                }
+            } catch (Exception ex) {
+                plugin.getLogger().info("Failed to check for updates on spigot.");
+            }
+        });
+    }
 }
