@@ -12,21 +12,14 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.github.donotspampls.ezprotector.Main;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 public class Schematica {
-
-    private static final String PERM_PRINTER = "schematica.printer";
-    private static final String PERM_SAVE = "schematica.save";
-    private static final String PERM_LOAD = "schematica.load";
-    private static Logger log;
 
     public void set(Player p) {
         try {
@@ -39,23 +32,24 @@ public class Schematica {
         } catch (InvocationTargetException ignored) {}
     }
 
-    public static byte[] getPayload(final Player player) {
-        log = Main.getPlugin().getLogger();
+    public static byte[] getPayload(Player player) {
+        Logger log = Main.getPlugin().getLogger();
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         final DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
         try {
             dataOutputStream.writeByte(0);
-            dataOutputStream.writeBoolean(!player.hasPermission(PERM_PRINTER));
-            dataOutputStream.writeBoolean(!player.hasPermission(PERM_SAVE));
-            dataOutputStream.writeBoolean(!player.hasPermission(PERM_LOAD));
+            dataOutputStream.writeBoolean(player.hasPermission("schematica.printer"));
+            dataOutputStream.writeBoolean(player.hasPermission("schematica.save"));
+            dataOutputStream.writeBoolean(player.hasPermission("schematica.load"));
 
             return byteArrayOutputStream.toByteArray();
         } catch (final IOException ioe) {
             log.throwing(Main.class.getName(), "getPayload", ioe);
+            return null;
         }
-        return null;
     }
 
+    /*
     public static void sendCheatyPluginMessage(final Player player, final String channel, final byte[] payload) {
         Plugin plugin = Main.getPlugin();
         log = Main.getPlugin().getLogger();
@@ -73,4 +67,5 @@ public class Schematica {
             log.throwing(Main.class.getName(), "sendCheatyPluginMessage", e);
         }
     }
+    */
 }

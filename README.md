@@ -1,4 +1,4 @@
-# eZProtector [![Build Status](https://travis-ci.org/DoNotSpamPls/eZProtector.svg?branch=master)](https://travis-ci.org/DoNotSpamPls/eZProtector)
+# eZProtector [![Build Status](https://travis-ci.org/DoNotSpamPls/eZProtector.svg?branch=master)](https://travis-ci.org/DoNotSpamPls/eZProtector) [![CodeFactor](https://www.codefactor.io/repository/github/donotspampls/ezprotector/badge/master)](https://www.codefactor.io/repository/github/donotspampls/ezprotector/overview/master)
 
 eZProtector is an advanced server protection plugin, made with simplicity and speed in mind. It has many useful features, such as changing the plugin list to a custom one, blocking many mods which give an advantage and more! If you'd like to download it, you can do so [here](https://www.spigotmc.org/resources/ezprotector.12663/)
 

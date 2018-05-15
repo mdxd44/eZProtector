@@ -14,7 +14,7 @@ commands:
     aliases: [ezprotector]
     permission: ezprotector.bypass.command.ezprotector
     usage: /ezp
-    
+
 permissions:
   ezprotector.*:
     description: Grants full access to the plugin.

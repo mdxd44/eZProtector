@@ -101,9 +101,9 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
         getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, this.pluginMessageListener);
 
-        getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
         getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
         getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
         getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
 
         // Register events and commands
@@ -114,7 +114,7 @@ public class Main extends JavaPlugin implements Listener {
         plugins.addAll(Arrays.asList(this.getConfig().getString("custom-plugins.plugins").split(", ")));
 
         // Log blocked mods (if enabled)
-        if (this.getConfig().getBoolean("log-blocked-mods")) { ModLogger.logMods(); }
+        if (this.getConfig().getBoolean("log-blocked-mods")) ModLogger.logMods();
 
         // A (very) simple check if the plugin has an update!
         checkVersion();
@@ -150,9 +150,9 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getMessenger().unregisterIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
         getServer().getMessenger().unregisterIncomingPluginChannel(this, SCHEMATICA, this.pluginMessageListener);
 
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, MCBRAND);
         getServer().getMessenger().unregisterOutgoingPluginChannel(this, ZIG);
         getServer().getMessenger().unregisterOutgoingPluginChannel(this, BSM);
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this, MCBRAND);
         getServer().getMessenger().unregisterOutgoingPluginChannel(this, SCHEMATICA);
     }
 
@@ -166,8 +166,8 @@ public class Main extends JavaPlugin implements Listener {
                 if (!(version.equals(this.getDescription().getVersion()))) {
                     log.info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
                 }
-            } catch (Exception ex) {
-                plugin.getLogger().info("Failed to check for updates on spigot.");
+            } catch (Exception ignored) {
+                plugin.getLogger().warning("Failed to check for an update!");
             }
         });
     }

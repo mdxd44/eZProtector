@@ -22,14 +22,11 @@ public class IPlayerLoginEvent implements Listener {
     @EventHandler
     public void onPlayerLogin(final PlayerLoginEvent event) {
         if (plugin.getConfig().getBoolean("mods.schematica.block")) {
-            final Player player = event.getPlayer();
-            final byte[] payload = Schematica.getPayload(player);
+            Player player = event.getPlayer();
+            byte[] payload = Schematica.getPayload(player);
             if (payload != null) {
-                Schematica.sendCheatyPluginMessage(player, Main.SCHEMATICA, payload);
-                Schematica.sendCheatyPluginMessage(player, Main.SCHEMATICA, payload);
+                player.sendPluginMessage(plugin, Main.SCHEMATICA, payload);
             }
-            player.sendPluginMessage(Main.plugin, Main.SCHEMATICA, payload);
-            player.sendPluginMessage(Main.getPlugin(), Main.SCHEMATICA, payload);
         }
     }
 }

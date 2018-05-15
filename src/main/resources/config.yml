@@ -30,6 +30,11 @@ tab-completion:
 hidden-syntaxes:
   blocked: true
   error-message: '%prefix% &cThat syntax is forbidden.'
+  # If you add a command to this list, it will not be blocked.
+  whitelisted:
+  - whitelisted:commands
+  - with:hidden
+  - syntaxes:here
   notify-admins:
     enabled: true
     message: '%prefix% %player% tried to do a command with a hidden syntax. &4(%command%)'

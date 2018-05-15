@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class IPlayerCommandPreprocessEvent implements Listener {
 
     private Main plugin;
-
     public IPlayerCommandPreprocessEvent(Main plugin) {
         this.plugin = plugin;
     }
@@ -33,11 +32,12 @@ public class IPlayerCommandPreprocessEvent implements Listener {
         String punishCommand;
         String notifyMessage;
 
+        // TODO: Make this file cleaner.
+
         if (config.getBoolean("custom-commands.blocked")) {
             for (int i = 0; i < config.getList("custom-commands.commands").size(); i++) {
                 Main.playerCommand = config.getList("custom-commands.commands").get(i).toString();
-                if ((command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) || command
-                        .toLowerCase().equals("/" + Main.playerCommand)) {
+                if ((command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) || command.toLowerCase().equals("/" + Main.playerCommand)) {
 
                     if (!player.hasPermission("ezprotector.bypass.command.custom")) {
                         event.setCancelled(true);
@@ -101,18 +101,15 @@ public class IPlayerCommandPreprocessEvent implements Listener {
         if (config.getBoolean("opped-player-commands.blocked")) {
             Main.errorMessage = config.getString("opped-player-commands.error-message");
             if (player.isOp()) {
-                for (int i2 = 0; i2 < config.getStringList("opped-player-commands.bypassed-players").size();
-                     i2++) {
+                for (int i2 = 0; i2 < config.getStringList("opped-player-commands.bypassed-players").size(); i2++) {
                     String opped = config.getStringList("opped-player-commands.bypassed-players").get(i2);
                     if (!opped.contains(Main.oppedPlayer)) {
-                        for (int i = 0; i < config.getStringList("opped-player-commands.commands").size();
-                             i++) {
-                            Main.playerCommand = config.getList("opped-player-commands.commands").get(i)
-                                    .toString();
+                        for (int i = 0; i < config.getStringList("opped-player-commands.commands").size(); i++) {
+                            Main.playerCommand = config.getList("opped-player-commands.commands").get(i).toString();
 
                             if (command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
-
                                 event.setCancelled(true);
+
                                 if (!Main.errorMessage.trim().equals("")) {
                                     player.sendMessage(Main.placeholders(Main.errorMessage));
                                 }
@@ -150,11 +147,8 @@ public class IPlayerCommandPreprocessEvent implements Listener {
                         for (String plugin : Main.plugins) {
                             defaultMessage.append(plugin).append(", ");
                         }
-                        defaultMessage = new StringBuilder(
-                                defaultMessage.substring(0, defaultMessage.lastIndexOf(", ")));
-                        String customPlugins = ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): "
-                                + ChatColor.GREEN + defaultMessage.toString()
-                                .replaceAll(", ", String.valueOf(ChatColor.WHITE) + ", " + ChatColor.GREEN);
+                        defaultMessage = new StringBuilder(defaultMessage.substring(0, defaultMessage.lastIndexOf(", ")));
+                        String customPlugins = ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.toString().replaceAll(", ", String.valueOf(ChatColor.WHITE) + ", " + ChatColor.GREEN);
                         player.sendMessage(customPlugins);
                         if (config.getBoolean("custom-plugins.punish-player.enabled")) {
                             punishCommand = config.getString("custom-plugins.punish-player.command");
