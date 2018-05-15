@@ -16,16 +16,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class IPacketEvent {
 
     private static FileConfiguration config = Main.getPlugin().getConfig();
 
-    public static void protocolLibHook(final List<String> list) {
+    public static void protocolLibHook() {
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(Main.plugin, ListenerPriority.HIGHEST, PacketType.Play.Client.TAB_COMPLETE) {
-
                     public void onPacketReceiving(PacketEvent event) {
                         if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) {
                             if (config.getBoolean("tab-completion.blocked")) {
@@ -34,43 +31,30 @@ public class IPacketEvent {
                                 String message = packet.getSpecificModifier(String.class).read(0).toLowerCase();
 
                                 if (!event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete")) {
-                                    for (String command : list) {
-                                        if (message.startsWith(command)) {
-                                            if (config.getBoolean("tab-completion.warn.enabled")) {
-                                                String errorMessage = plugin.getConfig()
-                                                        .getString("tab-completion.warn.message");
-
-                                                if (!errorMessage.trim().equals("")) {
-                                                    player.sendMessage(Main.placeholders(errorMessage));
-                                                }
-
-                                                if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
-                                                    String punishCommand = plugin.getConfig()
-                                                            .getString("tab-completion.punish-player.command");
-                                                    Main.errorMessage = plugin.getConfig()
-                                                            .getString("tab-completion.error-message");
-                                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                                                            Main.placeholders(punishCommand));
-                                                }
-
-                                                if (plugin.getConfig().getBoolean("tab-completion.notify-admins.enabled")) {
-                                                    for (Player admin : Bukkit.getOnlinePlayers()) {
-                                                        if (admin.hasPermission("ezprotector.notify.command.tabcomplete")) {
-                                                            String notifyMessage = plugin.getConfig()
-                                                                    .getString("tab-completion.notify-admins.message");
-                                                            if (!notifyMessage.trim().equals("")) {
-                                                                admin.sendMessage(Main.placeholders(notifyMessage));
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
+                                    if ((((message.startsWith("/")) && ((!message.contains(" ")) || (message.contains(":")))))) {
+                                        event.setCancelled(true);
+                                        if (config.getBoolean("tab-completion.warn.enabled")) {
+                                            String errorMessage = plugin.getConfig().getString("tab-completion.warn.message");
+                                            if (!errorMessage.trim().equals("")) {
+                                                player.sendMessage(Main.placeholders(errorMessage));
                                             }
                                         }
-                                        if ((message.startsWith(command)) || ((message.startsWith("/")) && (
-                                                (!message.contains(" ")) ||
-                                                        (message.contains(":"))))) {
-                                            event.setCancelled(true);
+
+                                        if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
+                                            String punishCommand = plugin.getConfig().getString("tab-completion.punish-player.command");
+                                            Main.errorMessage = plugin.getConfig().getString("tab-completion.warn.message");
+                                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+                                        }
+
+                                        if (plugin.getConfig().getBoolean("tab-completion.notify-admins.enabled")) {
+                                            for (Player admin : Bukkit.getOnlinePlayers()) {
+                                                if (admin.hasPermission("ezprotector.notify.command.tabcomplete")) {
+                                                    String notifyMessage = plugin.getConfig().getString("tab-completion.notify-admins.message");
+                                                    if (!notifyMessage.trim().equals("")) {
+                                                        admin.sendMessage(Main.placeholders(notifyMessage));
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }

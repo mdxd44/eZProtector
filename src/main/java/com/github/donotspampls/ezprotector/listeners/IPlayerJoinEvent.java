@@ -40,7 +40,7 @@ public class IPlayerJoinEvent implements Listener {
 
         if (plugin.getConfig().getBoolean("mods.schematica.block")) {
             if (!p.hasPermission("ezprotector.bypass.mod.schematica")) {
-                if (Main.getPlugin().getServer().getVersion().contains("1.7")) {
+                if (plugin.getServer().getVersion().contains("1.7")) {
                     schematica.set(p);
                 } else return;
             }
@@ -48,7 +48,7 @@ public class IPlayerJoinEvent implements Listener {
 
         if (plugin.getConfig().getBoolean("mods.reiminimap.block")) {
             if (!p.hasPermission("ezprotector.bypass.mod.reiminimap")) {
-                if (Main.getPlugin().getServer().getVersion().contains("1.7")) {
+                if (plugin.getServer().getVersion().contains("1.7")) {
                     reiMinimap.set(p);
                 } else return;
             }
@@ -56,7 +56,7 @@ public class IPlayerJoinEvent implements Listener {
 
         if (plugin.getConfig().getBoolean("mods.damageindicators.block")) {
             if (!p.hasPermission("ezprotector.bypass.mod.damageindicators")) {
-                if (Main.getPlugin().getServer().getVersion().contains("1.7")) {
+                if (plugin.getServer().getVersion().contains("1.7")) {
                     damageIndicators.set(p);
                 } else return;
 

@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class Main extends JavaPlugin implements Listener {
@@ -53,11 +52,9 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     private IPluginMessageListener pluginMessageListener;
-    private List<String> blocked;
 
     public Main() {
         this.pluginMessageListener = new IPluginMessageListener(this);
-        this.blocked = new ArrayList<>();
         log = this.getLogger();
     }
 
@@ -91,7 +88,7 @@ public class Main extends JavaPlugin implements Listener {
 
         // Check if ProtocolLib is on the server.
         if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-            setupProtocolLibHooks(this.blocked);
+            IPacketEvent.protocolLibHook();
         } else {
             log.severe("This plugin requires ProtocolLib in order to work. Please download ProtocolLib and try again.");
             Bukkit.getPluginManager().disablePlugin(this);
@@ -113,8 +110,7 @@ public class Main extends JavaPlugin implements Listener {
         registerEvents(this, new IPlayerCommandPreprocessEvent(this), new IPlayerJoinEvent(this), new IPlayerLoginEvent(this));
         this.getCommand("ezp").setExecutor(new EZPCommand());
 
-        // Add blocked commands and custom plugin list to the internal ArrayLists
-        blocked.addAll(getConfig().getStringList("block-commands.commands"));
+        // Add custom plugin list to the internal ArrayList
         plugins.addAll(Arrays.asList(this.getConfig().getString("custom-plugins.plugins").split(", ")));
 
         // Log blocked mods (if enabled)
@@ -158,10 +154,6 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getMessenger().unregisterOutgoingPluginChannel(this, ZIG);
         getServer().getMessenger().unregisterOutgoingPluginChannel(this, BSM);
         getServer().getMessenger().unregisterOutgoingPluginChannel(this, SCHEMATICA);
-    }
-
-    private void setupProtocolLibHooks(List<String> protocolList) {
-        IPacketEvent.protocolLibHook(protocolList);
     }
 
     private void checkVersion() {

@@ -27,4 +27,5 @@ class ModLogger {
     private static void logMod(String mod) {
         Main.getPlugin().getLogger().info(mod + "mod blocking activated.");
     }
+
 }
