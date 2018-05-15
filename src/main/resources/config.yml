@@ -45,6 +45,7 @@ hidden-syntaxes:
 # This option allows you to set a custom list of plugins that will be shown if players do /plugins
 # This will *not* work if you add the plugins command to the blocked commands list.
 custom-plugins:
+  # If you enable this, the other three options will *not* work!
   enabled: true
   plugins: Fully, Custom, Plugins
   # If the enabled option above is set to false, this message will be shown instead.
@@ -60,6 +61,7 @@ custom-plugins:
 # Same deal as with the custom plugins above, but for the version command!
 # It shows up as "This server is running server version Custom Version"
 custom-version:
+  # If you enable this, the other three options will *not* work!
   enabled: false
   version: "Custom Version"
   # If the enabled option above is set to false, this message will be shown instead.

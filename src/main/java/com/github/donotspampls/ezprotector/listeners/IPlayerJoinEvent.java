@@ -26,10 +26,10 @@ public class IPlayerJoinEvent implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        DamageIndicators damageIndicators = new DamageIndicators();
-        ReiMinimap reiMinimap = new ReiMinimap();
-        Schematica schematica = new Schematica();
-        SmartMoving smartMoving = new SmartMoving();
+        if (plugin.getConfig().getBoolean("mods.schematica.block")) Schematica.set(p);
+        if (plugin.getConfig().getBoolean("mods.reiminimap.block")) ReiMinimap.set(p);
+        if (plugin.getConfig().getBoolean("mods.damageindicators.block")) DamageIndicators.set(p);
+        if (plugin.getConfig().getBoolean("mods.smartmoving.block")) SmartMoving.set(p);
 
         if (plugin.getConfig().getBoolean("mods.betterpvp.block")) {
             if (!p.hasPermission("ezprotector.bypass.mod.betterpvp")) {
@@ -37,40 +37,9 @@ public class IPlayerJoinEvent implements Listener {
             }
         }
 
-        if (plugin.getConfig().getBoolean("mods.schematica.block")) {
-            if (!p.hasPermission("ezprotector.bypass.mod.schematica")) {
-                if (plugin.getServer().getVersion().contains("1.7")) {
-                    schematica.set(p);
-                } else return;
-            }
-        }
-
-        if (plugin.getConfig().getBoolean("mods.reiminimap.block")) {
-            if (!p.hasPermission("ezprotector.bypass.mod.reiminimap")) {
-                if (plugin.getServer().getVersion().contains("1.7")) {
-                    reiMinimap.set(p);
-                } else return;
-            }
-        }
-
-        if (plugin.getConfig().getBoolean("mods.damageindicators.block")) {
-            if (!p.hasPermission("ezprotector.bypass.mod.damageindicators")) {
-                if (plugin.getServer().getVersion().contains("1.7")) {
-                    damageIndicators.set(p);
-                } else return;
-
-            }
-        }
-
         if (plugin.getConfig().getBoolean("mods.voxelmap.block")) {
             if (!p.hasPermission("ezprotector.bypass.mod.voxelmap")) {
                 p.sendMessage(" §3 §6 §3 §6 §3 §6 §e ");
-            }
-        }
-
-        if (plugin.getConfig().getBoolean("mods.smartmoving.block")) {
-            if (!p.hasPermission("ezprotector.bypass.mod.smartmoving")) {
-                smartMoving.set(p);
             }
         }
     }

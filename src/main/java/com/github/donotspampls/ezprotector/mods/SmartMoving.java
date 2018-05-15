@@ -16,15 +16,18 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SmartMoving {
 
-    public void set(Player p) {
-        try {
-            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    public static void set(Player p) {
+        if (!p.hasPermission("ezprotector.bypass.mod.smartmoving")) {
+            try {
+                ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
-            String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§1§0§1§2§f§f\"},{\"text\":\"§0§1§3§4§f§f\"},{\"text\":\"§0§1§5§f§f\"},{\"text\":\"§0§1§6§f§f\"},{\"text\":\"§0§1§7§f§f\"},{\"text\":\"§0§1§8§9§a§b§f§f\"}]}";
-            PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
-            motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-            protocolManager.sendServerPacket(p, motd);
-        } catch (InvocationTargetException ignored) {}
+                String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§1§0§1§2§f§f\"},{\"text\":\"§0§1§3§4§f§f\"},{\"text\":\"§0§1§5§f§f\"},{\"text\":\"§0§1§6§f§f\"},{\"text\":\"§0§1§7§f§f\"},{\"text\":\"§0§1§8§9§a§b§f§f\"}]}";
+                PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
+                motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
+                protocolManager.sendServerPacket(p, motd);
+            } catch (InvocationTargetException ignored) {
+            }
+        }
     }
 
 }
