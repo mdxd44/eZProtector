@@ -6,6 +6,7 @@
 package com.github.donotspampls.ezprotector.listeners;
 
 import com.github.donotspampls.ezprotector.Main;
+import com.github.donotspampls.ezprotector.mods.Schematica;
 import com.github.donotspampls.ezprotector.utilities.ExecutionUtil;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -36,6 +37,11 @@ public class IPluginMessageListener implements PluginMessageListener {
 
         if (config.getBoolean("mods.bettersprinting.block")) {
             blockBSM(player, channel);
+        }
+
+        if (config.getBoolean("mods.schematica.block")) {
+            byte[] payload = Schematica.getPayload();
+            player.sendPluginMessage(plugin, Main.SCHEMATICA, payload);
         }
 
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {

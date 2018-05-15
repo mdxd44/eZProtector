@@ -43,42 +43,54 @@ public class IPlayerCommandPreprocessEvent implements Listener {
         if (config.getBoolean("custom-plugins.enabled")) {
             CustomPlugins.execute(event);
         } else if (!player.hasPermission("ezprotector.bypass.command.plugins")) {
-            event.setCancelled(true);
-            Main.errorMessage = config.getString("custom-plugins.error-message");
-            if (!Main.errorMessage.trim().equals("")) {
-                player.sendMessage(Main.placeholders(Main.errorMessage));
-            }
+            String[] plu = new String[]{"pl", "plugins"};
+            for (String aList : plu) {
+                Main.playerCommand = aList;
+                if (event.getMessage().split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
+                    event.setCancelled(true);
+                    Main.errorMessage = config.getString("custom-plugins.error-message");
+                    if (!Main.errorMessage.trim().equals("")) {
+                        player.sendMessage(Main.placeholders(Main.errorMessage));
+                    }
 
-            if (config.getBoolean("custom-plugins.punish-player.enabled")) {
-                punishCommand = config.getString("custom-plugins.punish-player.command");
-                Main.errorMessage = config.getString("custom-plugins.error-message");
-                Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-            }
+                    if (config.getBoolean("custom-plugins.punish-player.enabled")) {
+                        punishCommand = config.getString("custom-plugins.punish-player.command");
+                        Main.errorMessage = config.getString("custom-plugins.error-message");
+                        Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                    }
 
-            if (config.getBoolean("custom-plugins.notify-admins.enabled")) {
-                notifyMessage = config.getString("custom-plugins.notify-admins.message");
-                ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.plugins");
+                    if (config.getBoolean("custom-plugins.notify-admins.enabled")) {
+                        notifyMessage = config.getString("custom-plugins.notify-admins.message");
+                        ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.plugins");
+                    }
+                }
             }
         }
 
         if (config.getBoolean("custom-version.enabled")) {
             CustomVersion.execute(event);
         } else if (!player.hasPermission("ezprotector.bypass.command.version")) {
-            event.setCancelled(true);
-            Main.errorMessage = config.getString("custom-version.error-message");
-            if (!Main.errorMessage.trim().equals("")) {
-                player.sendMessage(Main.placeholders(Main.errorMessage));
-            }
+            String[] ver = new String[]{"ver", "version"};
+            for (String aList : ver) {
+                Main.playerCommand = aList;
+                if (event.getMessage().split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
+                    event.setCancelled(true);
+                    Main.errorMessage = config.getString("custom-version.error-message");
+                    if (!Main.errorMessage.trim().equals("")) {
+                        player.sendMessage(Main.placeholders(Main.errorMessage));
+                    }
 
-            if (config.getBoolean("custom-version.punish-player.enabled")) {
-                punishCommand = config.getString("custom-version.punish-player.command");
-                Main.errorMessage = config.getString("custom-version.error-message");
-                Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-            }
+                    if (config.getBoolean("custom-version.punish-player.enabled")) {
+                        punishCommand = config.getString("custom-version.punish-player.command");
+                        Main.errorMessage = config.getString("custom-version.error-message");
+                        Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                    }
 
-            if (config.getBoolean("custom-version.notify-admins.enabled")) {
-                notifyMessage = config.getString("custom-version.notify-admins.message");
-                ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.version");
+                    if (config.getBoolean("custom-version.notify-admins.enabled")) {
+                        notifyMessage = config.getString("custom-version.notify-admins.message");
+                        ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.version");
+                    }
+                }
             }
         }
     }
