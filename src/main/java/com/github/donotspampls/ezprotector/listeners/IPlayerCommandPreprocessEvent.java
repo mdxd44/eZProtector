@@ -17,8 +17,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class IPlayerCommandPreprocessEvent implements Listener {
 
-    public IPlayerCommandPreprocessEvent(Main plugin) {}
-
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
 

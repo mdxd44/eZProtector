@@ -107,7 +107,7 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
 
         // Register events and commands
-        registerEvents(this, new IPlayerCommandPreprocessEvent(this), new IPlayerJoinEvent(this));
+        registerEvents(this, new IPlayerCommandPreprocessEvent(), new IPlayerJoinEvent(this));
         this.getCommand("ezp").setExecutor(new EZPCommand());
 
         // Add custom plugin list to the internal ArrayList
