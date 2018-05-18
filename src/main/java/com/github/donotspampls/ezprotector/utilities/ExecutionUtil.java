@@ -6,6 +6,7 @@
 package com.github.donotspampls.ezprotector.utilities;
 
 import com.github.donotspampls.ezprotector.Main;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

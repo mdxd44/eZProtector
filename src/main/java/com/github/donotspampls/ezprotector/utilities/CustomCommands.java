@@ -16,6 +16,7 @@ public class CustomCommands {
 
     public static void execute(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
+        Main.player = player.getName();
         String command = event.getMessage();
         FileConfiguration config = Main.getPlugin().getConfig();
         ConsoleCommandSender console = Bukkit.getConsoleSender();

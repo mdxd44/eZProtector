@@ -52,7 +52,7 @@ custom-plugins:
   error-message: '%prefix% &4You are not allowed to see this server''s plugin list.'
   notify-admins:
     enabled: true
-    message: '%prefix% %player% tried to do the command &4%command%'
+    message: '%prefix% %player% tried to see the plugins list'
   # The punish feature will only work if you have the custom-plugins feature set to false.
   punish-player:
     enabled: false
@@ -68,7 +68,7 @@ custom-version:
   error-message: '%prefix% &4You are not allowed to see this server''s version.'
   notify-admins:
     enabled: true
-    message: '%prefix% %player% tried to do the command &4%command%'
+    message: '%prefix% %player% tried to see the server version'
   # The punish feature will only work if you have the custom-version feature set to false.
   punish-player:
     enabled: false

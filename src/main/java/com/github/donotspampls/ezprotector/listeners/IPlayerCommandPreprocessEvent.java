@@ -22,6 +22,7 @@ public class IPlayerCommandPreprocessEvent implements Listener {
 
         FileConfiguration config = Main.getPlugin().getConfig();
         Player player = event.getPlayer();
+        Main.player = player.getName();
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         String punishCommand;
         String notifyMessage;

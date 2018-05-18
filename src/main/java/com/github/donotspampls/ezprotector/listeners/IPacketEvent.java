@@ -27,6 +27,7 @@ public class IPacketEvent {
                         if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) {
                             if (config.getBoolean("tab-completion.blocked")) {
                                 Player player = event.getPlayer();
+                                Main.player = player.getName();
                                 PacketContainer packet = event.getPacket();
                                 String message = packet.getSpecificModifier(String.class).read(0).toLowerCase();
 

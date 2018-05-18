@@ -16,6 +16,7 @@ public class OppedPlayerCommands {
 
     public static void execute(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
+        Main.oppedPlayer = player.getName();
         String command = event.getMessage();
         FileConfiguration config = Main.getPlugin().getConfig();
         ConsoleCommandSender console = Bukkit.getConsoleSender();
