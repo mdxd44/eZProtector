@@ -35,7 +35,7 @@ public class IPlayerJoinEvent implements Listener {
         if (plugin.getConfig().getBoolean("mods.damageindicators.block")) DamageIndicators.set(p);
         if (plugin.getConfig().getBoolean("mods.reiminimap.block")) ReiMinimap.set(p);
         if (plugin.getConfig().getBoolean("mods.schematica.block")) Schematica.set(p);
-        if (plugin.getConfig().getBoolean("mods.smartmoving.block")) //SmartMoving.set(p);
+        if (plugin.getConfig().getBoolean("mods.smartmoving.block")) {/*SmartMoving.set(p);*/}
 
         if (plugin.getConfig().getBoolean("mods.voxelmap.block")) {
             if (!p.hasPermission("ezprotector.bypass.mod.voxelmap")) {
