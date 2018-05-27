@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>eZProtector</name>
-    <description>A server protection plugin, made with simplicity and speed in mind.</description>
+    <description>An advanced server protection plugin, made with speed in mind.</description>
     <url>https://github.com/DoNotSpamPls/eZProtector</url>
 
     <properties>

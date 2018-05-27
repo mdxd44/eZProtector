@@ -6,11 +6,13 @@
 package com.github.donotspampls.ezprotector;
 
 import com.github.donotspampls.ezprotector.commands.EZPCommand;
-import com.github.donotspampls.ezprotector.listeners.*;
+import com.github.donotspampls.ezprotector.listeners.IPacketEvent;
+import com.github.donotspampls.ezprotector.listeners.IPlayerCommandPreprocessEvent;
+import com.github.donotspampls.ezprotector.listeners.IPlayerJoinEvent;
+import com.github.donotspampls.ezprotector.listeners.IPluginMessageListener;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,9 +22,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
-public class Main extends JavaPlugin implements Listener {
+public class Main extends JavaPlugin {
 
     public static Plugin plugin;
     public static ArrayList<String> plugins;
@@ -36,7 +37,6 @@ public class Main extends JavaPlugin implements Listener {
     public static String SCHEMATICA;
     private static String prefix;
     private static String opCommand;
-    private static Logger log;
 
     static {
         plugins = new ArrayList<>();
@@ -55,13 +55,6 @@ public class Main extends JavaPlugin implements Listener {
 
     public Main() {
         this.pluginMessageListener = new IPluginMessageListener(this);
-        log = this.getLogger();
-    }
-
-    private static void registerEvents(Plugin plugin, Listener... listeners) {
-        for (Listener listener : listeners) {
-            Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
-        }
     }
 
     public static Plugin getPlugin() {
@@ -80,17 +73,17 @@ public class Main extends JavaPlugin implements Listener {
 
     public void onEnable() {
         plugin = this;
-        prefix = this.getConfig().getString("prefix");
+        prefix = getConfig().getString("prefix");
 
         // Save the default config
-        this.saveDefaultConfig();
-        this.reloadConfig();
+        saveDefaultConfig();
+        reloadConfig();
 
-        // Check if ProtocolLib is on the server.
+        // Check if ProtocolLib is on the server and register the packet listener
         if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
             IPacketEvent.protocolLibHook();
         } else {
-            log.severe("This plugin requires ProtocolLib in order to work. Please download ProtocolLib and try again.");
+            plugin.getLogger().severe("This plugin requires ProtocolLib in order to work. Please download ProtocolLib and try again.");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -107,18 +100,37 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
 
         // Register events and commands
-        registerEvents(this, new IPlayerCommandPreprocessEvent(), new IPlayerJoinEvent(this));
-        this.getCommand("ezp").setExecutor(new EZPCommand());
+        getServer().getPluginManager().registerEvents(new IPlayerCommandPreprocessEvent(), this);
+        getServer().getPluginManager().registerEvents(new IPlayerJoinEvent(this), this);
+        getCommand("ezp").setExecutor(new EZPCommand());
 
         // Add custom plugin list to the internal ArrayList
-        plugins.addAll(Arrays.asList(this.getConfig().getString("custom-plugins.plugins").split(", ")));
+        plugins.addAll(Arrays.asList(getConfig().getString("custom-plugins.plugins").split(", ")));
 
         // Log blocked mods (if enabled)
-        if (this.getConfig().getBoolean("log-blocked-mods")) ModLogger.logMods();
+        if (getConfig().getBoolean("log-blocked-mods")) ModLogger.logMods();
+
+        // Register the metrics class and add custom charts
+        registerMetrics();
 
         // A (very) simple check if the plugin has an update!
         checkVersion();
 
+    }
+
+    public void onDisable() {
+        getServer().getMessenger().unregisterIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
+        getServer().getMessenger().unregisterIncomingPluginChannel(this, BSM, this.pluginMessageListener);
+        getServer().getMessenger().unregisterIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
+        getServer().getMessenger().unregisterIncomingPluginChannel(this, SCHEMATICA, this.pluginMessageListener);
+
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this, ZIG);
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this, BSM);
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this, MCBRAND);
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this, SCHEMATICA);
+    }
+
+    private void registerMetrics() {
         // Initiate metrics
         Metrics metrics = new Metrics(this);
 
@@ -141,19 +153,6 @@ public class Main extends JavaPlugin implements Listener {
         metrics.addCustomChart(new Metrics.SimplePie("custom_version", customversion::toString));
         metrics.addCustomChart(new Metrics.SimplePie("custom_commands", customcommands::toString));
         metrics.addCustomChart(new Metrics.SimplePie("opped_commands", oppedcommands::toString));
-
-    }
-
-    public void onDisable() {
-        getServer().getMessenger().unregisterIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
-        getServer().getMessenger().unregisterIncomingPluginChannel(this, BSM, this.pluginMessageListener);
-        getServer().getMessenger().unregisterIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
-        getServer().getMessenger().unregisterIncomingPluginChannel(this, SCHEMATICA, this.pluginMessageListener);
-
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, ZIG);
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, BSM);
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, MCBRAND);
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, SCHEMATICA);
     }
 
     private void checkVersion() {
@@ -164,7 +163,7 @@ public class Main extends JavaPlugin implements Listener {
                 String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
 
                 if (!(version.equals(this.getDescription().getVersion()))) {
-                    log.info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
+                    plugin.getLogger().info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
                 }
             } catch (Exception ignored) {
                 plugin.getLogger().warning("Failed to check for an update!");

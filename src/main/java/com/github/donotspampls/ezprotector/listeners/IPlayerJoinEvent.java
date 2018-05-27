@@ -9,7 +9,6 @@ import com.github.donotspampls.ezprotector.Main;
 import com.github.donotspampls.ezprotector.mods.DamageIndicators;
 import com.github.donotspampls.ezprotector.mods.ReiMinimap;
 import com.github.donotspampls.ezprotector.mods.Schematica;
-import com.github.donotspampls.ezprotector.mods.SmartMoving;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

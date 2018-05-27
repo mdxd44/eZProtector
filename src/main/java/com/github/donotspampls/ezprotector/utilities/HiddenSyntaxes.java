@@ -34,17 +34,9 @@ public class HiddenSyntaxes {
             if (!player.hasPermission("ezprotector.bypass.command.hiddensyntax")) {
                 if (!whitelisted.contains(command.toLowerCase().replace("/", ""))) {
                     event.setCancelled(true);
-                    if (!Main.errorMessage.trim().equals("")) {
-                        player.sendMessage(Main.placeholders(Main.errorMessage));
-                    }
-
-                    if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) {
-                        Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-                    }
-
-                    if (config.getBoolean("hidden-syntaxes.notify-admins.enabled")) {
-                        ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.hiddensyntax");
-                    }
+                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
+                    if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                    if (config.getBoolean("hidden-syntaxes.notify-admins.enabled")) ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.hiddensyntax");
                 }
             }
         }

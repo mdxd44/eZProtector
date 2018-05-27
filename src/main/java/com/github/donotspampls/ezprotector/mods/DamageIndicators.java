@@ -27,8 +27,7 @@ public class DamageIndicators {
                     PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
                     motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
                     protocolManager.sendServerPacket(p, motd);
-                } catch (InvocationTargetException ignored) {
-                }
+                } catch (InvocationTargetException ignored) {}
             }
         }
     }
