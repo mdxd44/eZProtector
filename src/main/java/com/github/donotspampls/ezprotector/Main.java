@@ -26,17 +26,17 @@ import java.util.Arrays;
 public class Main extends JavaPlugin {
 
     public static Plugin plugin;
-    public static ArrayList<String> plugins;
+    public static final ArrayList<String> plugins;
     public static String player;
     public static String oppedPlayer;
     public static String playerCommand;
     public static String errorMessage;
-    public static String ZIG;
-    public static String BSM;
-    public static String MCBRAND;
-    public static String SCHEMATICA;
+    public static final String ZIG;
+    public static final String BSM;
+    public static final String MCBRAND;
+    public static final String SCHEMATICA;
     private static String prefix;
-    private static String opCommand;
+    private static final String opCommand;
 
     static {
         plugins = new ArrayList<>();

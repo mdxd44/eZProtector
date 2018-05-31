@@ -20,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 
 public class IPluginMessageListener implements PluginMessageListener {
 
-    private Main plugin;
+    private final Main plugin;
     public IPluginMessageListener(Main plugin) {
         this.plugin = plugin;
     }

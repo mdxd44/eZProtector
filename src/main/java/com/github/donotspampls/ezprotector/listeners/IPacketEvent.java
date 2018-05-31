@@ -20,8 +20,8 @@ import java.util.List;
 
 public class IPacketEvent {
 
-    private static FileConfiguration config = Main.getPlugin().getConfig();
-    private static List<String> blocked = config.getStringList("tab-completion.blacklisted");
+    private static final FileConfiguration config = Main.getPlugin().getConfig();
+    private static final List<String> blocked = config.getStringList("tab-completion.blacklisted");
 
     public static void protocolLibHook() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Main.plugin, PacketType.Play.Client.TAB_COMPLETE) {

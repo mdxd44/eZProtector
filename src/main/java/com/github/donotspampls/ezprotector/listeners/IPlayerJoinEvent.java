@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class IPlayerJoinEvent implements Listener {
 
-    private Main plugin;
+    private final Main plugin;
     public IPlayerJoinEvent(Main plugin) {
         this.plugin = plugin;
     }

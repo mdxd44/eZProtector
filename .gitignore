@@ -1,16 +1,3 @@
-# Log file
-*.log
-
-# Package Files
 /target
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# IntelliJ project files
 .idea
 *.iml
-out
-gen

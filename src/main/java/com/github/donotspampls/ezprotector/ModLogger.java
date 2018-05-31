@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 class ModLogger {
 
-    private static FileConfiguration config = Main.getPlugin().getConfig();
+    private static final FileConfiguration config = Main.getPlugin().getConfig();
 
     static void logMods() {
         if (config.getBoolean("mods.5zig.block")) logMod("5Zig");
