@@ -13,11 +13,7 @@ public class ExecutionUtil {
 
     public static void notifyAdmins(String message, String permission) {
         for (Player admin : Bukkit.getOnlinePlayers()) {
-            if (admin.hasPermission(permission)) {
-                if (!message.trim().equals("")) {
-                    admin.sendMessage(Main.placeholders(message));
-                }
-            }
+            if (admin.hasPermission(permission) && !message.trim().equals("")) admin.sendMessage(Main.placeholders(message));
         }
     }
 

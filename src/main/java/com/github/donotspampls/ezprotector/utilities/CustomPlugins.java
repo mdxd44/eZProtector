@@ -22,17 +22,13 @@ public class CustomPlugins {
         String[] plu = new String[]{"pl", "plugins"};
         for (String aList : plu) {
             Main.playerCommand = aList;
-            if (command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
-                if (!player.hasPermission("ezprotector.bypass.command.plugins")) {
-                    event.setCancelled(true);
-                    StringBuilder defaultMessage = new StringBuilder("§a");
-                    for (String plugin : Main.plugins) {
-                        defaultMessage.append(plugin).append(", ");
-                    }
-                    defaultMessage = new StringBuilder(defaultMessage.substring(0, defaultMessage.lastIndexOf(", ")));
-                    String customPlugins = ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.toString().replaceAll(", ", String.valueOf(ChatColor.WHITE) + ", " + ChatColor.GREEN);
-                    player.sendMessage(customPlugins);
-                }
+            if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand) && !player.hasPermission("ezprotector.bypass.command.plugins")) {
+                event.setCancelled(true);
+                StringBuilder defaultMessage = new StringBuilder("§a");
+                for (String plugin : Main.plugins) defaultMessage.append(plugin).append(", ");
+                defaultMessage = new StringBuilder(defaultMessage.substring(0, defaultMessage.lastIndexOf(", ")));
+                String customPlugins = ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.toString().replaceAll(", ", String.valueOf(ChatColor.WHITE) + ", " + ChatColor.GREEN);
+                player.sendMessage(customPlugins);
             }
         }
     }
@@ -49,12 +45,10 @@ public class CustomPlugins {
             String[] plu = new String[]{"pl", "plugins"};
             for (String aList : plu) {
                 Main.playerCommand = aList;
-                if (event.getMessage().split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
+                if (event.getMessage().split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
                     event.setCancelled(true);
                     Main.errorMessage = config.getString("custom-plugins.error-message");
-                    if (!Main.errorMessage.trim().equals("")) {
-                        player.sendMessage(Main.placeholders(Main.errorMessage));
-                    }
+                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
 
                     if (config.getBoolean("custom-plugins.punish-player.enabled")) {
                         punishCommand = config.getString("custom-plugins.punish-player.command");

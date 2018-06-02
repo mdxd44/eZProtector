@@ -25,18 +25,18 @@ import java.util.Arrays;
 
 public class Main extends JavaPlugin {
 
-    public static Plugin plugin;
     public static final ArrayList<String> plugins;
-    public static String player;
-    public static String oppedPlayer;
-    public static String playerCommand;
-    public static String errorMessage;
     public static final String ZIG;
     public static final String BSM;
     public static final String MCBRAND;
     public static final String SCHEMATICA;
-    private static String prefix;
     private static final String opCommand;
+    public static Plugin plugin;
+    public static String player;
+    public static String oppedPlayer;
+    public static String playerCommand;
+    public static String errorMessage;
+    private static String prefix;
 
     static {
         plugins = new ArrayList<>();

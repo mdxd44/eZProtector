@@ -18,17 +18,15 @@ import java.lang.reflect.InvocationTargetException;
 public class DamageIndicators {
 
     public static void set(Player p) {
-        if (!p.hasPermission("ezprotector.bypass.mod.damageindicators")) {
-            if (Main.getPlugin().getServer().getVersion().contains("1.7")) {
-                try {
-                    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+        if (!p.hasPermission("ezprotector.bypass.mod.damageindicators") && Main.getPlugin().getServer().getVersion().contains("1.7")) {
+            try {
+                ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
-                    String json = "{\"text\":\"\",\"extra\":[{\"text\":\"\\u00a70\\u00a70\\u00a7c\\u00a7d\\u00a7e\\u00a7f\"}]}";
-                    PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
-                    motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-                    protocolManager.sendServerPacket(p, motd);
-                } catch (InvocationTargetException ignored) {}
-            }
+                String json = "{\"text\":\"\",\"extra\":[{\"text\":\"\\u00a70\\u00a70\\u00a7c\\u00a7d\\u00a7e\\u00a7f\"}]}";
+                PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
+                motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
+                protocolManager.sendServerPacket(p, motd);
+            } catch (InvocationTargetException ignored) {}
         }
     }
 

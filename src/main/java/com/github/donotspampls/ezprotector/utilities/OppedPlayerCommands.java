@@ -31,12 +31,9 @@ public class OppedPlayerCommands {
                     for (int i = 0; i < config.getStringList("opped-player-commands.commands").size(); i++) {
                         Main.playerCommand = config.getList("opped-player-commands.commands").get(i).toString();
 
-                        if (command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
+                        if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
                             event.setCancelled(true);
-
-                            if (!Main.errorMessage.trim().equals("")) {
-                                player.sendMessage(Main.placeholders(Main.errorMessage));
-                            }
+                            if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
 
                             if (config.getBoolean("opped-player-commands.punish-player.enabled")) {
                                 punishCommand = config.getString("opped-player-commands.punish-player.command");
@@ -44,13 +41,9 @@ public class OppedPlayerCommands {
                             }
 
                             Player ops = Bukkit.getPlayer(opped);
-                            if (config.getBoolean("opped-player-commands.notify-bypassed-players.enabled")) {
-                                if (ops != null) {
+                            if (config.getBoolean("opped-player-commands.notify-bypassed-players.enabled") && ops != null) {
                                     notifyMessage = config.getString("opped-player-commands.notify-bypassed-players.message");
-                                    if (!notifyMessage.trim().equals("")) {
-                                        ops.sendMessage(Main.placeholders(notifyMessage));
-                                    }
-                                }
+                                    if (!notifyMessage.trim().equals("")) ops.sendMessage(Main.placeholders(notifyMessage));
                             }
                         }
                     }

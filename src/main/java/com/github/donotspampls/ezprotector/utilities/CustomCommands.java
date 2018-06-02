@@ -25,26 +25,21 @@ public class CustomCommands {
 
         for (int i = 0; i < config.getList("custom-commands.commands").size(); i++) {
             Main.playerCommand = config.getList("custom-commands.commands").get(i).toString();
-            if ((command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) || command.toLowerCase().equals("/" + Main.playerCommand)) {
+            if (((command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) || command.toLowerCase().equals("/" + Main.playerCommand)) && !player.hasPermission("ezprotector.bypass.command.custom")) {
+                event.setCancelled(true);
+                Main.errorMessage = config.getString("custom-commands.error-message");
 
-                if (!player.hasPermission("ezprotector.bypass.command.custom")) {
-                    event.setCancelled(true);
+                if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
+
+                if (config.getBoolean("custom-commands.punish-player.enabled")) {
+                    punishCommand = config.getString("custom-commands.punish-player.command");
                     Main.errorMessage = config.getString("custom-commands.error-message");
+                    Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                }
 
-                    if (!Main.errorMessage.trim().equals("")) {
-                        player.sendMessage(Main.placeholders(Main.errorMessage));
-                    }
-
-                    if (config.getBoolean("custom-commands.punish-player.enabled")) {
-                        punishCommand = config.getString("custom-commands.punish-player.command");
-                        Main.errorMessage = config.getString("custom-commands.error-message");
-                        Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-                    }
-
-                    if (config.getBoolean("custom-commands.notify-admins.enabled")) {
-                        notifyMessage = config.getString("custom-commands.notify-admins.message");
-                        ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.custom");
-                    }
+                if (config.getBoolean("custom-commands.notify-admins.enabled")) {
+                    notifyMessage = config.getString("custom-commands.notify-admins.message");
+                    ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.custom");
                 }
             }
         }

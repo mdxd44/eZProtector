@@ -30,15 +30,11 @@ public class HiddenSyntaxes {
         List<String> whitelisted = config.getStringList("hidden-syntaxes.whitelisted");
         notifyMessage = config.getString("hidden-syntaxes.notify-admins.message");
         punishCommand = config.getString("hidden-syntaxes.punish-player.command");
-        if (command.split(" ")[0].contains(":")) {
-            if (!player.hasPermission("ezprotector.bypass.command.hiddensyntax")) {
-                if (!whitelisted.contains(command.toLowerCase().replace("/", ""))) {
-                    event.setCancelled(true);
-                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
-                    if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-                    if (config.getBoolean("hidden-syntaxes.notify-admins.enabled")) ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.hiddensyntax");
-                }
-            }
+        if (command.split(" ")[0].contains(":") && !player.hasPermission("ezprotector.bypass.command.hiddensyntax") && !whitelisted.contains(command.toLowerCase().replace("/", ""))) {
+                event.setCancelled(true);
+                if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
+                if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                if (config.getBoolean("hidden-syntaxes.notify-admins.enabled")) ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.hiddensyntax");
         }
     }
 

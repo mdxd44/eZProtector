@@ -26,24 +26,19 @@ public class IPacketEvent {
     public static void protocolLibHook() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Main.plugin, PacketType.Play.Client.TAB_COMPLETE) {
             public void onPacketReceiving(PacketEvent event) {
-                if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE) {
-                    if (config.getBoolean("tab-completion.blocked")) {
+                if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE && config.getBoolean("tab-completion.blocked")) {
                         Player player = event.getPlayer();
                         Main.player = player.getName();
                         PacketContainer packet = event.getPacket();
                         String message = packet.getSpecificModifier(String.class).read(0).toLowerCase();
 
-                        System.out.println(message);
-
                         for (String command : blocked) {
-                            if (!player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
-                                if (message.equals(command) || (message.startsWith("/") && !message.contains(" "))) {
-                                    System.out.println(command);
-                                    event.setCancelled(true);
-                                    if (config.getBoolean("tab-completion.warn.enabled")) {
-                                        String errorMessage = plugin.getConfig().getString("tab-completion.warn.message");
-                                        if (!errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(errorMessage));
-                                    }
+                            if (!player.hasPermission("ezprotector.bypass.command.tabcomplete") && (message.equals(command) || (message.startsWith("/") && !message.contains(" ")))) {
+                                System.out.println(command);
+                                event.setCancelled(true);
+                                if (config.getBoolean("tab-completion.warn.enabled")) {
+                                    String errorMessage = plugin.getConfig().getString("tab-completion.warn.message");
+                                    if (!errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(errorMessage));
 
                                     if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
                                         String punishCommand = plugin.getConfig().getString("tab-completion.punish-player.command");
@@ -58,7 +53,6 @@ public class IPacketEvent {
                                 }
                             }
                         }
-                    }
                 }
             }
         });

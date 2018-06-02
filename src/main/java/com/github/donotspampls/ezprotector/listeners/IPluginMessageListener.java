@@ -21,23 +21,18 @@ import java.io.UnsupportedEncodingException;
 public class IPluginMessageListener implements PluginMessageListener {
 
     private final Main plugin;
+
     public IPluginMessageListener(Main plugin) {
         this.plugin = plugin;
     }
 
     public void onPluginMessageReceived(String channel, Player player, byte[] value) {
-
         Main.player = player.getName();
         FileConfiguration config = plugin.getConfig();
         ConsoleCommandSender console = Bukkit.getConsoleSender();
 
-        if (config.getBoolean("mods.5zig.block")) {
-            block5Zig(player, channel);
-        }
-
-        if (config.getBoolean("mods.bettersprinting.block")) {
-            blockBSM(player, channel);
-        }
+        if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
+        if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
         if (config.getBoolean("mods.schematica.block")) {
             byte[] payload = Schematica.getPayload();
@@ -49,61 +44,49 @@ public class IPluginMessageListener implements PluginMessageListener {
             try {
                 brand = new String(value, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                throw new Error(e);
+                throw new UnsupportedOperationException(e);
             }
 
-            if (config.getBoolean("mods.forge.block")) {
-                blockForge(player, brand, config, console);
-            }
-
-            if (config.getBoolean("mods.liteloader.block")) {
-                blockLiteLoader(player, brand, config, console);
-            }
+            if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config, console);
+            if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config, console);
         }
     }
 
     private void block5Zig(Player player, String channel) {
-        if (!player.hasPermission("ezprotector.bypass.mod.5zig")) {
-            if ((channel.equalsIgnoreCase(Main.ZIG)) || (channel.contains("5zig"))) {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeByte(0x01 | 0x02 | 0x04 | 0x08 | 0x010);
-                player.sendPluginMessage(Main.getPlugin(), Main.ZIG, out.toByteArray());
-            }
+        if (!player.hasPermission("ezprotector.bypass.mod.5zig") && (channel.equalsIgnoreCase(Main.ZIG)) || (channel.contains("5zig"))) {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeByte(0x01 | 0x02 | 0x04 | 0x08 | 0x010);
+            player.sendPluginMessage(Main.getPlugin(), Main.ZIG, out.toByteArray());
         }
     }
 
     private void blockBSM(Player player, String channel) {
-        if (!player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
-            if (channel.equalsIgnoreCase(Main.BSM)) {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeByte(1);
-                player.sendPluginMessage(Main.getPlugin(), Main.BSM, out.toByteArray());
-            }
+        if (!player.hasPermission("ezprotector.bypass.mod.bettersprinting") && channel.equalsIgnoreCase(Main.BSM)) {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeByte(1);
+            player.sendPluginMessage(Main.getPlugin(), Main.BSM, out.toByteArray());
         }
     }
+
     private void blockForge(Player player, String brand, FileConfiguration config, ConsoleCommandSender console) {
         String punishCommand;
         String notifyMessage;
-        if (!player.hasPermission("ezprotector.bypass.mod.forge")) {
-            if ((brand.equalsIgnoreCase("fml,forge")) || (brand.contains("fml")) || (brand.contains("forge"))) {
-                punishCommand = config.getString("mods.forge.punish-command");
-                Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-                notifyMessage = config.getString("mods.forge.warning-message");
-                ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
-            }
+        if (!player.hasPermission("ezprotector.bypass.mod.forge") && (brand.equalsIgnoreCase("fml,forge")) || (brand.contains("fml")) || (brand.contains("forge"))) {
+            punishCommand = config.getString("mods.forge.punish-command");
+            Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+            notifyMessage = config.getString("mods.forge.warning-message");
+            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
         }
     }
 
     private void blockLiteLoader(Player player, String brand, FileConfiguration config, ConsoleCommandSender console) {
         String punishCommand;
         String notifyMessage;
-        if (!player.hasPermission("ezprotector.bypass.mod.liteloader")) {
-            if ((brand.contains("Lite")) || (brand.equalsIgnoreCase("LiteLoader"))) {
-                punishCommand = config.getString("mods.liteloader.punish-command");
-                Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
-                notifyMessage = config.getString("mods.liteloader.warning-message");
-                ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
-            }
+        if (!player.hasPermission("ezprotector.bypass.mod.liteloader") && (brand.contains("Lite")) || (brand.equalsIgnoreCase("LiteLoader"))) {
+            punishCommand = config.getString("mods.liteloader.punish-command");
+            Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+            notifyMessage = config.getString("mods.liteloader.warning-message");
+            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
         }
     }
 }

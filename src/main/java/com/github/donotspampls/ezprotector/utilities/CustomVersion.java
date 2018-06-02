@@ -21,12 +21,10 @@ public class CustomVersion {
         String[] ver = new String[]{"ver", "version"};
         for (String aList : ver) {
             Main.playerCommand = aList;
-            if (command.split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
-                if (!player.hasPermission("ezprotector.bypass.command.version")) {
-                    event.setCancelled(true);
-                    String version = Main.getPlugin().getConfig().getString("custom-version.version");
-                    player.sendMessage("This server is running server version " + version);
-                }
+            if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand) && !player.hasPermission("ezprotector.bypass.command.version")) {
+                event.setCancelled(true);
+                String version = Main.getPlugin().getConfig().getString("custom-version.version");
+                player.sendMessage("This server is running server version " + version);
             }
         }
     }
@@ -43,7 +41,7 @@ public class CustomVersion {
             String[] ver = new String[]{"ver", "version"};
             for (String aList : ver) {
                 Main.playerCommand = aList;
-                if (event.getMessage().split(" ")[0].toLowerCase().equals("/" + Main.playerCommand)) {
+                if (event.getMessage().split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
                     event.setCancelled(true);
                     Main.errorMessage = config.getString("custom-version.error-message");
                     if (!Main.errorMessage.trim().equals("")) {

@@ -22,18 +22,15 @@ import java.util.logging.Logger;
 public class Schematica {
 
     public static void set(Player p) {
-        if (!p.hasPermission("ezprotector.bypass.mod.schematica")) {
-            if (Main.getPlugin().getServer().getVersion().contains("1.7")) {
-                try {
-                    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+        if (!p.hasPermission("ezprotector.bypass.mod.schematica") && Main.getPlugin().getServer().getVersion().contains("1.7")) {
+            try {
+                ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
-                    String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§2§0§0§e§f\"},{\"text\":\"§0§2§1§0§e§f\"},{\"text\":\"§0§2§1§1§e§f\"}]}";
-                    PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
-                    motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-                    protocolManager.sendServerPacket(p, motd);
-                } catch (InvocationTargetException ignored) {
-                }
-            }
+                String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§2§0§0§e§f\"},{\"text\":\"§0§2§1§0§e§f\"},{\"text\":\"§0§2§1§1§e§f\"}]}";
+                PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
+                motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
+                protocolManager.sendServerPacket(p, motd);
+            } catch (InvocationTargetException ignored) {}
         }
     }
 
