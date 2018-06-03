@@ -24,7 +24,7 @@ public class CustomVersion {
             if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand) && !player.hasPermission("ezprotector.bypass.command.version")) {
                 event.setCancelled(true);
                 String version = Main.getPlugin().getConfig().getString("custom-version.version");
-                player.sendMessage("This server is running server version " + version);
+                player.sendMessage("This server is running server version " + version.replace("&", "§"));
             }
         }
     }
@@ -44,9 +44,7 @@ public class CustomVersion {
                 if (event.getMessage().split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
                     event.setCancelled(true);
                     Main.errorMessage = config.getString("custom-version.error-message");
-                    if (!Main.errorMessage.trim().equals("")) {
-                        player.sendMessage(Main.placeholders(Main.errorMessage));
-                    }
+                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
 
                     if (config.getBoolean("custom-version.punish-player.enabled")) {
                         punishCommand = config.getString("custom-version.punish-player.command");
