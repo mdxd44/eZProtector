@@ -16,17 +16,29 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SmartMoving {
 
-    public static void set(Player p) {
-        if (!p.hasPermission("ezprotector.bypass.mod.smartmoving")) {
-            //try {
-                //ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    /**
+     * Blocks the Smart Moving mod for a certain player.
+     *
+     * @param player The player to execute the block on.
+     */
+    public static void set(Player player) {
+        if (!player.hasPermission("ezprotector.bypass.mod.smartmoving")) {
+            /*
+            try {
+                // Get the ProtocolLib manager
+                ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
-                //String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§1§0§1§2§f§f\"},{\"text\":\"§0§1§3§4§f§f\"},{\"text\":\"§0§1§5§f§f\"},{\"text\":\"§0§1§6§f§f\"},{\"text\":\"§0§1§7§f§f\"},{\"text\":\"§0§1§8§9§a§b§f§f\"}]}";
-                //PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
-                //motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-                //protocolManager.sendServerPacket(p, motd);
-                System.out.println("[eZProtector] SmartMoving block is currently not available.");
-            //} catch (InvocationTargetException ignored) {}
+                // JSON string that will be sent to the player
+                String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§1§0§1§2§f§f\"},{\"text\":\"§0§1§3§4§f§f\"},{\"text\":\"§0§1§5§f§f\"},{\"text\":\"§0§1§6§f§f\"},{\"text\":\"§0§1§7§f§f\"},{\"text\":\"§0§1§8§9§a§b§f§f\"}]}";
+                // Create a new chat packet container
+                PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
+                // Write the JSON string from above to the packet container
+                motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
+                // Send the packet to the user in question
+                protocolManager.sendServerPacket(player, motd);
+            } catch (InvocationTargetException ignored) {}
+            */
+            System.out.println("[eZProtector] The SmartMoving block is currently not available."); // The feature is not working at the moment.
         }
     }
 

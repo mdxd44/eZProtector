@@ -9,9 +9,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 class ModLogger {
 
+    // Get the plugin config
     private static final FileConfiguration config = Main.getPlugin().getConfig();
 
     static void logMods() {
+        // If a mod block is enabled in the config, execute the logMod() method below
         if (config.getBoolean("mods.5zig.block")) logMod("5Zig");
         if (config.getBoolean("mods.betterpvp.block")) logMod("BetterPvP");
         if (config.getBoolean("mods.bettersprinting.block")) logMod("BetterSprinting");
@@ -24,7 +26,13 @@ class ModLogger {
         if (config.getBoolean("mods.voxelmap.block")) logMod("VoxelMap");
     }
 
+    /**
+     * Log the block of various mods in the console.
+     *
+     * @param mod The mod's name.
+     */
     private static void logMod(String mod) {
+        // Send message to console
         Main.getPlugin().getLogger().info(mod + " mod blocking activated.");
     }
 

@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 
 public class Main extends JavaPlugin {
 
+    // Static variables
     public static final ArrayList<String> plugins;
     public static final String ZIG;
     public static final String BSM;
@@ -38,6 +40,7 @@ public class Main extends JavaPlugin {
     public static String errorMessage;
     private static String prefix;
 
+    // Fill static variables with information
     static {
         plugins = new ArrayList<>();
         player = "";
@@ -51,17 +54,29 @@ public class Main extends JavaPlugin {
         SCHEMATICA = "schematica";
     }
 
+    // Register the plugin message listener
     private IPluginMessageListener pluginMessageListener;
-
     public Main() {
         this.pluginMessageListener = new IPluginMessageListener(this);
     }
 
+    /**
+     * Gets the plugin variable from the main class.
+     *
+     * @return The plugin variable.
+     */
     public static Plugin getPlugin() {
         return plugin;
     }
 
+    /**
+     * Replaces placeholders with actual information in a given string.
+     *
+     * @param args The string that should be filtered.
+     * @return The new string with replaced placeholders.
+     */
     public static String placeholders(String args) {
+        // Replace placeholders in config messages with the required words
         return StringEscapeUtils.unescapeJava(args
                 .replace("%prefix%", prefix)
                 .replace("%player%", player)
@@ -71,7 +86,9 @@ public class Main extends JavaPlugin {
                 .replace("%command%", "/" + opCommand).replaceAll("&", "§"));
     }
 
+    // Code executed on each server startup
     public void onEnable() {
+        // Set internal variables
         plugin = this;
         prefix = getConfig().getString("prefix");
 
@@ -88,7 +105,7 @@ public class Main extends JavaPlugin {
             return;
         }
 
-        // Register plugin channels
+        // Register incoming and outgoing plugin channels
         getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
         getServer().getMessenger().registerIncomingPluginChannel(this, BSM, this.pluginMessageListener);
         getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
@@ -101,7 +118,7 @@ public class Main extends JavaPlugin {
 
         // Register events and commands
         getServer().getPluginManager().registerEvents(new IPlayerCommandPreprocessEvent(), this);
-        getServer().getPluginManager().registerEvents(new IPlayerJoinEvent(this), this);
+        getServer().getPluginManager().registerEvents(new IPlayerJoinEvent(), this);
         getCommand("ezp").setExecutor(new EZPCommand());
 
         // Add custom plugin list to the internal ArrayList
@@ -113,12 +130,14 @@ public class Main extends JavaPlugin {
         // Register the metrics class and add custom charts
         registerMetrics();
 
-        // A (very) simple check if the plugin has an update!
+        // Initiate a (very) simple check to see if the plugin has an update!
         checkVersion();
 
     }
 
+    // Code executed on each server shutdown
     public void onDisable() {
+        // Unregister incoming and outgoing plugin channels
         getServer().getMessenger().unregisterIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
         getServer().getMessenger().unregisterIncomingPluginChannel(this, BSM, this.pluginMessageListener);
         getServer().getMessenger().unregisterIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
@@ -130,6 +149,7 @@ public class Main extends JavaPlugin {
         getServer().getMessenger().unregisterOutgoingPluginChannel(this, SCHEMATICA);
     }
 
+    // Registers the Metrics
     private void registerMetrics() {
         // Initiate metrics
         Metrics metrics = new Metrics(this);
@@ -155,17 +175,22 @@ public class Main extends JavaPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("opped_commands", oppedcommands::toString));
     }
 
+    // Checks if the version used on the server is the latest and logs to console if not
     private void checkVersion() {
+        // Start an async thread
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
+                // Contact the Spigot Resource API
                 HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=12663").openConnection();
                 con.setRequestMethod("GET");
                 String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
 
+                // If version on the API doesn't equal the version in plugin.yml, print an update notification in console
                 if (!(version.equals(this.getDescription().getVersion()))) {
                     plugin.getLogger().info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
                 }
-            } catch (Exception ignored) {
+            } catch (IOException ignored) {
+                // For some reason the update check failed, this is very rare so the exception isn't printed.
                 plugin.getLogger().warning("Failed to check for an update!");
             }
         });

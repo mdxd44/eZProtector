@@ -20,37 +20,53 @@ import java.util.List;
 
 public class IPacketEvent {
 
+    // Set static variables
     private static final FileConfiguration config = Main.getPlugin().getConfig();
     private static final List<String> blocked = config.getStringList("tab-completion.blacklisted");
 
+    // Create packet listener method
     public static void protocolLibHook() {
+        // Register ProtocolLib packet listener
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Main.plugin, PacketType.Play.Client.TAB_COMPLETE) {
             public void onPacketReceiving(PacketEvent event) {
+                // If tab blocking is enabled and the player has tried to autocomplete, continue
                 if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE && config.getBoolean("tab-completion.blocked")) {
+                        // Set internal variables
                         Player player = event.getPlayer();
                         Main.player = player.getName();
                         PacketContainer packet = event.getPacket();
-                        String message = packet.getSpecificModifier(String.class).read(0).toLowerCase();
+                        String message = packet.getSpecificModifier(String.class).read(0).toLowerCase(); // Get the first argument of the message
 
+                        // Try all the commands in the blacklisted config section to see if there is a match
                         for (String command : blocked) {
+                            // Check if the player hasn't got the bypass permission, that the first argument matches or that the message doesn't contain any spaces
                             if (!player.hasPermission("ezprotector.bypass.command.tabcomplete") && (message.equals(command) || (message.startsWith("/") && !message.contains(" ")))) {
-                                System.out.println(command);
                                 event.setCancelled(true);
+                                // Check if notifications are enabled
                                 if (config.getBoolean("tab-completion.warn.enabled")) {
-                                    String errorMessage = plugin.getConfig().getString("tab-completion.warn.message");
+                                    String errorMessage = config.getString("tab-completion.warn.message");
+                                    // Send error message to player
                                     if (!errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(errorMessage));
-
-                                    if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
-                                        String punishCommand = plugin.getConfig().getString("tab-completion.punish-player.command");
-                                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
-                                    }
-
-                                    if (plugin.getConfig().getBoolean("tab-completion.notify-admins.enabled")) {
-                                        String notifyMessage = plugin.getConfig().getString("tab-completion.notify-admins.message");
-                                        ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.tabcomplete");
-                                    }
-                                    break;
                                 }
+
+                                // Check if punishment is enabled
+                                if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
+                                    // Get the punishment command to dispatch
+                                    String punishCommand = config.getString("tab-completion.punish-player.command");
+                                    // Replace placeholder with the error message in the config
+                                    Main.errorMessage = config.getString("tab-completion.warn.message");
+                                    // Dispatch punishment command to player
+                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+                                }
+
+                                // Check if admin notifications are enabled
+                                if (plugin.getConfig().getBoolean("tab-completion.notify-admins.enabled")) {
+                                    // Get the notification message to send to online admins
+                                    String notifyMessage = config.getString("tab-completion.notify-admins.message");
+                                    // Send notification to all online admins
+                                    ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.tabcomplete");
+                                }
+                                break; // Stop the for loop if there is a match
                             }
                         }
                 }
