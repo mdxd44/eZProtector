@@ -34,7 +34,6 @@ public class IPlayerCommandPreprocessEvent implements Listener {
         // Check if various plugin functions related to commands are enabled, and if yes - execute them
         if (config.getBoolean("custom-commands.blocked")) CustomCommands.execute(event);
         if (config.getBoolean("hidden-syntaxes.blocked")) HiddenSyntaxes.execute(event);
-        if (config.getBoolean("opped-player-commands.blocked")) OppedPlayerCommands.execute(event);
 
         // TODO: Merge some code from these two in one class - they are very similar!!
         if (config.getBoolean("custom-plugins.enabled")) CustomPlugins.executeCustom(event);

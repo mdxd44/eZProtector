@@ -107,24 +107,6 @@ custom-commands:
     enabled: false
     command: 'kick %player% %errormessage%'
 
-# If you add commands to this list, only players in the bypassed-players list will be able to use them.
-opped-player-commands:
-  blocked: false
-  error-message: '%prefix% This command can only be executed from the console. &4(%command%)'
-  commands:
-  - ezp
-  - reload
-  - featherboard resetconfig
-  - command_without_slash
-  bypassed-players:
-  - Notch
-  notify-bypassed-players:
-    enabled: true
-    message: '%prefix% Opped player %player% tried to do &4%command%'
-  punish-player:
-    enabled: false
-    command: 'kick %player% %errormessage%'
-
 # This section allows you to block various mods (and even punish players for some of them!)
 mods:
   5zig:
