@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 
 public class IPluginMessageListener implements PluginMessageListener {
 
-    // Get the plugin variable from the main class
     private final Main plugin;
     public IPluginMessageListener(Main plugin) {
         this.plugin = plugin;
@@ -39,12 +38,10 @@ public class IPluginMessageListener implements PluginMessageListener {
      * @param value The bytes included in the plugin message.
      */
     public void onPluginMessageReceived(String channel, Player player, byte[] value) {
-        // Get the player name, plugin config and server console
         Main.player = player.getName();
         FileConfiguration config = plugin.getConfig();
         ConsoleCommandSender console = Bukkit.getConsoleSender();
 
-        // Execute mod blockings for 5Zig, BSM and Schematica
         if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
@@ -53,9 +50,8 @@ public class IPluginMessageListener implements PluginMessageListener {
             player.sendPluginMessage(plugin, Main.SCHEMATICA, payload);
         }
 
-        // Check if the channel is "MC|Brand" (used by Forge and LiteLoader)
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {
-            // Convert the byte array to a string called "brand"
+            // Converts the byte array to a string called "brand"
             String brand;
             try {
                 brand = new String(value, "UTF-8");
@@ -63,7 +59,6 @@ public class IPluginMessageListener implements PluginMessageListener {
                 throw new UnsupportedOperationException(e);
             }
 
-            // Execute mod blockings for Forge and LiteLoader
             if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config, console);
             if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config, console);
         }
@@ -76,7 +71,6 @@ public class IPluginMessageListener implements PluginMessageListener {
      * @param channel The channel where the byte array should be sent.
      */
     private void block5Zig(Player player, String channel) {
-        // Check if the player hasn't got the bypass permission and the recieved channel is related to 5Zig
         if (!player.hasPermission("ezprotector.bypass.mod.5zig") && (channel.equalsIgnoreCase(Main.ZIG)) || (channel.contains("5zig"))) {
             // Create a new data output
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -94,7 +88,6 @@ public class IPluginMessageListener implements PluginMessageListener {
      * @param channel The channel where the byte array should be sent.
      */
     private void blockBSM(Player player, String channel) {
-        // Check if the player hasn't got the bypass permission and the recieved channel is related to BSM
         if (!player.hasPermission("ezprotector.bypass.mod.bettersprinting") && channel.equalsIgnoreCase(Main.BSM)) {
             // Create a new data output
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -114,22 +107,12 @@ public class IPluginMessageListener implements PluginMessageListener {
      * @param console The server's console (where the punish command is executed)
      */
     private void blockForge(Player player, String brand, FileConfiguration config, ConsoleCommandSender console) {
-        // Register strings for the notify and punish functions
-        String punishCommand;
-        String notifyMessage;
-        // Check if the player hasn't got the bypass permission and the recieved channel is related to Forge
         if (!player.hasPermission("ezprotector.bypass.mod.forge") && (brand.equalsIgnoreCase("fml,forge")) || (brand.contains("fml")) || (brand.contains("forge"))) {
-
-            // Get the punishment command to dispatch
-            punishCommand = config.getString("mods.forge.punish-command");
-            // Dispatch punishment command to player
+            String punishCommand = config.getString("mods.forge.punish-command");
             Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
 
-            // Get the notify message to send to online admins
-            notifyMessage = config.getString("mods.forge.warning-message");
-            // Send notification to all online admins
+            String notifyMessage = config.getString("mods.forge.warning-message");
             ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
-
         }
     }
 
@@ -142,22 +125,12 @@ public class IPluginMessageListener implements PluginMessageListener {
      * @param console The server's console (where the punish command is executed)
      */
     private void blockLiteLoader(Player player, String brand, FileConfiguration config, ConsoleCommandSender console) {
-        // Register strings for the notify and punish functions
-        String punishCommand;
-        String notifyMessage;
-        // Check if the player hasn't got the bypass permission and the recieved channel is related to LiteLoader
         if (!player.hasPermission("ezprotector.bypass.mod.liteloader") && (brand.contains("Lite")) || (brand.equalsIgnoreCase("LiteLoader"))) {
-
-            // Get the punishment command to dispatch
-            punishCommand = config.getString("mods.liteloader.punish-command");
-            // Dispatch punishment command to player
+            String punishCommand = config.getString("mods.liteloader.punish-command");
             Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
 
-            // Get the notification message to send to online admins
-            notifyMessage = config.getString("mods.liteloader.warning-message");
-            // Send notification to all online admins
+            String notifyMessage = config.getString("mods.liteloader.warning-message");
             ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
-
         }
     }
 }

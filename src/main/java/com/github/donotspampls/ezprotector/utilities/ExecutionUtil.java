@@ -23,9 +23,7 @@ public class ExecutionUtil {
      * @param permission The required permission to recieve the notification
      */
     public static void notifyAdmins(String message, String permission) {
-        // Start a for loop to check for players which have the required permission
         for (Player admin : Bukkit.getOnlinePlayers()) {
-            // If a player has the required permission and the notify message isn't empty, send the message to the player
             if (admin.hasPermission(permission) && !message.trim().equals("")) admin.sendMessage(Main.placeholders(message));
         }
     }

@@ -25,24 +25,17 @@ public class CustomVersion {
      * @param event The command event from which other information is gathered.
      */
     public static void executeCustom(PlayerCommandPreprocessEvent event) {
-        // Get the player and the executed command
         Player player = event.getPlayer();
         String command = event.getMessage();
 
-        // Create an internal string array with the possible version commands
         String[] ver = new String[]{"ver", "version"};
-        // Check if the player hasn't got the bypass permission
         if (!player.hasPermission("ezprotector.bypass.command.version")) {
-            // Try all the commands in the string array to see if there is a match
             for (String aList : ver) {
+                // The command that is being tested at the moment
                 Main.playerCommand = aList;
-                // Check if the command matches one of the command in the string array
                 if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand) && !player.hasPermission("ezprotector.bypass.command.version")) {
-                    // Cancel the command event
                     event.setCancelled(true);
-                    // Get the fake version message from the config
                     String version = Main.getPlugin().getConfig().getString("custom-version.version");
-                    // Send the fake message to the player who executed the command
                     player.sendMessage("This server is running server version " + version.replace("&", "§"));
                 }
             }
@@ -55,46 +48,32 @@ public class CustomVersion {
      * @param event The command event from which other information is gathered.
      */
     public static void executeBlock(PlayerCommandPreprocessEvent event) {
-        // Get information from the event, get the config and console and register strings
         Player player = event.getPlayer();
         Main.player = player.getName();
         FileConfiguration config = Main.getPlugin().getConfig();
         ConsoleCommandSender console = Bukkit.getConsoleSender();
-        String punishCommand;
-        String notifyMessage;
 
-        // Check if the player hasn't got the bypass permission
         if (!player.hasPermission("ezprotector.bypass.command.version")) {
-            // Create an internal string array with the possible plugin commands
             String[] ver = new String[]{"ver", "version"};
-            // Try all the commands in the string array to see if there is a match
             for (String aList : ver) {
-                // Replace placeholder with the executed command
+                // The command that is being tested at the moment
                 Main.playerCommand = aList;
                 if (event.getMessage().split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
-                    // Cancel the command event
                     event.setCancelled(true);
                     // Replace placeholder with the error message in the config
                     Main.errorMessage = config.getString("custom-version.error-message");
 
-                    // Send an error message to the player in question.
                     if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
 
-                    // Check if punishment is enabled
                     if (config.getBoolean("custom-version.punish-player.enabled")) {
-                        // Get the punishment command to dispatch
-                        punishCommand = config.getString("custom-version.punish-player.command");
+                        String punishCommand = config.getString("custom-version.punish-player.command");
                         // Replace placeholder with the error message in the config
                         Main.errorMessage = config.getString("custom-version.error-message");
-                        // Dispatch punishment command to player
                         Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
                     }
 
-                    // Check if admin notifications are enabled.
                     if (config.getBoolean("custom-version.notify-admins.enabled")) {
-                        // Get the notification message to send to online admins
-                        notifyMessage = config.getString("custom-version.notify-admins.message");
-                        // Send the notification message to all online admins
+                        String notifyMessage = config.getString("custom-version.notify-admins.message");
                         ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.version");
                     }
                 }

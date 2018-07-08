@@ -4,11 +4,8 @@
 # Here you can modify the prefix of the plugin.
 prefix: '&7[&aeZProtector&7]&f'
 
-# If enabled, you'll get a message in console that the plugin is outdated.
+# If enabled, you'll get a message if there is a new version of eZProtector!
 updater: true
-
-# If set to true, when a mod is blocked it will be logged to the console.
-log-blocked-mods: false
 
 # This feature blocks tab completion! (with various features added to it)
 tab-completion:

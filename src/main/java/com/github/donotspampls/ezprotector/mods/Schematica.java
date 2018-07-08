@@ -33,16 +33,12 @@ public class Schematica {
     public static void set(Player player) {
         if (!player.hasPermission("ezprotector.bypass.mod.schematica") && Main.getPlugin().getServer().getVersion().contains("1.7")) {
             try {
-                // Get the ProtocolLib manager
                 ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
                 // JSON string that will be sent to the player
                 String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§2§0§0§e§f\"},{\"text\":\"§0§2§1§0§e§f\"},{\"text\":\"§0§2§1§1§e§f\"}]}";
-                // Create a new chat packet container
                 PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
-                // Write the JSON string from above to the packet container
                 motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-                // Send the packet to the user in question
                 protocolManager.sendServerPacket(player, motd);
             } catch (InvocationTargetException ignored) {}
         }
@@ -67,7 +63,6 @@ public class Schematica {
             // Convert the data stream to a byte array and return it
             return byteArrayOutputStream.toByteArray();
         } catch (IOException ignored) {
-            // If failed, return null
             return null;
         }
     }

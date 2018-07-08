@@ -28,18 +28,14 @@ public class ReiMinimap {
      * @param player The player to execute the block on.
      */
     public static void set(Player player) {
-        if (!player.hasPermission("ezprotector.bypass.mod.reiminimap") && Main.getPlugin().getServer().getVersion().contains("1.7")) {
+        if (!player.hasPermission("ezprotector.bypass.mod.reiminimap")) {
             try {
-                // Get the ProtocolLib manager
                 ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
                 // JSON string that will be sent to the player
                 String json = "{\"text\":\"\",\"extra\":[{\"text\":\"\\u00a70\\u00a70\\u00a71\\u00a72\\u00a73\\u00a74\\u00a75\\u00a76\\u00a77\\u00a7e\\u00a7f\"}]}";
-                // Create a new chat packet container
                 PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
-                // Write the JSON string from above to the packet container
                 motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-                // Send the packet to the user in question
                 protocolManager.sendServerPacket(player, motd);
             } catch (InvocationTargetException ignored) {}
         }

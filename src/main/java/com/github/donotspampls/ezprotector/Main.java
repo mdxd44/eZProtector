@@ -31,35 +31,29 @@ import java.util.Arrays;
 
 public class Main extends JavaPlugin {
 
-    // Static variables
     public static final ArrayList<String> plugins;
     public static final String ZIG;
     public static final String BSM;
     public static final String MCBRAND;
     public static final String SCHEMATICA;
-    private static final String opCommand;
-    public static Plugin plugin;
     public static String player;
-    public static String oppedPlayer;
     public static String playerCommand;
     public static String errorMessage;
+    public static Plugin plugin;
     private static String prefix;
 
-    // Fill static variables with information
+    // Fill variables with information
     static {
         plugins = new ArrayList<>();
-        player = "";
-        oppedPlayer = "";
-        playerCommand = "";
-        errorMessage = "";
-        opCommand = "";
         ZIG = "5zig_Set";
         BSM = "BSM";
         MCBRAND = "MC|Brand";
         SCHEMATICA = "schematica";
+        player = "";
+        playerCommand = "";
+        errorMessage = "";
     }
 
-    // Register the plugin message listener
     private IPluginMessageListener pluginMessageListener;
     public Main() {
         this.pluginMessageListener = new IPluginMessageListener(this);
@@ -81,19 +75,14 @@ public class Main extends JavaPlugin {
      * @return The new string with replaced placeholders.
      */
     public static String placeholders(String args) {
-        // Replace placeholders in config messages with the required words
         return StringEscapeUtils.unescapeJava(args
                 .replace("%prefix%", prefix)
                 .replace("%player%", player)
-                .replace("%player%", oppedPlayer)
                 .replace("%errormessage%", errorMessage)
-                .replace("%command%", "/" + playerCommand)
-                .replace("%command%", "/" + opCommand).replaceAll("&", "§"));
+                .replace("%command%", "/" + playerCommand));
     }
 
-    // Code executed on each server startup
     public void onEnable() {
-        // Set internal variables
         plugin = this;
         prefix = getConfig().getString("prefix");
 
@@ -110,7 +99,6 @@ public class Main extends JavaPlugin {
             return;
         }
 
-        // Register incoming and outgoing plugin channels
         getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
         getServer().getMessenger().registerIncomingPluginChannel(this, BSM, this.pluginMessageListener);
         getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
@@ -121,7 +109,6 @@ public class Main extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
         getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
 
-        // Register events and commands
         getServer().getPluginManager().registerEvents(new IPlayerCommandPreprocessEvent(), this);
         getServer().getPluginManager().registerEvents(new IPlayerJoinEvent(), this);
         getCommand("ezp").setExecutor(new EZPCommand());
@@ -129,20 +116,15 @@ public class Main extends JavaPlugin {
         // Add custom plugin list to the internal ArrayList
         plugins.addAll(Arrays.asList(getConfig().getString("custom-plugins.plugins").split(", ")));
 
-        // Log blocked mods (if enabled)
-        if (getConfig().getBoolean("log-blocked-mods")) ModLogger.logMods();
-
         // Register the metrics class and add custom charts
         registerMetrics();
 
         // Initiate a (very) simple check to see if the plugin has an update!
-        checkVersion();
+        if (getConfig().getBoolean("updater")) checkVersion();
 
     }
 
-    // Code executed on each server shutdown
     public void onDisable() {
-        // Unregister incoming and outgoing plugin channels
         getServer().getMessenger().unregisterIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
         getServer().getMessenger().unregisterIncomingPluginChannel(this, BSM, this.pluginMessageListener);
         getServer().getMessenger().unregisterIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
@@ -154,43 +136,31 @@ public class Main extends JavaPlugin {
         getServer().getMessenger().unregisterOutgoingPluginChannel(this, SCHEMATICA);
     }
 
-    // Registers the Metrics
     private void registerMetrics() {
-        // Initiate metrics
         Metrics metrics = new Metrics(this);
 
-        // Get config variables
         Boolean updater = getConfig().getBoolean("updater");
-        Boolean mods = getConfig().getBoolean("log-blocked-mods");
         Boolean tabcompletion = getConfig().getBoolean("tab-completion.blocked");
         Boolean hiddensyntaxes = getConfig().getBoolean("hidden-syntaxes.blocked");
         Boolean customplugins = getConfig().getBoolean("custom-plugins.enabled");
         Boolean customversion = getConfig().getBoolean("custom-version.enabled");
         Boolean customcommands = getConfig().getBoolean("custom-commands.blocked");
-        Boolean oppedcommands = getConfig().getBoolean("opped-player-commands.blocked");
 
-        // Add custom charts
         metrics.addCustomChart(new Metrics.SimplePie("updater_enabled", updater::toString));
-        metrics.addCustomChart(new Metrics.SimplePie("log_blocked_mods", mods::toString));
         metrics.addCustomChart(new Metrics.SimplePie("tab_completion", tabcompletion::toString));
         metrics.addCustomChart(new Metrics.SimplePie("hidden_syntaxes", hiddensyntaxes::toString));
         metrics.addCustomChart(new Metrics.SimplePie("custom_plugins", customplugins::toString));
         metrics.addCustomChart(new Metrics.SimplePie("custom_version", customversion::toString));
         metrics.addCustomChart(new Metrics.SimplePie("custom_commands", customcommands::toString));
-        metrics.addCustomChart(new Metrics.SimplePie("opped_commands", oppedcommands::toString));
     }
 
-    // Checks if the version used on the server is the latest and logs to console if not
     private void checkVersion() {
-        // Start an async thread
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
-                // Contact the Spigot Resource API
                 HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=12663").openConnection();
                 con.setRequestMethod("GET");
                 String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
 
-                // If version on the API doesn't equal the version in plugin.yml, print an update notification in console
                 if (!(version.equals(this.getDescription().getVersion()))) {
                     plugin.getLogger().info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
                 }

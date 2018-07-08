@@ -11,7 +11,10 @@
 package com.github.donotspampls.ezprotector.listeners;
 
 import com.github.donotspampls.ezprotector.Main;
-import com.github.donotspampls.ezprotector.utilities.*;
+import com.github.donotspampls.ezprotector.utilities.CustomCommands;
+import com.github.donotspampls.ezprotector.utilities.CustomPlugins;
+import com.github.donotspampls.ezprotector.utilities.CustomVersion;
+import com.github.donotspampls.ezprotector.utilities.HiddenSyntaxes;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,10 +31,8 @@ public class IPlayerCommandPreprocessEvent implements Listener {
      */
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        // Get the config so we can get booleans from it
         FileConfiguration config = Main.getPlugin().getConfig();
 
-        // Check if various plugin functions related to commands are enabled, and if yes - execute them
         if (config.getBoolean("custom-commands.blocked")) CustomCommands.execute(event);
         if (config.getBoolean("hidden-syntaxes.blocked")) HiddenSyntaxes.execute(event);
 
