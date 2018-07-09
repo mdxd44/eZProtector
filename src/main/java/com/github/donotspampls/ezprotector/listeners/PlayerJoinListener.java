@@ -21,7 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class IPlayerJoinEvent implements Listener {
+public class PlayerJoinListener implements Listener {
 
     /**
      * Sends out the mod blocks every time a player joins the server.

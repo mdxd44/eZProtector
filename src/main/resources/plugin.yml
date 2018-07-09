@@ -12,8 +12,8 @@ commands:
   ezp:
     description: Shows the plugin information.
     aliases: [ezprotector]
-    permission: ezprotector.bypass.command.ezprotector
     usage: /ezp
+    permission: ezprotector.reload
 
 permissions:
   ezprotector.*:

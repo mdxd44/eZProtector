@@ -23,10 +23,10 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.UnsupportedEncodingException;
 
-public class IPluginMessageListener implements PluginMessageListener {
+public class PacketMessageListener implements PluginMessageListener {
 
     private final Main plugin;
-    public IPluginMessageListener(Main plugin) {
+    public PacketMessageListener(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -45,7 +45,7 @@ public class IPluginMessageListener implements PluginMessageListener {
         if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
-        if (config.getBoolean("mods.schematica.block")) {
+        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica")) {
             byte[] payload = Schematica.getPayload();
             player.sendPluginMessage(plugin, Main.SCHEMATICA, payload);
         }
@@ -77,7 +77,7 @@ public class IPluginMessageListener implements PluginMessageListener {
             // Write bytes to the data output that tell 5Zig to block certain features
             out.writeByte(0x1 | 0x2 | 0x4 | 0x8 | 0x10 | 0x20 );
             // Send the data output as a byte array to the player
-            player.sendPluginMessage(Main.getPlugin(), channel, out.toByteArray());
+            player.sendPluginMessage(plugin, channel, out.toByteArray());
         }
     }
 
@@ -94,7 +94,7 @@ public class IPluginMessageListener implements PluginMessageListener {
             // Write a byte to the data output to disable BSM
             out.writeByte(1);
             // Send the data output as a byte array to the player
-            player.sendPluginMessage(Main.getPlugin(), channel, out.toByteArray());
+            player.sendPluginMessage(plugin, channel, out.toByteArray());
         }
     }
 
@@ -133,4 +133,5 @@ public class IPluginMessageListener implements PluginMessageListener {
             ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
         }
     }
+
 }

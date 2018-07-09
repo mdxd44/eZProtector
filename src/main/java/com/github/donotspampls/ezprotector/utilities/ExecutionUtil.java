@@ -12,7 +12,6 @@ package com.github.donotspampls.ezprotector.utilities;
 
 import com.github.donotspampls.ezprotector.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public class ExecutionUtil {
 
@@ -23,9 +22,9 @@ public class ExecutionUtil {
      * @param permission The required permission to recieve the notification
      */
     public static void notifyAdmins(String message, String permission) {
-        for (Player admin : Bukkit.getOnlinePlayers()) {
-            if (admin.hasPermission(permission) && !message.trim().equals("")) admin.sendMessage(Main.placeholders(message));
-        }
+        Bukkit.getOnlinePlayers().stream()
+                .filter(admin -> admin.hasPermission(permission) && !message.trim().equals(""))
+                .forEach(admin -> admin.sendMessage(Main.placeholders(message)));
     }
 
 }

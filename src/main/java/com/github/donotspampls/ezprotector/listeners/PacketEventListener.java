@@ -23,13 +23,13 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class IPacketEvent {
-
-    private static final FileConfiguration config = Main.getPlugin().getConfig();
-    private static final List<String> blocked = config.getStringList("tab-completion.blacklisted");
+public class PacketEventListener {
 
     public static void protocolLibHook() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Main.plugin, PacketType.Play.Client.TAB_COMPLETE) {
+        FileConfiguration config = Main.getPlugin().getConfig();
+        final List<String> blocked = config.getStringList("tab-completion.blacklisted");
+
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Main.getPlugin(), PacketType.Play.Client.TAB_COMPLETE) {
             public void onPacketReceiving(PacketEvent event) {
                 // If tab blocking is enabled and the player has tried to autocomplete, continue
                 if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE && config.getBoolean("tab-completion.blocked")) {

@@ -5,7 +5,7 @@
 
     <groupId>com.github.donotspampls</groupId>
     <artifactId>ezprotector</artifactId>
-    <version>4.2.5</version>
+    <version>4.3.0</version>
     <packaging>jar</packaging>
 
     <name>eZProtector</name>
@@ -116,6 +116,10 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>com.github.donotspampls.ezprotector.metrics</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.google.inject</pattern>
+                            <shadedPattern>com.github.donotspampls.ezprotector.guice</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

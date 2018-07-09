@@ -11,10 +11,10 @@
 package com.github.donotspampls.ezprotector;
 
 import com.github.donotspampls.ezprotector.commands.EZPCommand;
-import com.github.donotspampls.ezprotector.listeners.IPacketEvent;
-import com.github.donotspampls.ezprotector.listeners.IPlayerCommandPreprocessEvent;
-import com.github.donotspampls.ezprotector.listeners.IPlayerJoinEvent;
-import com.github.donotspampls.ezprotector.listeners.IPluginMessageListener;
+import com.github.donotspampls.ezprotector.listeners.PacketEventListener;
+import com.github.donotspampls.ezprotector.listeners.CommandEventListener;
+import com.github.donotspampls.ezprotector.listeners.PlayerJoinListener;
+import com.github.donotspampls.ezprotector.listeners.PacketMessageListener;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -31,32 +31,21 @@ import java.util.Arrays;
 
 public class Main extends JavaPlugin {
 
-    public static final ArrayList<String> plugins;
-    public static final String ZIG;
-    public static final String BSM;
-    public static final String MCBRAND;
-    public static final String SCHEMATICA;
-    public static String player;
-    public static String playerCommand;
-    public static String errorMessage;
+    // Variables
+    public static final ArrayList<String> plugins = new ArrayList<>();
+    public static final String ZIG = "5zig_Set";
+    public static final String BSM = "BSM";
+    public static final String MCBRAND = "MC|Brand";
+    public static final String SCHEMATICA = "schematica";
+    public static String player = "";
+    public static String playerCommand = "";
+    public static String errorMessage = "";
     public static Plugin plugin;
     private static String prefix;
 
-    // Fill variables with information
-    static {
-        plugins = new ArrayList<>();
-        ZIG = "5zig_Set";
-        BSM = "BSM";
-        MCBRAND = "MC|Brand";
-        SCHEMATICA = "schematica";
-        player = "";
-        playerCommand = "";
-        errorMessage = "";
-    }
-
-    private IPluginMessageListener pluginMessageListener;
+    private PacketMessageListener pluginMessageListener;
     public Main() {
-        this.pluginMessageListener = new IPluginMessageListener(this);
+        this.pluginMessageListener = new PacketMessageListener(this);
     }
 
     /**
@@ -86,18 +75,19 @@ public class Main extends JavaPlugin {
         plugin = this;
         prefix = getConfig().getString("prefix");
 
+
+        // Check if ProtocolLib is on the server and register the packet listener
+        if (!Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+            getLogger().severe("This plugin requires ProtocolLib in order to work. Please download ProtocolLib and try again.");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         // Save the default config
         saveDefaultConfig();
         reloadConfig();
 
-        // Check if ProtocolLib is on the server and register the packet listener
-        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-            IPacketEvent.protocolLibHook();
-        } else {
-            plugin.getLogger().severe("This plugin requires ProtocolLib in order to work. Please download ProtocolLib and try again.");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        PacketEventListener.protocolLibHook();
 
         getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
         getServer().getMessenger().registerIncomingPluginChannel(this, BSM, this.pluginMessageListener);
@@ -109,9 +99,9 @@ public class Main extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
         getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
 
-        getServer().getPluginManager().registerEvents(new IPlayerCommandPreprocessEvent(), this);
-        getServer().getPluginManager().registerEvents(new IPlayerJoinEvent(), this);
         getCommand("ezp").setExecutor(new EZPCommand());
+        getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
         // Add custom plugin list to the internal ArrayList
         plugins.addAll(Arrays.asList(getConfig().getString("custom-plugins.plugins").split(", ")));
@@ -123,7 +113,6 @@ public class Main extends JavaPlugin {
         if (getConfig().getBoolean("updater")) checkVersion();
 
     }
-
     public void onDisable() {
         getServer().getMessenger().unregisterIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
         getServer().getMessenger().unregisterIncomingPluginChannel(this, BSM, this.pluginMessageListener);
@@ -155,18 +144,18 @@ public class Main extends JavaPlugin {
     }
 
     private void checkVersion() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
             try {
                 HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=12663").openConnection();
                 con.setRequestMethod("GET");
                 String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
 
                 if (!(version.equals(this.getDescription().getVersion()))) {
-                    plugin.getLogger().info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
+                    getLogger().info("An update for eZProtector is available! Download it now at https://bit.ly/eZProtector");
                 }
             } catch (IOException ignored) {
                 // For some reason the update check failed, this is very rare so the exception isn't printed.
-                plugin.getLogger().warning("Failed to check for an update!");
+                getLogger().warning("Failed to check for an update!");
             }
         });
     }

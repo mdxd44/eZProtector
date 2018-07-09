@@ -33,7 +33,7 @@ public class CustomVersion {
             for (String aList : ver) {
                 // The command that is being tested at the moment
                 Main.playerCommand = aList;
-                if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand) && !player.hasPermission("ezprotector.bypass.command.version")) {
+                if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
                     event.setCancelled(true);
                     String version = Main.getPlugin().getConfig().getString("custom-version.version");
                     player.sendMessage("This server is running server version " + version.replace("&", "§"));

@@ -20,7 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-public class IPlayerCommandPreprocessEvent implements Listener {
+public class CommandEventListener implements Listener {
 
     /**
      * Listener to intercept and check and commands executed by the player.
