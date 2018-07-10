@@ -22,8 +22,8 @@
 
     <licenses>
         <license>
-            <name>MIT</name>
-            <url>https://opensource.org/licenses/MIT</url>
+            <name>GPLv3</name>
+            <url>https://opensource.org/licenses/GPL-3.0</url>
         </license>
     </licenses>
 
@@ -116,10 +116,6 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>com.github.donotspampls.ezprotector.metrics</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.google.inject</pattern>
-                            <shadedPattern>com.github.donotspampls.ezprotector.guice</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

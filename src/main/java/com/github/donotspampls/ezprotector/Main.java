@@ -40,7 +40,7 @@ public class Main extends JavaPlugin {
     public static String player = "";
     public static String playerCommand = "";
     public static String errorMessage = "";
-    public static Plugin plugin;
+    private static Plugin plugin;
     private static String prefix;
 
     private PacketMessageListener pluginMessageListener;

@@ -18,7 +18,6 @@ import org.bukkit.command.CommandSender;
 
 public class EZPCommand implements CommandExecutor {
 
-
     /**
      * Checks if the /ezp command was executed and handles command logic.
      *
