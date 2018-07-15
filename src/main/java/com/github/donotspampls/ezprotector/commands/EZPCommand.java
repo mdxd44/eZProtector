@@ -11,10 +11,10 @@
 package com.github.donotspampls.ezprotector.commands;
 
 import com.github.donotspampls.ezprotector.Main;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 
 public class EZPCommand implements CommandExecutor {
 
@@ -29,15 +29,15 @@ public class EZPCommand implements CommandExecutor {
      */
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("ezp") && args.length == 0) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&leZProtector &7version &r") + Main.getPlugin().getDescription().getVersion());
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/ezp reload &7- &rReloads the plugin configuration."));
+            sender.sendMessage(color( "&a&leZProtector &7version &r") + Main.getPlugin().getDescription().getVersion());
+            sender.sendMessage(color("&b/ezp reload &7- &rReloads the plugin configuration."));
             return true;
         } else if (args[0].equalsIgnoreCase("reload")) {
             Main.getPlugin().reloadConfig();
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.getPlugin().getConfig().getString("prefix")) + " The config was reloaded!");
+            sender.sendMessage(color(Main.getPlugin().getConfig().getString("prefix")) + " The config was reloaded!");
             return true;
         }
-        sender.sendMessage(ChatColor.RED + "You have typed an invalid argument. Type /ezp to see a list of available commands.");
+        sender.sendMessage(color("&4You have typed an invalid argument. Type /ezp to see a list of available commands."));
         return true;
     }
 }

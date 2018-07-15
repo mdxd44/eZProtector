@@ -10,23 +10,11 @@
 
 package com.github.donotspampls.ezprotector.utilities;
 
-import com.github.donotspampls.ezprotector.Main;
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
-import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
+public class MessageUtil {
 
-public class ExecutionUtil {
-
-    /**
-     * Sends a notification message to all online admins
-     *
-     * @param message The notification message sent to the admins
-     * @param permission The required permission to recieve the notification
-     */
-    public static void notifyAdmins(String message, String permission) {
-        Bukkit.getOnlinePlayers().stream()
-                .filter(admin -> admin.hasPermission(permission) && !message.trim().equals(""))
-                .forEach(admin -> admin.sendMessage(Main.placeholders(color(message))));
+    public static String color(String text) {
+        return ChatColor.translateAlternateColorCodes('&', text);
     }
-
 }

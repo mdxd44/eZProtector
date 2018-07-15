@@ -19,6 +19,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.List;
 
+import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
+
 public class HiddenSyntaxes {
 
     /**
@@ -42,7 +44,7 @@ public class HiddenSyntaxes {
             // Replace placeholder with the executed command
             Main.playerCommand = command.replace("/", "");
 
-            if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
+            if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(Main.errorMessage)));
 
             if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) {
                 String punishCommand = config.getString("hidden-syntaxes.punish-player.command");

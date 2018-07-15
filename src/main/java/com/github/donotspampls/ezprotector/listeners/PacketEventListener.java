@@ -22,6 +22,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 
 public class PacketEventListener {
 
@@ -44,7 +45,7 @@ public class PacketEventListener {
                                 event.setCancelled(true);
                                 if (config.getBoolean("tab-completion.warn.enabled")) {
                                     String errorMessage = config.getString("tab-completion.warn.message");
-                                    if (!errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(errorMessage));
+                                    if (!errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(errorMessage)));
                                 }
 
                                 if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {

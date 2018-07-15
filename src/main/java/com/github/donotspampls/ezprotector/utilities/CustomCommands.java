@@ -16,6 +16,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 
 public class CustomCommands {
 
@@ -39,7 +40,7 @@ public class CustomCommands {
                 // Replace placeholder with the error message in the config
                 Main.errorMessage = config.getString("custom-commands.error-message");
 
-                if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
+                if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(Main.errorMessage)));
 
                 if (config.getBoolean("custom-commands.punish-player.enabled")) {
                     String punishCommand = config.getString("custom-commands.punish-player.command");

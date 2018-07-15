@@ -17,6 +17,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
+
 public class CustomVersion {
 
     /**
@@ -36,7 +38,7 @@ public class CustomVersion {
                 if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
                     event.setCancelled(true);
                     String version = Main.getPlugin().getConfig().getString("custom-version.version");
-                    player.sendMessage("This server is running server version " + version.replace("&", "§"));
+                    player.sendMessage(color("This server is running server version " + version));
                 }
             }
         }
@@ -63,7 +65,7 @@ public class CustomVersion {
                     // Replace placeholder with the error message in the config
                     Main.errorMessage = config.getString("custom-version.error-message");
 
-                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
+                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(Main.errorMessage)));
 
                     if (config.getBoolean("custom-version.punish-player.enabled")) {
                         String punishCommand = config.getString("custom-version.punish-player.command");

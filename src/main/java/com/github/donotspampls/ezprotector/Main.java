@@ -29,6 +29,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
+
 public class Main extends JavaPlugin {
 
     // Variables
@@ -65,7 +67,7 @@ public class Main extends JavaPlugin {
      */
     public static String placeholders(String args) {
         return StringEscapeUtils.unescapeJava(args
-                .replace("%prefix%", prefix)
+                .replace("%prefix%", color(prefix))
                 .replace("%player%", player)
                 .replace("%errormessage%", errorMessage)
                 .replace("%command%", "/" + playerCommand));

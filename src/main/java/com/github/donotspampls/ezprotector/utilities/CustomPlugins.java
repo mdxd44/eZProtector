@@ -18,6 +18,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
+
 public class CustomPlugins {
 
     /**
@@ -72,7 +74,7 @@ public class CustomPlugins {
                     // Replace placeholder with the error message in the config
                     Main.errorMessage = config.getString("custom-plugins.error-message");
 
-                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(Main.errorMessage));
+                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(Main.errorMessage)));
 
                     if (config.getBoolean("custom-plugins.punish-player.enabled")) {
                         String punishCommand = config.getString("custom-plugins.punish-player.command");
