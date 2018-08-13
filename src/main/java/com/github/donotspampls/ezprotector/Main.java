@@ -15,6 +15,8 @@ import com.github.donotspampls.ezprotector.listeners.PacketEventListener;
 import com.github.donotspampls.ezprotector.listeners.CommandEventListener;
 import com.github.donotspampls.ezprotector.listeners.PlayerJoinListener;
 import com.github.donotspampls.ezprotector.listeners.PacketMessageListener;
+import me.lucko.commodore.Commodore;
+import me.lucko.commodore.CommodoreProvider;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -30,15 +32,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
+import static com.github.donotspampls.ezprotector.utilities.TabCompletion.registerCompletions;
 
 public class Main extends JavaPlugin {
 
     // Variables
     public static final ArrayList<String> plugins = new ArrayList<>();
-    public static final String ZIG = "5zig_Set";
-    public static final String BSM = "BSM";
-    public static final String MCBRAND = "MC|Brand";
-    public static final String SCHEMATICA = "schematica";
+    public static String ZIG;
+    public static String BSM;
+    public static String MCBRAND;
+    public static String SCHEMATICA;
     public static String player = "";
     public static String playerCommand = "";
     public static String errorMessage = "";
@@ -89,6 +92,19 @@ public class Main extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
 
+        // Set mod channels depending on the server being 1.13+ or not
+        if (getServer().getVersion().contains("1.13")) {
+            ZIG = "ezprotector:5zig_set";
+            BSM = "ezprotector:bsm";
+            MCBRAND = "ezprotector:mc|brand";
+            SCHEMATICA = "ezprotector:schematica";
+        } else {
+            ZIG = "5zig_Set";
+            BSM = "BSM";
+            MCBRAND = "MC|Brand";
+            SCHEMATICA = "schematica";
+        }
+
         PacketEventListener.protocolLibHook();
 
         getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
@@ -102,6 +118,13 @@ public class Main extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
 
         getCommand("ezp").setExecutor(new EZPCommand());
+
+        // Set up 1.13 tab completion
+        if (CommodoreProvider.isSupported()) {
+            Commodore commodore = CommodoreProvider.getCommodore(this);
+            registerCompletions(commodore, getCommand("ezp"));
+        }
+        
         getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
@@ -114,17 +137,6 @@ public class Main extends JavaPlugin {
         // Initiate a (very) simple check to see if the plugin has an update!
         if (getConfig().getBoolean("updater")) checkVersion();
 
-    }
-    public void onDisable() {
-        getServer().getMessenger().unregisterIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
-        getServer().getMessenger().unregisterIncomingPluginChannel(this, BSM, this.pluginMessageListener);
-        getServer().getMessenger().unregisterIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
-        getServer().getMessenger().unregisterIncomingPluginChannel(this, SCHEMATICA, this.pluginMessageListener);
-
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, ZIG);
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, BSM);
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, MCBRAND);
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this, SCHEMATICA);
     }
 
     private void registerMetrics() {

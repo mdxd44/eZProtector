@@ -5,7 +5,7 @@
 
     <groupId>com.github.donotspampls</groupId>
     <artifactId>ezprotector</artifactId>
-    <version>4.3.1</version>
+    <version>4.3.2</version>
     <packaging>jar</packaging>
 
     <name>eZProtector</name>
@@ -63,6 +63,10 @@
             <id>bstats-repo</id>
             <url>https://repo.bstats.org/content/repositories/releases/</url>
         </repository>
+        <repository>
+            <id>luck-repo</id>
+            <url>https://repo.lucko.me</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -71,7 +75,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.13-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -88,6 +92,14 @@
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>1.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Commodore (1.13 tab completion) -->
+        <dependency>
+            <groupId>me.lucko</groupId>
+            <artifactId>commodore</artifactId>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -112,10 +124,20 @@
                 <version>3.1.0</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <artifactSet>
+                        <includes>
+                            <include>me.lucko:commodore</include>
+                            <include>org.bstats</include>
+                        </includes>
+                    </artifactSet>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>com.github.donotspampls.ezprotector.metrics</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.lucko.commodore</pattern>
+                            <shadedPattern>com.github.donotspampls.ezprotector.commodore</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -136,5 +158,16 @@
             </resource>
         </resources>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>codemc-releases</id>
+            <url>https://repo.codemc.org/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.org/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
