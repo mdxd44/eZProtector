@@ -45,8 +45,8 @@ public class PacketEventListener {
 
                                 String errorMessage = config.getString("tab-completion.warn.message");
 
-                                if (config.getBoolean("tab-completion.warn.enabled")) {
-                                    if (!errorMessage.trim().isEmpty()) player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, cmd));
+                                if (config.getBoolean("tab-completion.warn.enabled") && !errorMessage.trim().isEmpty()) {
+                                    player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, cmd));
                                 }
 
                                 if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
