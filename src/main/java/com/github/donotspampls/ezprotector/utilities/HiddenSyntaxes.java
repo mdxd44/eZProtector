@@ -11,15 +11,11 @@
 package com.github.donotspampls.ezprotector.utilities;
 
 import com.github.donotspampls.ezprotector.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.List;
-
-import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 
 public class HiddenSyntaxes {
 
@@ -30,31 +26,30 @@ public class HiddenSyntaxes {
      */
     public static void execute(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        Main.player = player.getName();
         String command = event.getMessage();
         FileConfiguration config = Main.getPlugin().getConfig();
-        ConsoleCommandSender console = Bukkit.getConsoleSender();
 
         // Get the commands which will not be filtered by this check
         List<String> whitelisted = config.getStringList("hidden-syntaxes.whitelisted");
 
         // Check if the command contains :. If that is true, check if the player hasn't got the bypass permission and that the command hasn't got any spaces in it
-        if (command.split(" ")[0].contains(":") && !player.hasPermission("ezprotector.bypass.command.hiddensyntax") && !whitelisted.contains(command.split(" ")[0].toLowerCase().replace("/", ""))) {
+        if (command.split(" ")[0].contains(":") && !whitelisted.contains(command.split(" ")[0].toLowerCase().replace("/", "")) && !player.hasPermission("ezprotector.bypass.command.hiddensyntax")) {
             event.setCancelled(true);
             // Replace placeholder with the executed command
-            Main.playerCommand = command.replace("/", "");
 
-            if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(Main.errorMessage)));
+            String errorMessage = config.getString("hidden-syntaxes.error-message");
+
+            if (!errorMessage.trim().isEmpty()) player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
 
             if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) {
                 String punishCommand = config.getString("hidden-syntaxes.punish-player.command");
                 // Replace placeholder with the error message in the config
-                Main.errorMessage = config.getString("hidden-syntaxes.error-message");
-                Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                errorMessage = config.getString("hidden-syntaxes.error-message");
+                ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
             }
 
             if (config.getBoolean("hidden-syntaxes.notify-admins.enabled")) {
-                String notifyMessage = config.getString("hidden-syntaxes.notify-admins.message");
+                String notifyMessage =  MessageUtil.placeholders(config.getString("hidden-syntaxes.notify-admins.message"), player, null, command);
                 ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.hiddensyntax");
             }
         }

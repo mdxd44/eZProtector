@@ -10,15 +10,8 @@
 
 package com.github.donotspampls.ezprotector.mods;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.github.donotspampls.ezprotector.Main;
+import com.github.donotspampls.ezprotector.utilities.MessageUtil;
 import org.bukkit.entity.Player;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class ReiMinimap {
 
@@ -29,16 +22,9 @@ public class ReiMinimap {
      */
     public static void set(Player player) {
         if (!player.hasPermission("ezprotector.bypass.mod.reiminimap")) {
-            try {
-                ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-
-                // JSON string that will be sent to the player
-                String json = "{\"text\":\"\",\"extra\":[{\"text\":\"\\u00a70\\u00a70\\u00a71\\u00a72\\u00a73\\u00a74\\u00a75\\u00a76\\u00a77\\u00a7e\\u00a7f\"}]}";
-                PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
-                motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-                protocolManager.sendServerPacket(player, motd);
-            } catch (InvocationTargetException ignored) {}
+            // JSON string that will be sent to the player
+            String json = "{\"text\":\"\",\"extra\":[{\"text\":\"\\u00a70\\u00a70\\u00a71\\u00a72\\u00a73\\u00a74\\u00a75\\u00a76\\u00a77\\u00a7e\\u00a7f\"}]}";
+            MessageUtil.sendJsonMessage(player, json);
         }
     }
-
 }

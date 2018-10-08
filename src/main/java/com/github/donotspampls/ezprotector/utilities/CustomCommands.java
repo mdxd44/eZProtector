@@ -11,12 +11,9 @@
 package com.github.donotspampls.ezprotector.utilities;
 
 import com.github.donotspampls.ezprotector.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 
 public class CustomCommands {
 
@@ -27,34 +24,30 @@ public class CustomCommands {
      */
     public static void execute(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        Main.player = player.getName();
         String command = event.getMessage();
         FileConfiguration config = Main.getPlugin().getConfig();
-        ConsoleCommandSender console = Bukkit.getConsoleSender();
 
-        for (int i = 0; i < config.getList("custom-commands.commands").size(); i++) {
+        for (String message : config.getStringList("custom-commands.commands")) {
             // Replace placeholder with the command executed by the player
-            Main.playerCommand = config.getList("custom-commands.commands").get(i).toString();
-            if (((command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand))) && !player.hasPermission("ezprotector.bypass.command.custom")) {
+            if (((command.split(" ")[0].equalsIgnoreCase("/" + message))) && !player.hasPermission("ezprotector.bypass.command.custom")) {
                 event.setCancelled(true);
                 // Replace placeholder with the error message in the config
-                Main.errorMessage = config.getString("custom-commands.error-message");
+                String errorMessage = config.getString("custom-commands.error-message");
 
-                if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(Main.errorMessage)));
+                if (!errorMessage.trim().isEmpty()) player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, "/" + message));
 
                 if (config.getBoolean("custom-commands.punish-player.enabled")) {
                     String punishCommand = config.getString("custom-commands.punish-player.command");
                     // Replace placeholder with the error message in the config
-                    Main.errorMessage = config.getString("tab-completion.warn.message");
-                    Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                    errorMessage = config.getString("custom-commands.punish-player.command");
+                    ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, "/" + message));
                 }
 
                 if (config.getBoolean("custom-commands.notify-admins.enabled")) {
-                    String notifyMessage = config.getString("custom-commands.notify-admins.message");
+                    String notifyMessage = MessageUtil.placeholders(config.getString("custom-commands.notify-admins.message"), player, null, command);
                     ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.custom");
                 }
             }
         }
     }
-
 }
