@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.utilities;
+package com.github.donotspampls.ezprotector.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -16,7 +16,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import me.lucko.commodore.Commodore;
 import org.bukkit.command.PluginCommand;
 
-public class TabCompletion {
+public class BrigadierTabCompletion {
 
     public static void registerCompletions(Commodore commodore, PluginCommand command) {
         commodore.register(command, LiteralArgumentBuilder.literal("ezp")

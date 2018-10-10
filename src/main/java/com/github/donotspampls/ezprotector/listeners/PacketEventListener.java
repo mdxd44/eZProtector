@@ -17,12 +17,11 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.github.donotspampls.ezprotector.Main;
 import com.github.donotspampls.ezprotector.utilities.ExecutionUtil;
-import org.bukkit.Bukkit;
+import com.github.donotspampls.ezprotector.utilities.MessageUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 
 public class PacketEventListener {
 
@@ -31,32 +30,33 @@ public class PacketEventListener {
         final List<String> blocked = config.getStringList("tab-completion.blacklisted");
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Main.getPlugin(), PacketType.Play.Client.TAB_COMPLETE) {
+            @Override
             public void onPacketReceiving(PacketEvent event) {
                 // If tab blocking is enabled and the player has tried to autocomplete, continue
                 if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE && config.getBoolean("tab-completion.blocked")) {
                         Player player = event.getPlayer();
-                        Main.player = player.getName();
                         PacketContainer packet = event.getPacket();
-                        String message = packet.getSpecificModifier(String.class).read(0).toLowerCase(); // Get the first argument of the message
+                        String cmd = packet.getSpecificModifier(String.class).read(0).toLowerCase(); // Get the first argument of the message
 
                         // Try all the commands in the blacklisted config section to see if there is a match
                         for (String command : blocked) {
-                            if (!player.hasPermission("ezprotector.bypass.command.tabcomplete") && (message.equals(command) || (message.startsWith("/") && !message.contains(" ")))) {
+                            if ((cmd.equals(command) || (cmd.startsWith("/") && !cmd.contains(" "))) && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
                                 event.setCancelled(true);
-                                if (config.getBoolean("tab-completion.warn.enabled")) {
-                                    String errorMessage = config.getString("tab-completion.warn.message");
-                                    if (!errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(errorMessage)));
+
+                                String errorMessage = config.getString("tab-completion.warn.message");
+
+                                if (config.getBoolean("tab-completion.warn.enabled") && !errorMessage.trim().isEmpty()) {
+                                    player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, cmd));
                                 }
 
                                 if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
                                     String punishCommand = config.getString("tab-completion.punish-player.command");
                                     // Replace placeholder with the error message in the config
-                                    Main.errorMessage = config.getString("tab-completion.warn.message");
-                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Main.placeholders(punishCommand));
+                                    ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, cmd));
                                 }
 
                                 if (plugin.getConfig().getBoolean("tab-completion.notify-admins.enabled")) {
-                                    String notifyMessage = config.getString("tab-completion.notify-admins.message");
+                                    String notifyMessage = MessageUtil.placeholders(config.getString("tab-completion.notify-admins.message"), player, null, command);
                                     ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.tabcomplete");
                                 }
                                 break;

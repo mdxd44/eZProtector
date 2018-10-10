@@ -10,11 +10,41 @@
 
 package com.github.donotspampls.ezprotector.utilities;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.github.donotspampls.ezprotector.Main;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class MessageUtil {
 
     public static String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
+    }
+
+    public static String placeholders(String args, Player player, String errorMessage, String command) {
+        return StringEscapeUtils.unescapeJava(color(args)
+                .replace("%player%", player.getName())
+                .replace("%errormessage%", errorMessage == null ? "" : color(errorMessage))
+                .replace("%command%", command == null ? "" : command)
+                .replace("%prefix%", Main.getPrefix()));
+    }
+
+    public static void sendJsonMessage(Player player, String jsonMessage) {
+        try {
+            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+
+            PacketContainer packet = new PacketContainer(PacketType.Play.Server.CHAT);
+            packet.getChatComponents().write(0, WrappedChatComponent.fromJson(jsonMessage));
+            protocolManager.sendServerPacket(player, packet);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 }

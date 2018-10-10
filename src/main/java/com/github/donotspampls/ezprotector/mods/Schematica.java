@@ -10,18 +10,13 @@
 
 package com.github.donotspampls.ezprotector.mods;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.github.donotspampls.ezprotector.Main;
+import com.github.donotspampls.ezprotector.utilities.MessageUtil;
 import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 public class Schematica {
 
@@ -32,15 +27,9 @@ public class Schematica {
      */
     public static void set(Player player) {
         if (!player.hasPermission("ezprotector.bypass.mod.schematica") && Main.getPlugin().getServer().getVersion().contains("1.7")) {
-            try {
-                ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-
-                // JSON string that will be sent to the player
-                String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§2§0§0§e§f\"},{\"text\":\"§0§2§1§0§e§f\"},{\"text\":\"§0§2§1§1§e§f\"}]}";
-                PacketContainer motd = new PacketContainer(PacketType.Play.Server.CHAT);
-                motd.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-                protocolManager.sendServerPacket(player, motd);
-            } catch (InvocationTargetException ignored) {}
+            // JSON string that will be sent to the player
+            String json = "{\"text\":\"\",\"extra\":[{\"text\":\"§0§2§0§0§e§f\"},{\"text\":\"§0§2§1§0§e§f\"},{\"text\":\"§0§2§1§1§e§f\"}]}";
+            MessageUtil.sendJsonMessage(player, json);
         }
     }
 

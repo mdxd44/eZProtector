@@ -11,8 +11,6 @@
 package com.github.donotspampls.ezprotector.utilities;
 
 import com.github.donotspampls.ezprotector.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -30,12 +28,11 @@ public class CustomVersion {
         Player player = event.getPlayer();
         String command = event.getMessage();
 
-        String[] ver = new String[]{"ver", "version"};
+        String[] ver = new String[]{"/ver", "/version"};
         if (!player.hasPermission("ezprotector.bypass.command.version")) {
             for (String aList : ver) {
                 // The command that is being tested at the moment
-                Main.playerCommand = aList;
-                if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
+                if (command.split(" ")[0].equalsIgnoreCase(aList)) {
                     event.setCancelled(true);
                     String version = Main.getPlugin().getConfig().getString("custom-version.version");
                     player.sendMessage(color("This server is running server version " + version));
@@ -51,31 +48,28 @@ public class CustomVersion {
      */
     public static void executeBlock(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        Main.player = player.getName();
         FileConfiguration config = Main.getPlugin().getConfig();
-        ConsoleCommandSender console = Bukkit.getConsoleSender();
 
         if (!player.hasPermission("ezprotector.bypass.command.version")) {
-            String[] ver = new String[]{"ver", "version"};
+            String[] ver = new String[]{"/ver", "/version"};
             for (String aList : ver) {
                 // The command that is being tested at the moment
-                Main.playerCommand = aList;
-                if (event.getMessage().split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
+                if (event.getMessage().split(" ")[0].equalsIgnoreCase(aList)) {
                     event.setCancelled(true);
                     // Replace placeholder with the error message in the config
-                    Main.errorMessage = config.getString("custom-version.error-message");
+                    String errorMessage = config.getString("custom-version.error-message");
 
-                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(Main.errorMessage)));
+                    if (!errorMessage.trim().isEmpty()) player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, aList));
 
                     if (config.getBoolean("custom-version.punish-player.enabled")) {
                         String punishCommand = config.getString("custom-version.punish-player.command");
                         // Replace placeholder with the error message in the config
-                        Main.errorMessage = config.getString("custom-version.error-message");
-                        Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                        errorMessage = config.getString("custom-version.error-message");
+                        ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, aList));
                     }
 
                     if (config.getBoolean("custom-version.notify-admins.enabled")) {
-                        String notifyMessage = config.getString("custom-version.notify-admins.message");
+                        String notifyMessage = MessageUtil.placeholders(config.getString("custom-version.notify-admins.message"), player, null, aList);
                         ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.version");
                     }
                 }

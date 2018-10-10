@@ -11,15 +11,14 @@
 package com.github.donotspampls.ezprotector;
 
 import com.github.donotspampls.ezprotector.commands.EZPCommand;
+import com.github.donotspampls.ezprotector.commands.LegacyTabCompletion;
 import com.github.donotspampls.ezprotector.listeners.PacketEventListener;
 import com.github.donotspampls.ezprotector.listeners.CommandEventListener;
 import com.github.donotspampls.ezprotector.listeners.PlayerJoinListener;
 import com.github.donotspampls.ezprotector.listeners.PacketMessageListener;
-import me.lucko.commodore.Commodore;
 import me.lucko.commodore.CommodoreProvider;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,30 +27,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
-import static com.github.donotspampls.ezprotector.utilities.TabCompletion.registerCompletions;
+import static com.github.donotspampls.ezprotector.commands.BrigadierTabCompletion.registerCompletions;
 
 public class Main extends JavaPlugin {
 
     // Variables
-    public static final ArrayList<String> plugins = new ArrayList<>();
     public static String ZIG;
     public static String BSM;
     public static String MCBRAND;
     public static String SCHEMATICA;
-    public static String player = "";
-    public static String playerCommand = "";
-    public static String errorMessage = "";
-    private static Plugin plugin;
     private static String prefix;
-
-    private PacketMessageListener pluginMessageListener;
-    public Main() {
-        this.pluginMessageListener = new PacketMessageListener(this);
-    }
+    private static Plugin plugin;
 
     /**
      * Gets the plugin variable from the main class.
@@ -62,35 +50,24 @@ public class Main extends JavaPlugin {
         return plugin;
     }
 
-    /**
-     * Replaces placeholders with actual information in a given string.
-     *
-     * @param args The string that should be filtered.
-     * @return The new string with replaced placeholders.
-     */
-    public static String placeholders(String args) {
-        return StringEscapeUtils.unescapeJava(args
-                .replace("%prefix%", color(prefix))
-                .replace("%player%", player)
-                .replace("%errormessage%", errorMessage)
-                .replace("%command%", "/" + playerCommand));
+    public static String getPrefix() {
+        return prefix;
     }
 
+    @Override
     public void onEnable() {
         plugin = this;
-        prefix = getConfig().getString("prefix");
-
+        prefix = color(getConfig().getString("prefix"));
 
         // Check if ProtocolLib is on the server and register the packet listener
-        if (!Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+        if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
             getLogger().severe("This plugin requires ProtocolLib in order to work. Please download ProtocolLib and try again.");
-            Bukkit.getPluginManager().disablePlugin(this);
+            getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         // Save the default config
         saveDefaultConfig();
-        reloadConfig();
 
         // Set mod channels depending on the server being 1.13+ or not
         if (getServer().getVersion().contains("1.13")) {
@@ -107,58 +84,51 @@ public class Main extends JavaPlugin {
 
         PacketEventListener.protocolLibHook();
 
-        getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, this.pluginMessageListener);
-        getServer().getMessenger().registerIncomingPluginChannel(this, BSM, this.pluginMessageListener);
-        getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, this.pluginMessageListener);
-        getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, this.pluginMessageListener);
+        PacketMessageListener pluginMessageListener = new PacketMessageListener(this);
+
+        getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, pluginMessageListener);
+        getServer().getMessenger().registerIncomingPluginChannel(this, BSM, pluginMessageListener);
+        getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, pluginMessageListener);
+        getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, pluginMessageListener);
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
         getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
         getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
         getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
 
-        getCommand("ezp").setExecutor(new EZPCommand());
+        PluginCommand command = getCommand("ezp");
+        command.setExecutor(new EZPCommand());
 
         // Set up 1.13 tab completion
         if (CommodoreProvider.isSupported()) {
-            Commodore commodore = CommodoreProvider.getCommodore(this);
-            registerCompletions(commodore, getCommand("ezp"));
+            registerCompletions(CommodoreProvider.getCommodore(this), command);
+        } else {
+            command.setTabCompleter(new LegacyTabCompletion());
         }
-        
+
         getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
-        // Add custom plugin list to the internal ArrayList
-        plugins.addAll(Arrays.asList(getConfig().getString("custom-plugins.plugins").split(", ")));
-
         // Register the metrics class and add custom charts
-        registerMetrics();
+        Metrics metrics = new Metrics(this);
+
+        registerMetricsChart(metrics, "updater_enabled", "updater");
+        registerMetricsChart(metrics, "tab_completion", "tab-completion.blocked");
+        registerMetricsChart(metrics, "hidden_syntaxes", "hidden-syntaxes.blocked");
+        registerMetricsChart(metrics, "custom_plugins", "custom-plugins.enabled");
+        registerMetricsChart(metrics, "custom_version", "custom-version.enabled");
+        registerMetricsChart(metrics, "custom_commands", "custom-commands.blocked");
 
         // Initiate a (very) simple check to see if the plugin has an update!
         if (getConfig().getBoolean("updater")) checkVersion();
-
     }
 
-    private void registerMetrics() {
-        Metrics metrics = new Metrics(this);
-
-        Boolean updater = getConfig().getBoolean("updater");
-        Boolean tabcompletion = getConfig().getBoolean("tab-completion.blocked");
-        Boolean hiddensyntaxes = getConfig().getBoolean("hidden-syntaxes.blocked");
-        Boolean customplugins = getConfig().getBoolean("custom-plugins.enabled");
-        Boolean customversion = getConfig().getBoolean("custom-version.enabled");
-        Boolean customcommands = getConfig().getBoolean("custom-commands.blocked");
-
-        metrics.addCustomChart(new Metrics.SimplePie("updater_enabled", updater::toString));
-        metrics.addCustomChart(new Metrics.SimplePie("tab_completion", tabcompletion::toString));
-        metrics.addCustomChart(new Metrics.SimplePie("hidden_syntaxes", hiddensyntaxes::toString));
-        metrics.addCustomChart(new Metrics.SimplePie("custom_plugins", customplugins::toString));
-        metrics.addCustomChart(new Metrics.SimplePie("custom_version", customversion::toString));
-        metrics.addCustomChart(new Metrics.SimplePie("custom_commands", customcommands::toString));
+    private void registerMetricsChart(Metrics metrics, String metricsId, String configKey) {
+        metrics.addCustomChart(new Metrics.SimplePie(metricsId, () -> String.valueOf(getConfig().getBoolean(configKey))));
     }
 
     private void checkVersion() {
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+        getServer().getScheduler().runTaskAsynchronously(this, () -> {
             try {
                 HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=12663").openConnection();
                 con.setRequestMethod("GET");

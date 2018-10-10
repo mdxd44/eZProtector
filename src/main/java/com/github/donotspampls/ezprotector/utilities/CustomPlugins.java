@@ -11,14 +11,11 @@
 package com.github.donotspampls.ezprotector.utilities;
 
 import com.github.donotspampls.ezprotector.Main;
-import org.bukkit.Bukkit;
+import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
-import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 
 public class CustomPlugins {
 
@@ -31,25 +28,24 @@ public class CustomPlugins {
         Player player = event.getPlayer();
         String command = event.getMessage();
 
-        String[] plu = new String[]{"pl", "plugins"};
-        if (!player.hasPermission("ezprotector.bypass.command.plugins")) {
+        String[] plu = new String[]{"/pl", "/plugins"};
             for (String aList : plu) {
                 // The command that is being tested at the moment
-                Main.playerCommand = aList;
-                if (command.split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
+                if (command.split(" ")[0].equalsIgnoreCase(aList)) {
+                    if (player.hasPermission("ezprotector.bypass.command.plugins")) {
+                        return;
+                    }
+
                     event.setCancelled(true);
 
-                    // Put all the fake plugins defined in a string array
-                    StringBuilder defaultMessage = new StringBuilder("§a");
-                    for (String plugin : Main.plugins) defaultMessage.append(plugin).append(", ");
-                    defaultMessage = new StringBuilder(defaultMessage.substring(0, defaultMessage.lastIndexOf(", ")));
+                    String[] plugins = Main.getPlugin().getConfig().getString("custom-plugins.plugins").split(", ");
+                    String pluginsList = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GREEN).join(plugins);
 
                     // Create a fake /plugins output message using the string array above.
-                    String customPlugins = ChatColor.WHITE + "Plugins (" + Main.plugins.size() + "): " + ChatColor.GREEN + defaultMessage.toString().replaceAll(", ", String.valueOf(ChatColor.WHITE) + ", " + ChatColor.GREEN);
+                    String customPlugins = ChatColor.WHITE + "Plugins (" + plugins + "): " + ChatColor.GREEN + pluginsList;
 
                     player.sendMessage(customPlugins);
                 }
-            }
         }
     }
 
@@ -61,30 +57,26 @@ public class CustomPlugins {
     public static void executeBlock(PlayerCommandPreprocessEvent event) {
         FileConfiguration config = Main.getPlugin().getConfig();
         Player player = event.getPlayer();
-        Main.player = player.getName();
-        ConsoleCommandSender console = Bukkit.getConsoleSender();
 
         if (!player.hasPermission("ezprotector.bypass.command.plugins")) {
-            String[] plu = new String[]{"pl", "plugins"};
+            String[] plu = new String[]{"/pl", "/plugins"};
             for (String aList : plu) {
-                // The command that is being tested at the moment
-                Main.playerCommand = aList;
-                if (event.getMessage().split(" ")[0].equalsIgnoreCase("/" + Main.playerCommand)) {
-                    event.setCancelled(true);
-                    // Replace placeholder with the error message in the config
-                    Main.errorMessage = config.getString("custom-plugins.error-message");
 
-                    if (!Main.errorMessage.trim().equals("")) player.sendMessage(Main.placeholders(color(Main.errorMessage)));
+                if (event.getMessage().split(" ")[0].equalsIgnoreCase(aList)) {
+                    event.setCancelled(true);
+                    String errorMessage = config.getString("custom-plugins.error-message");
+
+                    if (!errorMessage.trim().isEmpty()) player.sendMessage(MessageUtil.placeholders(errorMessage, player, errorMessage, aList));
 
                     if (config.getBoolean("custom-plugins.punish-player.enabled")) {
                         String punishCommand = config.getString("custom-plugins.punish-player.command");
                         // Replace placeholder with the error message in the config
-                        Main.errorMessage = config.getString("custom-version.error-message");
-                        Bukkit.dispatchCommand(console, Main.placeholders(punishCommand));
+                        errorMessage = config.getString("custom-version.error-message");
+                        ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, aList));
                     }
 
                     if (config.getBoolean("custom-plugins.notify-admins.enabled")) {
-                        String notifyMessage = config.getString("custom-plugins.notify-admins.message");
+                        String notifyMessage = MessageUtil.placeholders(config.getString("custom-plugins.notify-admins.message"), player, null, aList);
                         ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.plugins");
                     }
                 }
