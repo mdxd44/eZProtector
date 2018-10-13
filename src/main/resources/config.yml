@@ -105,6 +105,7 @@ custom-commands:
     command: 'kick %player% %errormessage%'
 
 # This section allows you to block various mods (and even punish players for some of them!)
+# These **do not** work for 1.13
 mods:
   5zig:
     block: false
@@ -112,8 +113,6 @@ mods:
   betterpvp:
     block: false
   bettersprinting:
-    block: false
-  damageindicators:
     block: false
   forge:
     block: false
@@ -123,11 +122,7 @@ mods:
     block: false
     warning-message: '&4WARN &c- &f%player% tried to join with the LiteLoader mod, but failed.'
     punish-command: kick %player% &4The LiteLoader mod is not allowed.
-  reiminimap:
-    block: false
   schematica:
-    block: false
-  smartmoving:
     block: false
   voxelmap:
     block: false

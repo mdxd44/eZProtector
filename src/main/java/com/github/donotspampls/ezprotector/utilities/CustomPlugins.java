@@ -42,7 +42,7 @@ public class CustomPlugins {
                     String pluginsList = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GREEN).join(plugins);
 
                     // Create a fake /plugins output message using the string array above.
-                    String customPlugins = ChatColor.WHITE + "Plugins (" + plugins + "): " + ChatColor.GREEN + pluginsList;
+                    String customPlugins = ChatColor.WHITE + "Plugins (" + plugins.length + "): " + ChatColor.GREEN + pluginsList;
 
                     player.sendMessage(customPlugins);
                 }

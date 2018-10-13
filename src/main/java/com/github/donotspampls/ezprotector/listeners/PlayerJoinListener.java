@@ -11,10 +11,6 @@
 package com.github.donotspampls.ezprotector.listeners;
 
 import com.github.donotspampls.ezprotector.Main;
-import com.github.donotspampls.ezprotector.mods.DamageIndicators;
-import com.github.donotspampls.ezprotector.mods.ReiMinimap;
-import com.github.donotspampls.ezprotector.mods.Schematica;
-import com.github.donotspampls.ezprotector.mods.SmartMoving;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,10 +30,6 @@ public class PlayerJoinListener implements Listener {
         FileConfiguration config = Main.getPlugin().getConfig();
 
         if (config.getBoolean("mods.betterpvp.block") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(" §c §r§5 §r§1 §r§f §r§0 ");
-        if (config.getBoolean("mods.damageindicators.block")) DamageIndicators.set(p);
-        if (config.getBoolean("mods.reiminimap.block")) ReiMinimap.set(p);
-        if (config.getBoolean("mods.schematica.block")) Schematica.set(p);
-        if (config.getBoolean("mods.smartmoving.block")) SmartMoving.set(p);
         if (config.getBoolean("mods.voxelmap.block") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(" §3 §6 §3 §6 §3 §6 §e ");
     }
 

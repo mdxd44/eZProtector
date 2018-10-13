@@ -34,34 +34,36 @@ public class PacketEventListener {
             public void onPacketReceiving(PacketEvent event) {
                 // If tab blocking is enabled and the player has tried to autocomplete, continue
                 if (event.getPacketType() == PacketType.Play.Client.TAB_COMPLETE && config.getBoolean("tab-completion.blocked")) {
-                        Player player = event.getPlayer();
-                        PacketContainer packet = event.getPacket();
-                        String cmd = packet.getSpecificModifier(String.class).read(0).toLowerCase(); // Get the first argument of the message
+                    Player player = event.getPlayer();
+                    PacketContainer packet = event.getPacket();
+                    // Get the first argument of the message
+                    // TODO: Figure out regex so I don't need two replace() methods.
+                    String cmd = packet.getSpecificModifier(String.class).read(0).replace("/", "").replace(" ", "");
 
-                        // Try all the commands in the blacklisted config section to see if there is a match
-                        for (String command : blocked) {
-                            if ((cmd.equals(command) || (cmd.startsWith("/") && !cmd.contains(" "))) && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
-                                event.setCancelled(true);
+                    // Try all the commands in the blacklisted config section to see if there is a match
+                    for (String command : blocked) {
+                        if (command.equalsIgnoreCase(cmd) && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
+                            event.setCancelled(true);
 
-                                String errorMessage = config.getString("tab-completion.warn.message");
+                            String errorMessage = config.getString("tab-completion.warn.message");
 
-                                if (config.getBoolean("tab-completion.warn.enabled") && !errorMessage.trim().isEmpty()) {
-                                    player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, cmd));
-                                }
-
-                                if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
-                                    String punishCommand = config.getString("tab-completion.punish-player.command");
-                                    // Replace placeholder with the error message in the config
-                                    ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, cmd));
-                                }
-
-                                if (plugin.getConfig().getBoolean("tab-completion.notify-admins.enabled")) {
-                                    String notifyMessage = MessageUtil.placeholders(config.getString("tab-completion.notify-admins.message"), player, null, command);
-                                    ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.tabcomplete");
-                                }
-                                break;
+                            if (config.getBoolean("tab-completion.warn.enabled") && !errorMessage.trim().isEmpty()) {
+                                player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, cmd));
                             }
+
+                            if (plugin.getConfig().getBoolean("tab-completion.punish-player.enabled")) {
+                                String punishCommand = config.getString("tab-completion.punish-player.command");
+                                // Replace placeholder with the error message in the config
+                                ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, cmd));
+                            }
+
+                            if (plugin.getConfig().getBoolean("tab-completion.notify-admins.enabled")) {
+                                String notifyMessage = MessageUtil.placeholders(config.getString("tab-completion.notify-admins.message"), player, null, command);
+                                ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.tabcomplete");
+                            }
+                            break;
                         }
+                    }
                 }
             }
         });

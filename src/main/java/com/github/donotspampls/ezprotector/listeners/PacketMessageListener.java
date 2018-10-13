@@ -11,15 +11,15 @@
 package com.github.donotspampls.ezprotector.listeners;
 
 import com.github.donotspampls.ezprotector.Main;
-import com.github.donotspampls.ezprotector.mods.Schematica;
 import com.github.donotspampls.ezprotector.utilities.ExecutionUtil;
 import com.github.donotspampls.ezprotector.utilities.MessageUtil;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class PacketMessageListener implements PluginMessageListener {
@@ -44,8 +44,7 @@ public class PacketMessageListener implements PluginMessageListener {
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
         if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica")) {
-            byte[] payload = Schematica.getPayload();
-            player.sendPluginMessage(plugin, Main.SCHEMATICA, payload);
+            player.sendPluginMessage(plugin, Main.SCHEMATICA, getSchematicaPayload());
         }
 
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {
@@ -65,12 +64,8 @@ public class PacketMessageListener implements PluginMessageListener {
      */
     private void block5Zig(Player player, String channel) {
         if ((channel.equalsIgnoreCase(Main.ZIG)) || (channel.contains("5zig")) && !player.hasPermission("ezprotector.bypass.mod.5zig")) {
-            // Create a new data output
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            // Write bytes to the data output that tell 5Zig to block certain features
-            out.writeByte(0x1 | 0x2 | 0x4 | 0x8 | 0x10 | 0x20 );
             // Send the data output as a byte array to the player
-            player.sendPluginMessage(plugin, channel, out.toByteArray());
+            player.sendPluginMessage(plugin, channel, new byte[] {0x1|0x2|0x4|0x8|0x10|0x20});
         }
     }
 
@@ -82,12 +77,8 @@ public class PacketMessageListener implements PluginMessageListener {
      */
     private void blockBSM(Player player, String channel) {
         if (channel.equalsIgnoreCase(Main.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
-            // Create a new data output
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            // Write a byte to the data output to disable BSM
-            out.writeByte(1);
             // Send the data output as a byte array to the player
-            player.sendPluginMessage(plugin, channel, out.toByteArray());
+            player.sendPluginMessage(plugin, channel, new byte[] {1});
         }
     }
 
@@ -122,6 +113,29 @@ public class PacketMessageListener implements PluginMessageListener {
 
             String notifyMessage = MessageUtil.placeholders(config.getString("mods.liteloader.warning-message"), player, null, null);
             ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
+        }
+    }
+
+    /**
+     * Creates a byte array with options that tell Schematica which features to block (used for 1.8+)
+     *
+     * @return The byte array containing the Schematica block configuration.
+     */
+    private static byte[] getSchematicaPayload() {
+        // Create the byte array and data stream
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        try {
+            // Add bytes to data stream
+            dataOutputStream.writeByte(0);
+            dataOutputStream.writeBoolean(false);
+            dataOutputStream.writeBoolean(false);
+            dataOutputStream.writeBoolean(false);
+
+            // Convert the data stream to a byte array and return it
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException ignored) {
+            return null;
         }
     }
 

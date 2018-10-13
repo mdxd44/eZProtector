@@ -11,12 +11,12 @@
 package com.github.donotspampls.ezprotector;
 
 import com.github.donotspampls.ezprotector.commands.EZPCommand;
-import com.github.donotspampls.ezprotector.commands.LegacyTabCompletion;
+import com.github.donotspampls.ezprotector.commands.TabCompletion;
 import com.github.donotspampls.ezprotector.listeners.PacketEventListener;
 import com.github.donotspampls.ezprotector.listeners.CommandEventListener;
 import com.github.donotspampls.ezprotector.listeners.PlayerJoinListener;
 import com.github.donotspampls.ezprotector.listeners.PacketMessageListener;
-import me.lucko.commodore.CommodoreProvider;
+
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
@@ -29,15 +29,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
-import static com.github.donotspampls.ezprotector.commands.BrigadierTabCompletion.registerCompletions;
 
 public class Main extends JavaPlugin {
 
     // Variables
-    public static String ZIG;
-    public static String BSM;
-    public static String MCBRAND;
-    public static String SCHEMATICA;
+    public static String ZIG = "5zig_Set";
+    public static String BSM = "BSM";
+    public static String MCBRAND = "MC|Brand";
+    public static String SCHEMATICA = "schematica";
     private static String prefix;
     private static Plugin plugin;
 
@@ -50,6 +49,11 @@ public class Main extends JavaPlugin {
         return plugin;
     }
 
+    /**
+     * Gets the plugin's message prefix from the main class.
+     *
+     * @return The plugin variable.
+     */
     public static String getPrefix() {
         return prefix;
     }
@@ -69,42 +73,26 @@ public class Main extends JavaPlugin {
         // Save the default config
         saveDefaultConfig();
 
-        // Set mod channels depending on the server being 1.13+ or not
-        if (getServer().getVersion().contains("1.13")) {
-            ZIG = "ezprotector:5zig_set";
-            BSM = "ezprotector:bsm";
-            MCBRAND = "ezprotector:mc|brand";
-            SCHEMATICA = "ezprotector:schematica";
-        } else {
-            ZIG = "5zig_Set";
-            BSM = "BSM";
-            MCBRAND = "MC|Brand";
-            SCHEMATICA = "schematica";
-        }
-
         PacketEventListener.protocolLibHook();
 
         PacketMessageListener pluginMessageListener = new PacketMessageListener(this);
 
-        getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, pluginMessageListener);
-        getServer().getMessenger().registerIncomingPluginChannel(this, BSM, pluginMessageListener);
-        getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, pluginMessageListener);
-        getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, pluginMessageListener);
+        // Set mod channels (Forge 1.13 doesn't exist yet so we don't bother with 1.13)
+        if (!getServer().getVersion().contains("1.13")) {
+            getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, pluginMessageListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, BSM, pluginMessageListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, pluginMessageListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, pluginMessageListener);
 
-        getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
-        getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
-        getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
-        getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
+            getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
+            getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
+            getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
+            getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
+        } else getLogger().warning("1.13 and above do not support mod blocking yet!");
 
         PluginCommand command = getCommand("ezp");
         command.setExecutor(new EZPCommand());
-
-        // Set up 1.13 tab completion
-        if (CommodoreProvider.isSupported()) {
-            registerCompletions(CommodoreProvider.getCommodore(this), command);
-        } else {
-            command.setTabCompleter(new LegacyTabCompletion());
-        }
+        command.setTabCompleter(new TabCompletion());
 
         getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
