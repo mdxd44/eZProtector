@@ -8,7 +8,7 @@ import org.bukkit.util.StringUtil;
 import java.util.Collections;
 import java.util.List;
 
-public class TabCompletion implements TabCompleter {
+public class EZPTabCompleter implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -17,4 +17,5 @@ public class TabCompletion implements TabCompleter {
         }
         return Collections.emptyList();
     }
+
 }

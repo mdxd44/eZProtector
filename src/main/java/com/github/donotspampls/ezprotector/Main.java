@@ -11,7 +11,7 @@
 package com.github.donotspampls.ezprotector;
 
 import com.github.donotspampls.ezprotector.commands.EZPCommand;
-import com.github.donotspampls.ezprotector.commands.TabCompletion;
+import com.github.donotspampls.ezprotector.commands.EZPTabCompleter;
 import com.github.donotspampls.ezprotector.listeners.PacketEventListener;
 import com.github.donotspampls.ezprotector.listeners.CommandEventListener;
 import com.github.donotspampls.ezprotector.listeners.PlayerJoinListener;
@@ -92,7 +92,7 @@ public class Main extends JavaPlugin {
 
         PluginCommand command = getCommand("ezp");
         command.setExecutor(new EZPCommand());
-        command.setTabCompleter(new TabCompletion());
+        command.setTabCompleter(new EZPTabCompleter());
 
         getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);

@@ -36,15 +36,4 @@ public class MessageUtil {
                 .replace("%prefix%", Main.getPrefix()));
     }
 
-    public static void sendJsonMessage(Player player, String jsonMessage) {
-        try {
-            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-
-            PacketContainer packet = new PacketContainer(PacketType.Play.Server.CHAT);
-            packet.getChatComponents().write(0, WrappedChatComponent.fromJson(jsonMessage));
-            protocolManager.sendServerPacket(player, packet);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
 }

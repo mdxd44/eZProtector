@@ -43,9 +43,8 @@ public class PacketMessageListener implements PluginMessageListener {
         if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
-        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica")) {
+        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica"))
             player.sendPluginMessage(plugin, Main.SCHEMATICA, getSchematicaPayload());
-        }
 
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {
             // Converts the byte array to a string called "brand"
