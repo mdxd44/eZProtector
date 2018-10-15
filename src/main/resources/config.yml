@@ -126,5 +126,7 @@ mods:
     block: false
   voxelmap:
     block: false
+  wdl:
+    block: false
 
 # This is the end of the config! Yay!

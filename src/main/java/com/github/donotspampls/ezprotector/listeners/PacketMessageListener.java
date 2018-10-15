@@ -13,14 +13,15 @@ package com.github.donotspampls.ezprotector.listeners;
 import com.github.donotspampls.ezprotector.Main;
 import com.github.donotspampls.ezprotector.utilities.ExecutionUtil;
 import com.github.donotspampls.ezprotector.utilities.MessageUtil;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
+import static com.github.donotspampls.ezprotector.utilities.WDLPackets.*;
 
 public class PacketMessageListener implements PluginMessageListener {
 
@@ -53,6 +54,8 @@ public class PacketMessageListener implements PluginMessageListener {
             if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config);
             if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config);
         }
+
+        if (config.getBoolean("mods.wdl.block")) blockWDL(player, channel, config);
     }
 
     /**
@@ -62,9 +65,16 @@ public class PacketMessageListener implements PluginMessageListener {
      * @param channel The channel where the byte array should be sent.
      */
     private void block5Zig(Player player, String channel) {
-        if ((channel.equalsIgnoreCase(Main.ZIG)) || (channel.contains("5zig")) && !player.hasPermission("ezprotector.bypass.mod.5zig")) {
-            // Send the data output as a byte array to the player
-            player.sendPluginMessage(plugin, channel, new byte[] {0x1|0x2|0x4|0x8|0x10|0x20});
+        if (channel.equalsIgnoreCase(Main.ZIG) && !player.hasPermission("ezprotector.bypass.mod.5zig")) {
+            /*
+             * 0x1 = Potion HUD
+             * 0x2 = Potion Indicator
+             * 0x4 = Armor HUD
+             * 0x8 = Saturation
+             * 0x16 = Unused
+             * 0x32 = Auto Reconnect
+             */
+            player.sendPluginMessage(plugin, channel, new byte[] {0x1|0x2|0x4|0x8|0x16|0x32});
         }
     }
 
@@ -106,7 +116,7 @@ public class PacketMessageListener implements PluginMessageListener {
      * @param config The plugin configuration on the particular server.
      */
     private void blockLiteLoader(Player player, String brand, FileConfiguration config) {
-        if ((brand.contains("Lite")) || (brand.equalsIgnoreCase("LiteLoader")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
+        if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
             ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
 
@@ -116,25 +126,39 @@ public class PacketMessageListener implements PluginMessageListener {
     }
 
     /**
-     * Creates a byte array with options that tell Schematica which features to block (used for 1.8+)
+     * Creates a byte array with options that tell Schematica which features to block
      *
      * @return The byte array containing the Schematica block configuration.
      */
+    @SuppressWarnings("UnstableApiUsage")
     private static byte[] getSchematicaPayload() {
         // Create the byte array and data stream
-        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        final DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
-        try {
-            // Add bytes to data stream
-            dataOutputStream.writeByte(0);
-            dataOutputStream.writeBoolean(false);
-            dataOutputStream.writeBoolean(false);
-            dataOutputStream.writeBoolean(false);
+        final ByteArrayDataOutput output = ByteStreams.newDataOutput();
 
-            // Convert the data stream to a byte array and return it
-            return byteArrayOutputStream.toByteArray();
-        } catch (IOException ignored) {
-            return null;
+        // Add bytes to data stream
+        output.writeByte(0);
+        output.writeBoolean(false);
+        output.writeBoolean(false);
+        output.writeBoolean(false);
+
+        // Convert the data stream to a byte array and return it
+        return output.toByteArray();
+    }
+
+    /**
+     * Kicks a certain player if WorldDownloader is found on the client
+     *
+     * @param player The player to execute the block on.
+     * @param channel The channel which the message was sent on.
+     * @param config The plugin configuration on the particular server.
+     */
+    private void blockWDL(Player player, String channel, FileConfiguration config) {
+        if (channel.equalsIgnoreCase(Main.WDLINIT) && !player.hasPermission("ezprotector.bypass.mod.wdl")) {
+            byte[][] packets = new byte[2][];
+            packets[0] = createWDLPacket0();
+            packets[1] = createWDLPacket1();
+
+            for (byte[] packet : packets) player.sendPluginMessage(plugin, Main.WDLCONTROL, packet);
         }
     }
 

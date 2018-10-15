@@ -12,10 +12,7 @@ package com.github.donotspampls.ezprotector;
 
 import com.github.donotspampls.ezprotector.commands.EZPCommand;
 import com.github.donotspampls.ezprotector.commands.EZPTabCompleter;
-import com.github.donotspampls.ezprotector.listeners.PacketEventListener;
-import com.github.donotspampls.ezprotector.listeners.CommandEventListener;
-import com.github.donotspampls.ezprotector.listeners.PlayerJoinListener;
-import com.github.donotspampls.ezprotector.listeners.PacketMessageListener;
+import com.github.donotspampls.ezprotector.listeners.*;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.PluginCommand;
@@ -37,6 +34,8 @@ public class Main extends JavaPlugin {
     public static String BSM = "BSM";
     public static String MCBRAND = "MC|Brand";
     public static String SCHEMATICA = "schematica";
+    public static String WDLINIT = "WDL|INIT";
+    public static String WDLCONTROL = "WDL|CONTROL";
     private static String prefix;
     private static Plugin plugin;
 
@@ -83,11 +82,13 @@ public class Main extends JavaPlugin {
             getServer().getMessenger().registerIncomingPluginChannel(this, BSM, pluginMessageListener);
             getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, pluginMessageListener);
             getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, pluginMessageListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, pluginMessageListener);
 
             getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
             getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
             getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
             getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
+            getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
         } else getLogger().warning("1.13 and above do not support mod blocking yet!");
 
         PluginCommand command = getCommand("ezp");

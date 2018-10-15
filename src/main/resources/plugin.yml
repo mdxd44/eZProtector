@@ -112,6 +112,7 @@ permissions:
       ezprotector.bypass.mod.schematica: true
       ezprotector.bypass.mod.smartmoving: true
       ezprotector.bypass.mod.voxelmap: true
+      ezprotector.bypass.mod.wdl: true
   ezprotector.bypass.mod.5zig:
     description: Bypasses the 5zig mod.
     default: op
@@ -141,4 +142,7 @@ permissions:
     default: op
   ezprotector.bypass.mod.voxelmap:
     description: Bypasses the VoxelMap mod.
+    default: op
+  ezprotector.bypass.mod.wdl:
+    description: Bypasses the WorldDownloader mod.
     default: op

@@ -29,23 +29,21 @@ public class CustomPlugins {
         String command = event.getMessage();
 
         String[] plu = new String[]{"/pl", "/plugins"};
-            for (String aList : plu) {
-                // The command that is being tested at the moment
-                if (command.split(" ")[0].equalsIgnoreCase(aList)) {
-                    if (player.hasPermission("ezprotector.bypass.command.plugins")) {
-                        return;
-                    }
+        for (String aList : plu) {
+            // The command that is being tested at the moment
+            if (command.split(" ")[0].equalsIgnoreCase(aList)) {
+                if (player.hasPermission("ezprotector.bypass.command.plugins")) return;
 
-                    event.setCancelled(true);
+                event.setCancelled(true);
 
-                    String[] plugins = Main.getPlugin().getConfig().getString("custom-plugins.plugins").split(", ");
-                    String pluginsList = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GREEN).join(plugins);
+                String[] plugins = Main.getPlugin().getConfig().getString("custom-plugins.plugins").split(", ");
+                String pluginsList = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GREEN).join(plugins);
 
-                    // Create a fake /plugins output message using the string array above.
-                    String customPlugins = ChatColor.WHITE + "Plugins (" + plugins.length + "): " + ChatColor.GREEN + pluginsList;
+                // Create a fake /plugins output message using the string array above.
+                String customPlugins = ChatColor.WHITE + "Plugins (" + plugins.length + "): " + ChatColor.GREEN + pluginsList;
 
-                    player.sendMessage(customPlugins);
-                }
+                player.sendMessage(customPlugins);
+            }
         }
     }
 
