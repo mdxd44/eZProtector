@@ -3,6 +3,7 @@ version: ${project.version}
 description: ${project.description}
 authors: [DoNotSpamPls, dvargas135, Gianluca]
 website: https://bit.ly/eZProtector
+api-version: 1.13
 
 main: com.github.donotspampls.ezprotector.Main
 database: false
