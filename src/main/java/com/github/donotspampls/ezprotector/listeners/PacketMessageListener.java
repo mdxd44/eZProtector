@@ -55,7 +55,7 @@ public class PacketMessageListener implements PluginMessageListener {
             if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config);
         }
 
-        if (config.getBoolean("mods.wdl.block")) blockWDL(player, channel, config);
+        if (config.getBoolean("mods.wdl.block")) blockWDL(player, channel);
     }
 
     /**
@@ -150,9 +150,8 @@ public class PacketMessageListener implements PluginMessageListener {
      *
      * @param player The player to execute the block on.
      * @param channel The channel which the message was sent on.
-     * @param config The plugin configuration on the particular server.
      */
-    private void blockWDL(Player player, String channel, FileConfiguration config) {
+    private void blockWDL(Player player, String channel) {
         if (channel.equalsIgnoreCase(Main.WDLINIT) && !player.hasPermission("ezprotector.bypass.mod.wdl")) {
             byte[][] packets = new byte[2][];
             packets[0] = createWDLPacket0();

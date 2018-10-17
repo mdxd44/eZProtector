@@ -117,10 +117,6 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>com.github.donotspampls.ezprotector.metrics</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>me.lucko.commodore</pattern>
-                            <shadedPattern>com.github.donotspampls.ezprotector.commodore</shadedPattern>
-                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
