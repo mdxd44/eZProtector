@@ -7,7 +7,6 @@ api-version: 1.13
 
 main: com.github.donotspampls.ezprotector.Main
 database: false
-softDepend: [ProtocolLib]
 
 commands:
   ezp:

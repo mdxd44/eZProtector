@@ -5,7 +5,7 @@
 
     <groupId>com.github.donotspampls</groupId>
     <artifactId>ezprotector</artifactId>
-    <version>4.4.0</version>
+    <version>4.4.1</version>
     <packaging>jar</packaging>
 
     <name>eZProtector</name>
@@ -56,10 +56,6 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>protocollib-repo</id>
-            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
-        </repository>
-        <repository>
             <id>bstats-repo</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -72,14 +68,6 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.13.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- ProtocolLib API -->
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib-API</artifactId>
-            <version>4.4.0</version>
             <scope>provided</scope>
         </dependency>
 

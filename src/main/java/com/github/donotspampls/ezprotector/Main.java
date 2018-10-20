@@ -62,17 +62,8 @@ public class Main extends JavaPlugin {
         plugin = this;
         prefix = color(getConfig().getString("prefix"));
 
-        // Check if ProtocolLib is on the server and register the packet listener
-        if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-            getLogger().severe("This plugin requires ProtocolLib in order to work. Please download ProtocolLib and try again.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
         // Save the default config
         saveDefaultConfig();
-
-        PacketEventListener.protocolLibHook();
 
         PacketMessageListener pluginMessageListener = new PacketMessageListener(this);
 
@@ -97,6 +88,7 @@ public class Main extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new TabCompletionListener(), this);
 
         // Register the metrics class and add custom charts
         Metrics metrics = new Metrics(this);
