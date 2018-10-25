@@ -23,13 +23,18 @@ import java.util.List;
 
 public class TabCompletionListener implements Listener {
 
+    /**
+     * Checks if a player is tab completing a forbidden command.
+     *
+     * @param event The tab complete event from which other information is gathered.
+     */
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         FileConfiguration config = Main.getPlugin().getConfig();
         final List<String> blocked = config.getStringList("tab-completion.blacklisted");
 
         // If tab blocking is enabled and the player has tried to autocomplete, continue
-        if (config.getBoolean("tab-completion.blocked")) {
+        if (config.getBoolean("tab-completion.blocked") && event.getSender() instanceof Player) {
             Player player = (Player) event.getSender();
             String cmd = event.getBuffer().replaceAll("[/ ]", "");
 

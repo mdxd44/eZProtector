@@ -23,9 +23,7 @@ public class ExecutionUtil {
      * @param permission The required permission to recieve the notification
      */
     public static void notifyAdmins(String message, String permission) {
-        if (message.trim().isEmpty()) {
-            return;
-        }
+        if (message.trim().isEmpty()) return;
 
         Bukkit.getOnlinePlayers().stream()
                 .filter(admin -> admin.hasPermission(permission))

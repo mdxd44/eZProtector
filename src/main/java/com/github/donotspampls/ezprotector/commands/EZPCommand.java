@@ -20,24 +20,22 @@ import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 public class EZPCommand implements CommandExecutor {
 
     /**
-     * Checks if the /ezp command was executed and handles command logic.
+     * Handles command logic for the /ezp command
      *
      * @param sender The player who sent the command
      * @param command The command which was sent
      * @param label Pretty much command.getName(). Not used in the code below
      * @param args The arguments after the command (/command <args>)
-     * @return true if the command got executed successfully, otherwise false
+     * @return true
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(color( "&a&leZProtector &7version &r") + Main.getPlugin().getDescription().getVersion());
-            sender.sendMessage(color("&b/ezp reload &7- &rReloads the plugin configuration."));
-        } else if (args[0].equalsIgnoreCase("reload")) {
+        if (args[0].equalsIgnoreCase("reload")) {
             Main.getPlugin().reloadConfig();
             sender.sendMessage(color(Main.getPlugin().getConfig().getString("prefix")) + " The config was reloaded!");
         } else {
-            sender.sendMessage(color("&4You have typed an invalid argument. Type /ezp to see a list of available commands."));
+            sender.sendMessage(color( "&a&leZProtector &7version &r") + Main.getPlugin().getDescription().getVersion());
+            sender.sendMessage(color("&b/ezp reload &7- &rReloads the plugin configuration."));
         }
         return true;
     }

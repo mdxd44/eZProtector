@@ -23,12 +23,7 @@ import java.nio.charset.StandardCharsets;
 
 import static com.github.donotspampls.ezprotector.utilities.WDLPackets.*;
 
-public class PacketMessageListener implements PluginMessageListener {
-
-    private final Main plugin;
-    public PacketMessageListener(Main plugin) {
-        this.plugin = plugin;
-    }
+public class ByteMessageListener implements PluginMessageListener {
 
     /**
      * Listen for plugin messages by various mods
@@ -39,13 +34,13 @@ public class PacketMessageListener implements PluginMessageListener {
      */
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] value) {
-        FileConfiguration config = plugin.getConfig();
+        FileConfiguration config = Main.getPlugin().getConfig();
 
         if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
         if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica"))
-            player.sendPluginMessage(plugin, Main.SCHEMATICA, getSchematicaPayload());
+            player.sendPluginMessage(Main.getPlugin(), Main.SCHEMATICA, getSchematicaPayload());
 
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {
             // Converts the byte array to a string called "brand"
@@ -74,7 +69,7 @@ public class PacketMessageListener implements PluginMessageListener {
              * 0x16 = Unused
              * 0x32 = Auto Reconnect
              */
-            player.sendPluginMessage(plugin, channel, new byte[] {0x1|0x2|0x4|0x8|0x16|0x32});
+            player.sendPluginMessage(Main.getPlugin(), channel, new byte[] {0x1|0x2|0x4|0x8|0x16|0x32});
         }
     }
 
@@ -87,7 +82,7 @@ public class PacketMessageListener implements PluginMessageListener {
     private void blockBSM(Player player, String channel) {
         if (channel.equalsIgnoreCase(Main.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
             // Send the data output as a byte array to the player
-            player.sendPluginMessage(plugin, channel, new byte[] {1});
+            player.sendPluginMessage(Main.getPlugin(), channel, new byte[] {1});
         }
     }
 
@@ -157,7 +152,7 @@ public class PacketMessageListener implements PluginMessageListener {
             packets[0] = createWDLPacket0();
             packets[1] = createWDLPacket1();
 
-            for (byte[] packet : packets) player.sendPluginMessage(plugin, Main.WDLCONTROL, packet);
+            for (byte[] packet : packets) player.sendPluginMessage(Main.getPlugin(), Main.WDLCONTROL, packet);
         }
     }
 

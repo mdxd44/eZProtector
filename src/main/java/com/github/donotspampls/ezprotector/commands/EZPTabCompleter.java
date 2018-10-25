@@ -10,6 +10,15 @@ import java.util.List;
 
 public class EZPTabCompleter implements TabCompleter {
 
+    /**
+     * Handles tab completion logic for the /ezp command
+     *
+     * @param sender The player who sent the command
+     * @param command The command which was sent
+     * @param alias Pretty much command.getAlias(). Not used in the code below
+     * @param args The arguments after the command (/command <args>)
+     * @return Collection with the tab completion results
+     */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1 && StringUtil.startsWithIgnoreCase("reload", args[0])) {

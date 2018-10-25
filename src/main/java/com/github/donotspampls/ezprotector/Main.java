@@ -16,7 +16,6 @@ import com.github.donotspampls.ezprotector.listeners.*;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -32,19 +31,19 @@ public class Main extends JavaPlugin {
     // Variables
     public static String ZIG = "5zig_Set";
     public static String BSM = "BSM";
-    public static String MCBRAND = "MC|Brand";
+    public static String MCBRAND;
     public static String SCHEMATICA = "schematica";
-    public static String WDLINIT = "WDL|INIT";
-    public static String WDLCONTROL = "WDL|CONTROL";
+    public static String WDLINIT;
+    public static String WDLCONTROL;
     private static String prefix;
-    private static Plugin plugin;
+    private static Main plugin;
 
     /**
      * Gets the plugin variable from the main class.
      *
      * @return The plugin variable.
      */
-    public static Plugin getPlugin() {
+    public static Main getPlugin() {
         return plugin;
     }
 
@@ -65,10 +64,14 @@ public class Main extends JavaPlugin {
         // Save the default config
         saveDefaultConfig();
 
-        PacketMessageListener pluginMessageListener = new PacketMessageListener(this);
+        ByteMessageListener pluginMessageListener = new ByteMessageListener();
 
-        // Set mod channels (Forge 1.13 doesn't exist yet so we don't bother with 1.13)
+        // Set mod channels (Forge 1.13 doesn't exist yet so we don't bother with most 1.13 mods)
         if (!getServer().getVersion().contains("1.13")) {
+            MCBRAND = "MC|Brand";
+            WDLINIT = "WDL|INIT";
+            WDLCONTROL = "WDL|CONTROL";
+
             getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, pluginMessageListener);
             getServer().getMessenger().registerIncomingPluginChannel(this, BSM, pluginMessageListener);
             getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, pluginMessageListener);
@@ -77,10 +80,18 @@ public class Main extends JavaPlugin {
 
             getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
             getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
-            getServer().getMessenger().registerOutgoingPluginChannel(this, MCBRAND);
             getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
             getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
-        } else getLogger().warning("1.13 and above do not support mod blocking yet!");
+        } else {
+            MCBRAND = "minecraft:brand";
+            WDLINIT = "wdl:init";
+            WDLCONTROL = "wdl:control";
+
+            getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, pluginMessageListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, pluginMessageListener);
+
+            getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
+        }
 
         PluginCommand command = getCommand("ezp");
         command.setExecutor(new EZPCommand());
@@ -124,4 +135,5 @@ public class Main extends JavaPlugin {
             }
         });
     }
+
 }
