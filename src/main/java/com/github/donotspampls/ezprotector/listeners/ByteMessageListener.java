@@ -39,9 +39,6 @@ public class ByteMessageListener implements PluginMessageListener {
         if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
-        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica"))
-            player.sendPluginMessage(Main.getPlugin(), Main.SCHEMATICA, getSchematicaPayload());
-
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {
             // Converts the byte array to a string called "brand"
             String brand = new String(value, StandardCharsets.UTF_8);
@@ -49,6 +46,9 @@ public class ByteMessageListener implements PluginMessageListener {
             if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config);
             if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config);
         }
+
+        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica"))
+            player.sendPluginMessage(Main.getPlugin(), Main.SCHEMATICA, getSchematicaPayload());
 
         if (config.getBoolean("mods.wdl.block")) blockWDL(player, channel);
     }
@@ -127,7 +127,7 @@ public class ByteMessageListener implements PluginMessageListener {
      */
     @SuppressWarnings("UnstableApiUsage")
     private static byte[] getSchematicaPayload() {
-        // Create the byte array and data stream
+        // Create the byte array data output
         final ByteArrayDataOutput output = ByteStreams.newDataOutput();
 
         // Add bytes to data stream

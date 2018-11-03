@@ -9,7 +9,7 @@ public class WDLPackets {
     public static byte[] createWDLPacket0() {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeInt(0);
-        output.writeBoolean(false);
+        output.writeBoolean(false); // no new features allowed
         return output.toByteArray();
     }
 
@@ -17,6 +17,7 @@ public class WDLPackets {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeInt(1);
 
+        // no WDL features at all allowed
         output.writeBoolean(false);
         output.writeInt(0);
         output.writeBoolean(false);

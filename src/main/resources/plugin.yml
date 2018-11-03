@@ -105,12 +105,9 @@ permissions:
       ezprotector.bypass.mod.5zig: true
       ezprotector.bypass.mod.betterpvp: true
       ezprotector.bypass.mod.bettersprinting: true
-      ezprotector.bypass.mod.damageindicators: true
       ezprotector.bypass.mod.forge: true
       ezprotector.bypass.mod.liteloader: true
-      ezprotector.bypass.mod.reiminimap: true
       ezprotector.bypass.mod.schematica: true
-      ezprotector.bypass.mod.smartmoving: true
       ezprotector.bypass.mod.voxelmap: true
       ezprotector.bypass.mod.wdl: true
   ezprotector.bypass.mod.5zig:
@@ -122,23 +119,14 @@ permissions:
   ezprotector.bypass.mod.bettersprinting:
     description: Bypasses the BetterSprinting mod.
     default: op
-  ezprotector.bypass.mod.damageindicators:
-    description: Bypasses the Damage Indicators mod.
-    default: op
   ezprotector.bypass.mod.forge:
     description: Bypasses the Forge mod.
     default: op
   ezprotector.bypass.mod.liteloader:
     description: Bypasses the LiteLoader mod.
     default: op
-  ezprotector.bypass.mod.reiminimap:
-    description: Bypasses the Rei''s Minimap mod.
-    default: op
   ezprotector.bypass.mod.schematica:
     description: Bypasses the Schematica mod.
-    default: op
-  ezprotector.bypass.mod.smartmoving:
-    description: Bypasses the Smart Moving mod.
     default: op
   ezprotector.bypass.mod.voxelmap:
     description: Bypasses the VoxelMap mod.
