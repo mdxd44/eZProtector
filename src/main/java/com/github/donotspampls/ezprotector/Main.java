@@ -29,10 +29,10 @@ import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
 public class Main extends JavaPlugin {
 
     // Variables
-    public static String ZIG = "5zig_Set";
-    public static String BSM = "BSM";
+    public static String ZIG;
+    public static String BSM;
     public static String MCBRAND;
-    public static String SCHEMATICA = "schematica";
+    public static String SCHEMATICA;
     public static String WDLINIT;
     public static String WDLCONTROL;
     private static String prefix;
@@ -68,7 +68,10 @@ public class Main extends JavaPlugin {
 
         // Set mod channels (Forge 1.13 doesn't exist yet so we don't bother with most 1.13 mods)
         if (!getServer().getVersion().contains("1.13")) {
+            ZIG = "5zig_Set";
+            BSM = "BSM";
             MCBRAND = "MC|Brand";
+            SCHEMATICA = "schematica";
             WDLINIT = "WDL|INIT";
             WDLCONTROL = "WDL|CONTROL";
 
@@ -83,7 +86,10 @@ public class Main extends JavaPlugin {
             getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
             getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
         } else {
+            ZIG = "";
+            BSM = "";
             MCBRAND = "minecraft:brand";
+            SCHEMATICA = "";
             WDLINIT = "wdl:init";
             WDLCONTROL = "wdl:control";
 
@@ -100,7 +106,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new TabCompletionListener(), this);
-
+        
         // Register the metrics class and add custom charts
         Metrics metrics = new Metrics(this);
 

@@ -57,7 +57,7 @@
         </repository>
         <repository>
             <id>bstats-repo</id>
-            <url>https://jitpack.io</url>
+            <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
     </repositories>
 
@@ -73,7 +73,7 @@
 
         <!-- bStats Metrics -->
         <dependency>
-            <groupId>org.bstats.bStats-Metrics</groupId>
+            <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>1.4</version>
             <scope>compile</scope>

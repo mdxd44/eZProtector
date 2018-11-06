@@ -30,12 +30,14 @@ public class EZPCommand implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args[0].equalsIgnoreCase("reload")) {
+        if (args.length == 0) {
+            sender.sendMessage(color( "&a&leZProtector &7version &r") + Main.getPlugin().getDescription().getVersion());
+            sender.sendMessage(color("&b/ezp reload &7- &rReloads the plugin configuration."));
+        } else if (args[0].equalsIgnoreCase("reload")) {
             Main.getPlugin().reloadConfig();
             sender.sendMessage(color(Main.getPlugin().getConfig().getString("prefix")) + " The config was reloaded!");
         } else {
-            sender.sendMessage(color( "&a&leZProtector &7version &r") + Main.getPlugin().getDescription().getVersion());
-            sender.sendMessage(color("&b/ezp reload &7- &rReloads the plugin configuration."));
+            sender.sendMessage(color("&4You have typed an invalid argument. Type /ezp to see a list of available commands."));
         }
         return true;
     }
