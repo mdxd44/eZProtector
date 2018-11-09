@@ -24,7 +24,7 @@ import java.util.List;
 public class TabCompletionListener implements Listener {
 
     /**
-     * Checks if a player is tab completing a forbidden command.
+     * Checks if a player is tab completing a forbidden command. (1.8-1.12)
      *
      * @param event The tab complete event from which other information is gathered.
      */

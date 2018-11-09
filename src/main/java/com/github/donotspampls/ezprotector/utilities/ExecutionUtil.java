@@ -10,6 +10,7 @@
 
 package com.github.donotspampls.ezprotector.utilities;
 
+import com.github.donotspampls.ezprotector.Main;
 import org.bukkit.Bukkit;
 
 import static com.github.donotspampls.ezprotector.utilities.MessageUtil.color;
@@ -25,12 +26,12 @@ public class ExecutionUtil {
     public static void notifyAdmins(String message, String permission) {
         if (message.trim().isEmpty()) return;
 
-        Bukkit.getOnlinePlayers().stream()
+        Main.getPlugin().getServer().getOnlinePlayers().stream()
                 .filter(admin -> admin.hasPermission(permission))
                 .forEach(admin -> admin.sendMessage(color(message)));
     }
 
     public static void executeConsoleCommand(String command) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        Main.getPlugin().getServer().dispatchCommand(Main.getPlugin().getServer().getConsoleSender(), command);
     }
 }

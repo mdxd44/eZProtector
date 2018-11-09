@@ -8,19 +8,27 @@ prefix: '&7[&aeZProtector&7]&f'
 updater: true
 
 # This feature blocks tab completion! (with various features added to it)
+# Punishments and notifications will *not* work 1.13 or above
 tab-completion:
   blocked: true
   # These commands will never be allowed to be tab completed!
   blacklisted:
   - plugins
+  - bukkit:plugins
   - pl
+  - bukkit:pl
   - icanhasbukkit
   - ver
+  - bukkit:ver
   - version
+  - bukkit:version
   - '?'
+  - bukkit:?
   - a
   - about
+  - bukkit:about
   - help
+  - bukkit:help
   warn:
     # If this option is set to true and a player holds the Tab key, they'll be spammed with the message below
     enabled: false

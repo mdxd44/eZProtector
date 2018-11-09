@@ -64,10 +64,19 @@ public class Main extends JavaPlugin {
         // Save the default config
         saveDefaultConfig();
 
-        ByteMessageListener pluginMessageListener = new ByteMessageListener();
+        ByteMessageListener bml = new ByteMessageListener();
+
+        // Check if the server is 1.13 or above
+        boolean newerversion;
+        try {
+            Class.forName("org.bukkit.entity.Dolphin");
+            newerversion = true;
+        } catch (ClassNotFoundException ignored) {
+            newerversion = false;
+        }
 
         // Set mod channels (Forge 1.13 doesn't exist yet so we don't bother with most 1.13 mods)
-        if (!getServer().getVersion().contains("1.13")) {
+        if (!newerversion) {
             ZIG = "5zig_Set";
             BSM = "BSM";
             MCBRAND = "MC|Brand";
@@ -75,16 +84,18 @@ public class Main extends JavaPlugin {
             WDLINIT = "WDL|INIT";
             WDLCONTROL = "WDL|CONTROL";
 
-            getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, pluginMessageListener);
-            getServer().getMessenger().registerIncomingPluginChannel(this, BSM, pluginMessageListener);
-            getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, pluginMessageListener);
-            getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, pluginMessageListener);
-            getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, pluginMessageListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, BSM, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, bml);
 
             getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
             getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
             getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
             getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
+
+            getServer().getPluginManager().registerEvents(new TabCompletionListener(), this);
         } else {
             ZIG = "";
             BSM = "";
@@ -93,10 +104,12 @@ public class Main extends JavaPlugin {
             WDLINIT = "wdl:init";
             WDLCONTROL = "wdl:control";
 
-            getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, pluginMessageListener);
-            getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, pluginMessageListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, bml);
 
             getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
+
+            getServer().getPluginManager().registerEvents(new BrigadierListener(), this);
         }
 
         PluginCommand command = getCommand("ezp");
@@ -105,7 +118,6 @@ public class Main extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
-        getServer().getPluginManager().registerEvents(new TabCompletionListener(), this);
         
         // Register the metrics class and add custom charts
         Metrics metrics = new Metrics(this);

@@ -5,7 +5,7 @@
 
     <groupId>com.github.donotspampls</groupId>
     <artifactId>ezprotector</artifactId>
-    <version>4.4.1</version>
+    <version>4.4.2</version>
     <packaging>jar</packaging>
 
     <name>eZProtector</name>
