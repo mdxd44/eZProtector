@@ -97,10 +97,10 @@ public class Main extends JavaPlugin {
 
             getServer().getPluginManager().registerEvents(new TabCompletionListener(), this);
         } else {
-            ZIG = "";
-            BSM = "";
+            ZIG = "dev:null";
+            BSM = "dev:null";
             MCBRAND = "minecraft:brand";
-            SCHEMATICA = "";
+            SCHEMATICA = "dev:null";
             WDLINIT = "wdl:init";
             WDLCONTROL = "wdl:control";
 

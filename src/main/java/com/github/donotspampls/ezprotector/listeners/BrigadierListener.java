@@ -20,7 +20,7 @@ public class BrigadierListener implements Listener {
         FileConfiguration config = Main.getPlugin().getConfig();
         final List<String> blocked = config.getStringList("tab-completion.blacklisted");
 
-        if (config.getBoolean("tab-completion.blocked") && Main.getPlugin().getServer().getVersion().contains("1.13")) {
+        if (config.getBoolean("tab-completion.blocked") && !event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete")) {
             event.getCommands().removeAll(blocked);
         }
     }
