@@ -104,9 +104,11 @@ public class Main extends JavaPlugin {
             WDLINIT = "wdl:init";
             WDLCONTROL = "wdl:control";
 
+            getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, bml);
             getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, bml);
             getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, bml);
 
+            getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
             getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
 
             getServer().getPluginManager().registerEvents(new BrigadierListener(), this);
