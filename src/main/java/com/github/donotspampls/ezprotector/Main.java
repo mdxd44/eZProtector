@@ -60,6 +60,12 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         prefix = color(getConfig().getString("prefix"));
+        String version = getServer().getVersion();
+
+        if (!version.contains("1.12") || !version.contains("1.13")) {
+            getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
+            getServer().getPluginManager().disablePlugin(this);
+        }
 
         // Save the default config
         saveDefaultConfig();

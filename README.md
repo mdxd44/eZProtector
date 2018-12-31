@@ -23,4 +23,4 @@ mvn clean package
 You can find the output jars in the `target` directory.
 
 ## License
-eZProtector is licensed under the permissive MIT license. Please see [`LICENSE`](https://github.com/DoNotSpamPls/eZProtector/blob/master/LICENSE) for more information.
+eZProtector is licensed under the GPLv3 license. Please see [`LICENSE`](https://github.com/DoNotSpamPls/eZProtector/blob/master/LICENSE) for more information.
