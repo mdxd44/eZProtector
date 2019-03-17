@@ -1,0 +1,16 @@
+[
+    {
+        "modid": "${parent.artifactId}",
+        "name": "${parent.name}",
+        "version": "${project.version}",
+        "description": "${parent.description}",
+        "url": "${parent.url}",
+        "authorList": [ "DoNotSpamPls" ],
+        "dependencies": [
+            "spongeapi@7.1.0"
+        ],
+        "requiredMods": [
+            "spongeapi@7.1.0"
+        ]
+    }
+]

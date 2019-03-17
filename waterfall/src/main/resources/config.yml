@@ -1,0 +1,138 @@
+# eZProtector | Version ${project.version}
+# To see what are the placeholders available to you, read the information page here: https://git.io/vpDio
+
+# Here you can modify the prefix of the plugin.
+prefix: '&7[&aeZProtector&7]&f'
+
+# This feature blocks tab completion! (with various features added to it)
+# Punishments and notifications will *not* work 1.13 or above
+tab-completion:
+  blocked: true
+  # These commands will never be allowed to be tab completed!
+  blacklisted:
+  - plugins
+  - bukkit:plugins
+  - pl
+  - waterfall:pl
+  - icanhasbukkit
+  - ver
+  - bukkit:ver
+  - version
+  - bukkit:version
+  - '?'
+  - bukkit:?
+  - a
+  - about
+  - bukkit:about
+  - help
+  - bukkit:help
+  - server
+  warn:
+    # If this option is set to true and a player holds the Tab key, they'll be spammed with the message below
+    enabled: false
+    message: '%prefix% &cYou don''t have permission to tab-complete commands.'
+  notify-admins:
+    # If this is set to true, players with notify permissions will also get spammed if a player holds the Tab key.
+    enabled: false
+    message: '%prefix% %player% tried to tab-complete a command. &4(%command%)'
+  punish-player:
+    # This shouldn't really be necessary, but it's here for convenience. It's not recommended to punish a player for pressing the Tab key in the chat!
+    enabled: false
+    command: 'kick %player% %errormessage%'
+
+# This blocks players from using commands such as /waterfall:help or /essentials:warp, since they can use that to bypass various protections.
+hidden-syntaxes:
+  blocked: true
+  error-message: '%prefix% &cThat syntax is forbidden.'
+  # If you add a command to this list, it will not be blocked.
+  whitelisted:
+  - whitelisted:commands
+  - with:hidden
+  - syntaxes:here
+  notify-admins:
+    enabled: true
+    message: '%prefix% %player% tried to do a command with a hidden syntax. &4(%command%)'
+  punish-player:
+    enabled: false
+    command: 'kick %player% %errormessage%'
+
+# This option allows you to set a custom list of plugins that will be shown if players do /plugins
+# This will *not* work if you add the plugins command to the blocked commands list.
+custom-plugins:
+  # If you enable this, the other three options will *not* work!
+  enabled: true
+  plugins: Fully, Custom, Plugins
+  # If the enabled option above is set to false, this message will be shown instead.
+  error-message: '%prefix% &4You are not allowed to see this server''s plugin list.'
+  notify-admins:
+    enabled: true
+    message: '%prefix% %player% tried to see the plugins list'
+  # The punish feature will only work if you have the custom-plugins feature set to false.
+  punish-player:
+    enabled: false
+    command: 'kick %player% %prefix% You don''t have permission to do this. (%command%)'
+
+# Same deal as with the custom plugins above, but for the version command!
+# It shows up as "This server is running server version Custom Version"
+custom-version:
+  # If you enable this, the other three options will *not* work!
+  enabled: false
+  version: "Custom Version"
+  # If the enabled option above is set to false, this message will be shown instead.
+  error-message: '%prefix% &4You are not allowed to see this server''s version.'
+  notify-admins:
+    enabled: true
+    message: '%prefix% %player% tried to see the server version'
+  # The punish feature will only work if you have the custom-version feature set to false.
+  punish-player:
+    enabled: false
+    command: 'kick %player% %prefix% You don''t have permission to do this. (%command%)'
+
+# This option allows you to block any command you wish! Just add it to the list to
+custom-commands:
+  blocked: true
+  error-message: '%prefix% You don''t have permission to do this. &4(%command%)'
+  commands:
+  - a
+  - about
+  - icanhasbukkit
+ #- pl      # These two commands are handled by the customized plugins section, so you don't need to add them here!
+ #- plugins
+ #- ver     # These two commands are handled by the customized version section, so you don't need to add them here!
+ #- version
+  - '?'
+  - plugman list
+  - command_without_slash
+  notify-admins:
+    enabled: true
+    message: '%prefix% &e%player% &btried to do the command &e%command%'
+  punish-player:
+    enabled: false
+    command: 'kick %player% %errormessage%'
+
+# This section allows you to block various mods (and even punish players for some of them!)
+# These **do not** work for 1.13
+mods:
+  5zig:
+    block: false
+  # This option also blocks Xaero's Minimap!
+  betterpvp:
+    block: false
+  bettersprinting:
+    block: false
+  forge:
+    block: false
+    warning-message: '&4WARN &c- &f%player% tried to join with the Forge mod.'
+    punish-command: kick %player% &4The Forge mod is not allowed.
+  liteloader:
+    block: false
+    warning-message: '&4WARN &c- &f%player% tried to join with the LiteLoader mod.'
+    punish-command: kick %player% &4The LiteLoader mod is not allowed.
+  schematica:
+    block: false
+  voxelmap:
+    block: false
+  wdl:
+    block: false
+
+# This is the end of the config! Yay!

@@ -3,21 +3,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.donotspampls</groupId>
+    <groupId>com.github.donotspampls.ezprotector</groupId>
     <artifactId>ezprotector</artifactId>
-    <version>4.4.2</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>paper</module>
+        <module>sponge</module>
+        <module>waterfall</module>
+    </modules>
 
     <name>eZProtector</name>
     <description>Securing your server the easy way!</description>
     <url>https://github.com/DoNotSpamPls/eZProtector</url>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- Disable tests -->
-        <skipTests>true</skipTests>
-        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <licenses>
@@ -27,23 +29,11 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>DoNotSpamPls</name>
-            <url>https://github.com/DoNotSpamPls</url>
-        </developer>
-    </developers>
-
     <scm>
         <connection>scm:git:https://github.com/DoNotSpamPls/eZProtector.git</connection>
         <developerConnection>scm:git:git@github.com:DoNotSpamPls/eZProtector.git</developerConnection>
         <url>https://github.com/DoNotSpamPls/eZProtector</url>
     </scm>
-
-    <ciManagement>
-        <system>Travis</system>
-        <url>https://travis-ci.com/DoNotSpamPls/eZProtector</url>
-    </ciManagement>
 
     <issueManagement>
         <system>GitHub</system>
@@ -52,78 +42,17 @@
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>paper-repo</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>bstats-repo</id>
-            <url>https://repo.codemc.org/repository/maven-public</url>
+            <id>sponge-repo</id>
+            <url>https://repo.spongepowered.org/maven</url>
         </repository>
     </repositories>
 
-    <dependencies>
-
-        <!-- Bukkit API -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- bStats Metrics -->
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>1.4</version>
-            <scope>compile</scope>
-        </dependency>
-
-    </dependencies>
-
     <build>
         <defaultGoal>clean package</defaultGoal>
-        <finalName>eZProtector</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
-                <configuration>
-                    <minimizeJar>true</minimizeJar>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>com.github.donotspampls.ezprotector.metrics</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 
     <distributionManagement>

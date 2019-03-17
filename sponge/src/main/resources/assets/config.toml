@@ -1,0 +1,96 @@
+# eZProtector | Version ${project.version}
+# To see what are the placeholders available to you, read the information page here: https://git.io/vpDio
+
+# Here you can modify the prefix of the plugin.
+prefix = "&7[&aeZProtector&7]&f"
+
+[tab-completion]
+    blocked = true
+    blacklisted = [
+        "sponge",
+        "help",
+        "?",
+    ]
+
+    [tab-completion.warn]
+        enabled = false
+        message = "%prefix% &cYou don't have permission to tab-complete commands."
+
+    [tab-completion.notify-admins]
+        enabled = false
+        message = "%prefix% %player% tried to tab-complete a command. &4(%command%)"
+
+    [tab-completion.punish-player]
+        enabled = false
+        command = "kick %player% %errormessage%"
+
+[hidden-syntaxes]
+    blocked = true
+    error-message = "%prefix% &cThat syntax is forbidden."
+    whitelisted = [
+        "whitelisted:commands",
+        "with:hidden",
+        "syntaxes:here"
+    ]
+
+    [hidden-syntaxes.notify-admins]
+        enabled = true
+        message = "%prefix% %player% tried to do a command with a hidden syntax. &4(%command%)"
+
+    [hidden-syntaxes.punish-player]
+        enabled = false
+        command = "kick %player% %errormessage%"
+
+[custom-plugins]
+    enabled = true
+    plugins = "Fully, Custom, Plugins"
+    error-message = "%prefix% &4You are not allowed to see this server's plugin list."
+
+    [custom-plugins.notify-admins]
+        enabled = true
+        message = "%prefix% %player% tried to see the plugins list"
+
+    [custom-plugins.punish-player]
+        enabled = false
+        command = "kick %player% %prefix% You don't have permission to do this. (%command%)"
+
+[custom-version]
+    enabled = false
+    version = "Custom Version"
+    error-message = "%prefix% &4You are not allowed to see this server's version."
+
+    [custom-version.notify-admins]
+        enabled = true
+        message = "%prefix% %player% tried to see the server version"
+
+    [custom-version.punish-player]
+        enabled = false
+        command = "kick %player% %prefix% You don't have permission to do this. (%command%)"
+
+[custom-commands]
+    blocked = true
+    error-message = "%prefix% You don't have permission to do this. &4(%command%)"
+    commands = [
+        "a",
+        "about",
+        "icanhasbukkit",
+        "?",
+        "plugman list",
+        "command_without_slash"
+    ]
+
+    [custom-commands.notify-admins]
+        enabled = true
+        message = "%prefix% &e%player% &btried to do the command &e%command%"
+
+    [custom-commands.punish-player]
+        enabled = false
+        command = "kick %player% %errormessage%"
+
+[mods]
+  5zig = false
+  betterpvp = false
+  bettersprinting = false
+  schematica = false
+  voxelmap = false
+  wdl = false
