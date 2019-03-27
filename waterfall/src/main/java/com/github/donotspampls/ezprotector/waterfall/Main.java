@@ -12,20 +12,21 @@ package com.github.donotspampls.ezprotector.waterfall;
 
 import com.github.donotspampls.ezprotector.waterfall.listeners.*;
 import com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil;
-
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.event.ProxyReloadEvent;
+import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import net.md_5.bungee.event.EventHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
-public class Main extends Plugin {
+public class Main extends Plugin implements Listener {
 
     // Variables
     private static String prefix;
@@ -56,21 +57,9 @@ public class Main extends Plugin {
         }
 
         // Load the configuration
-        try {
-            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
-        } catch (IOException ignored) {}
-
+        loadConfig();
 
         prefix = MessageUtil.color(getConfig().getString("prefix"));
-
-        /*
-        getProxy().registerChannel("5zig_Set");
-        getProxy().registerChannel("BSM");
-        getProxy().registerChannel("bsm:settings");
-        getProxy().registerChannel("schematica");
-        getProxy().registerChannel("WDL|CONTROL");
-        getProxy().registerChannel("wdl:control");
-        */
 
         // Register listeners
         getProxy().getPluginManager().registerListener(this, new BrigadierListener());
@@ -78,6 +67,12 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerListener(this, new CommandEventListener());
         getProxy().getPluginManager().registerListener(this, new PlayerJoinListener());
         getProxy().getPluginManager().registerListener(this, new TabCompletionListener());
+    }
+
+    private void loadConfig() {
+        try {
+            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
+        } catch (IOException ignored) {}
     }
 
     public static ProxyServer getServer() {
@@ -92,4 +87,8 @@ public class Main extends Plugin {
         return config;
     }
 
+    @EventHandler
+    public void onReload(ProxyReloadEvent event) {
+        loadConfig();
+    }
 }

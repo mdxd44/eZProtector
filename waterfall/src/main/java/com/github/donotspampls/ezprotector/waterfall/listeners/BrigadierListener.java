@@ -31,8 +31,6 @@ public class BrigadierListener implements Listener {
         ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
         Configuration config = Main.getConfig();
 
-        System.out.println(event.getCommands());
-
         if (config.getBoolean("tab-completion.blocked") && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
             for (String cmd : config.getStringList("tab-completion.blacklisted")) {
                 event.getCommands().remove(cmd);

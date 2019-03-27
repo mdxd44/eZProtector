@@ -11,7 +11,6 @@
 package com.github.donotspampls.ezprotector.waterfall.utilities;
 
 import com.github.donotspampls.ezprotector.waterfall.Main;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
