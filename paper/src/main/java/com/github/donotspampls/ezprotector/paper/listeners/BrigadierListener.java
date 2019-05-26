@@ -8,29 +8,31 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.listeners;
+package com.github.donotspampls.ezprotector.paper.listeners;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
+import com.github.donotspampls.ezprotector.paper.Main;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 
-public class PlayerJoinListener implements Listener {
+import java.util.List;
+
+public class BrigadierListener implements Listener {
 
     /**
-     * Sends out the mod blocks every time a player joins the server.
+     * Removes forbidden commands from Brigadier's command tree (1.13)
      *
-     * @param event The join event from which other information is gathered.
+     * @param event The event which removes the tab completions from the client.
      */
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player p = event.getPlayer();
+    public void onCommandSend(PlayerCommandSendEvent event) {
         FileConfiguration config = Main.getPlugin().getConfig();
+        final List<String> blocked = config.getStringList("tab-completion.blacklisted");
 
-        if (config.getBoolean("mods.betterpvp.block") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(" §c §r§5 §r§1 §r§f §r§0 ");
-        if (config.getBoolean("mods.voxelmap.block") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(" §3 §6 §3 §6 §3 §6 §e ");
+        if (config.getBoolean("tab-completion.blocked") && !event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete")) {
+            event.getCommands().removeAll(blocked);
+        }
     }
 
 }

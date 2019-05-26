@@ -41,7 +41,7 @@ public class CustomCommands {
                 if (config.getBoolean("custom-commands.punish-player.enabled")) {
                     String punishCommand = config.getString("custom-commands.punish-player.command");
                     // Replace placeholder with the error message in the config
-                    errorMessage = config.getString("custom-commands.punish-player.command");
+                    errorMessage = config.getString("custom-commands.error-message");
                     ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, "/" + message));
                 }
 

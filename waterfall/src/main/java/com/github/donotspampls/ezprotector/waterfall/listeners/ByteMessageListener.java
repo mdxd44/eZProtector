@@ -23,6 +23,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class ByteMessageListener implements Listener {
 
@@ -33,8 +34,8 @@ public class ByteMessageListener implements Listener {
         ProxiedPlayer player = (ProxiedPlayer) e.getSender();
         Configuration config = Main.getConfig();
 
-        if (config.getBoolean("mods.5zig.block")) block5Zig(player);
-        if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player);
+        if (config.getBoolean("mods.5zig.block") && e.getTag().equalsIgnoreCase("5zig_Set")) block5Zig(player);
+        if (config.getBoolean("mods.bettersprinting.block") && e.getTag().equalsIgnoreCase("BSM")) blockBSM(player);
 
         if (e.getTag().equalsIgnoreCase("MC|Brand") || e.getTag().equalsIgnoreCase("minecraft:brand")) {
             // Converts the byte array to a string called "brand"
@@ -66,13 +67,14 @@ public class ByteMessageListener implements Listener {
 
     private void blockBSM(ProxiedPlayer player) {
         if (!player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
-            player.sendData("BSM", new byte[] {1});
+            if (player.getPendingConnection().getVersion() <= 340)
+                player.sendData("BSM", new byte[] {1});
             player.sendData("bsm:settings", new byte[] {1});
         }
     }
 
     private void blockForge(ProxiedPlayer player, String brand, Configuration config) {
-        if ((brand.equalsIgnoreCase("fml,forge")) || (brand.contains("fml")) || (brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
+        if ((brand.equalsIgnoreCase("fml,forge") || brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
             ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
 

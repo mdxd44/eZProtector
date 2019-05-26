@@ -8,9 +8,9 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.utilities;
+package com.github.donotspampls.ezprotector.paper.utilities;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
+import com.github.donotspampls.ezprotector.paper.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -39,7 +39,7 @@ public class CustomCommands {
                 if (config.getBoolean("custom-commands.punish-player.enabled")) {
                     String punishCommand = config.getString("custom-commands.punish-player.command");
                     // Replace placeholder with the error message in the config
-                    errorMessage = config.getString("custom-commands.punish-player.command");
+                    errorMessage = config.getString("custom-commands.error-message");
                     ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, "/" + message));
                 }
 

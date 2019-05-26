@@ -13,7 +13,7 @@ tab-completion:
   - plugins
   - bukkit:plugins
   - pl
-  - waterfall:pl
+  - paper:pl
   - icanhasbukkit
   - ver
   - bukkit:ver
@@ -40,7 +40,7 @@ tab-completion:
     enabled: false
     command: 'kick %player% %errormessage%'
 
-# This blocks players from using commands such as /waterfall:help or /essentials:warp, since they can use that to bypass various protections.
+# This blocks players from using commands such as /paper:help or /essentials:warp, since they can use that to bypass various protections.
 hidden-syntaxes:
   blocked: true
   error-message: '%prefix% &cThat syntax is forbidden.'

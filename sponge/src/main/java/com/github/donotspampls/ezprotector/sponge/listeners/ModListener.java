@@ -15,15 +15,9 @@ import com.github.donotspampls.ezprotector.sponge.utilities.ExecutionUtil;
 import com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil;
 import com.github.donotspampls.ezprotector.sponge.utilities.PacketUtil;
 import com.moandjiezana.toml.Toml;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.spongepowered.api.Platform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.network.ChannelBuf;
-import org.spongepowered.api.network.RemoteConnection;
-
-import java.nio.charset.StandardCharsets;
 
 public class ModListener {
 
@@ -32,8 +26,8 @@ public class ModListener {
         Toml config = Main.getConfig();
         Player player = (Player) event.getSource();
 
-        if (config.getBoolean("mods.5zig.block")) block5Zig(player);
-        if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player);
+        if (config.getBoolean("mods.5zig")) block5Zig(player);
+        if (config.getBoolean("mods.bettersprinting")) blockBSM(player);
 
         /*
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {
@@ -45,10 +39,10 @@ public class ModListener {
             }
         */
 
-        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica"))
+        if (config.getBoolean("mods.schematica") && !player.hasPermission("ezprotector.bypass.mod.schematica"))
             Main.SCHEMATICA.sendTo(player, buf -> buf.writeByteArray(PacketUtil.createSchematicaPacket()));
 
-        if (config.getBoolean("mods.wdl.block")) blockWDL(player);
+        if (config.getBoolean("mods.wdl")) blockWDL(player);
     };
 
     private void block5Zig(Player player) {

@@ -8,10 +8,10 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall;
+package com.github.donotspampls.ezprotector.paper;
 
-import com.github.donotspampls.ezprotector.waterfall.listeners.*;
-import com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil;
+import com.github.donotspampls.ezprotector.paper.listeners.*;
+import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
 
 import io.papermc.lib.PaperLib;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +25,7 @@ public class Main extends JavaPlugin {
     public static String SCHEMATICA;
     public static String WDLINIT;
     public static String WDLCONTROL;
+
     private static String prefix;
     private static Main plugin;
 
@@ -52,10 +53,10 @@ public class Main extends JavaPlugin {
         prefix = MessageUtil.color(getConfig().getString("prefix"));
         String version = getServer().getVersion();
 
-        if (!version.contains("1.12") && !version.contains("1.13")) {
-            getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
-            getServer().getPluginManager().disablePlugin(this);
-        } else {
+        //if (!version.matches("1\\.1[2-9](.\\d)?")) {
+        //    getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
+        //    getServer().getPluginManager().disablePlugin(this);
+        //} else {
             // Save the default config
             saveDefaultConfig();
 
@@ -115,7 +116,7 @@ public class Main extends JavaPlugin {
 
             // Suggest Paper to unsuspecting server owners
             PaperLib.suggestPaper(this);
-        }
+        //}
     }
 
 }

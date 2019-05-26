@@ -8,12 +8,12 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.listeners;
+package com.github.donotspampls.ezprotector.paper.listeners;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
-import com.github.donotspampls.ezprotector.waterfall.utilities.CustomCommands;
-import com.github.donotspampls.ezprotector.waterfall.utilities.FakeCommands;
-import com.github.donotspampls.ezprotector.waterfall.utilities.HiddenSyntaxes;
+import com.github.donotspampls.ezprotector.paper.Main;
+import com.github.donotspampls.ezprotector.paper.utilities.CustomCommands;
+import com.github.donotspampls.ezprotector.paper.utilities.FakeCommands;
+import com.github.donotspampls.ezprotector.paper.utilities.HiddenSyntaxes;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

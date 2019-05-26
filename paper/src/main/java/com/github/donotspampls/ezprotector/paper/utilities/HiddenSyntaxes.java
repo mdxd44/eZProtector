@@ -8,9 +8,9 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.utilities;
+package com.github.donotspampls.ezprotector.paper.utilities;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
+import com.github.donotspampls.ezprotector.paper.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;

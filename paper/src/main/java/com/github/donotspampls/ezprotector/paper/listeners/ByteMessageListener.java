@@ -8,12 +8,12 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.listeners;
+package com.github.donotspampls.ezprotector.paper.listeners;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
-import com.github.donotspampls.ezprotector.waterfall.utilities.ExecutionUtil;
-import com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil;
-import com.github.donotspampls.ezprotector.waterfall.utilities.WDLPackets;
+import com.github.donotspampls.ezprotector.paper.Main;
+import com.github.donotspampls.ezprotector.paper.utilities.ExecutionUtil;
+import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
+import com.github.donotspampls.ezprotector.paper.utilities.WDLPackets;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -93,7 +93,7 @@ public class ByteMessageListener implements PluginMessageListener {
      * @param config The plugin configuration on the particular server.
      */
     private void blockForge(Player player, String brand, FileConfiguration config) {
-        if ((brand.equalsIgnoreCase("fml,forge")) || (brand.contains("fml")) || (brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
+        if ((brand.equalsIgnoreCase("fml,forge") || brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
             ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
 

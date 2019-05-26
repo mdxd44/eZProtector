@@ -5,27 +5,15 @@ authors: [DoNotSpamPls, dvargas135, Gianluca]
 website: https://bit.ly/eZProtector
 api-version: 1.13
 
-main: com.github.donotspampls.ezprotector.waterfall.Main
+main: com.github.donotspampls.ezprotector.paper.Main
 database: false
-
-commands:
-  ezp:
-    description: Shows the plugin information.
-    aliases: [ezprotector]
-    usage: /ezp
-    permission: ezprotector.reload
 
 permissions:
   ezprotector.*:
     description: Grants full access to the plugin.
     children:
-      ezprotector.reload: true
       ezprotector.notify.*: true
       ezprotector.bypass.*: true
-
-  ezprotector.reload:
-    description: Reloads the plugin
-    default: op
 
   ezprotector.notify.*:
     description: Gives access to all the notifies that eZProtector embodies.

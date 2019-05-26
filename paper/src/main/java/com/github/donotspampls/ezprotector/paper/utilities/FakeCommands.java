@@ -8,16 +8,16 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.utilities;
+package com.github.donotspampls.ezprotector.paper.utilities;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
+import com.github.donotspampls.ezprotector.paper.Main;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import static com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil.color;
+import static com.github.donotspampls.ezprotector.paper.utilities.MessageUtil.color;
 
 public class FakeCommands {
 
@@ -56,7 +56,7 @@ public class FakeCommands {
         FileConfiguration config = Main.getPlugin().getConfig();
 
         if (command.split(" ")[0].matches("/ver|/version") && !player.hasPermission("ezprotector.bypass.command.version")
-                && config.getBoolean("custom-version.enabled")) {
+                && !config.getBoolean("custom-version.enabled")) {
             event.setCancelled(true);
             // Replace placeholder with the error message in the config
             String errorMessage = config.getString("custom-version.error-message");
@@ -74,8 +74,8 @@ public class FakeCommands {
                 String notifyMessage = MessageUtil.placeholders(config.getString("custom-version.notify-admins.message"), player, null, command);
                 ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.version");
             }
-        } else if (command.split(" ")[0].matches("/pl|/plugins") && player.hasPermission("ezprotector.bypass.command.plugins")
-                && config.getBoolean("custom-plugins.enabled")) {
+        } else if (command.split(" ")[0].matches("/pl|/plugins") && !player.hasPermission("ezprotector.bypass.command.plugins")
+                && !config.getBoolean("custom-plugins.enabled")) {
             event.setCancelled(true);
             String errorMessage = config.getString("custom-plugins.error-message");
 

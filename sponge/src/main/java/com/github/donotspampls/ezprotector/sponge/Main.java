@@ -21,10 +21,11 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.network.ChannelBinding;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.plugin.PluginManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Plugin(id="ezprotector")
@@ -35,9 +36,13 @@ public class Main {
     public static ChannelBinding.RawDataChannel BSM;
     public static ChannelBinding.RawDataChannel MCBRAND;
     public static ChannelBinding.RawDataChannel SCHEMATICA;
-    public static ChannelBinding.RawDataChannel WDLINIT ;
+    public static ChannelBinding.RawDataChannel WDLINIT;
     public static ChannelBinding.RawDataChannel WDLCONTROL;
     private static String prefix;
+
+    @Inject
+    private PluginManager pluginManager;
+    private PluginContainer plugin;
 
     @Inject
     private Game server;
@@ -52,6 +57,8 @@ public class Main {
 
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
+        plugin = pluginManager.getPlugin("ezprotector").orElse(null);
+
         // Save the default config
         loadConfig();
 
@@ -60,7 +67,7 @@ public class Main {
         // Register mod channels
         ZIG = server.getChannelRegistrar().createRawChannel(this, "5zig_Set");
         BSM = server.getChannelRegistrar().createRawChannel(this, "BSM");
-        MCBRAND = server.getChannelRegistrar().createRawChannel(this, "MC|Brand");
+        //MCBRAND = server.getChannelRegistrar().createRawChannel(this, "MC|Brand");
         SCHEMATICA = server.getChannelRegistrar().createRawChannel(this, "schematica");
         WDLINIT = server.getChannelRegistrar().createRawChannel(this, "WDL|INIT");
         WDLCONTROL = server.getChannelRegistrar().createRawChannel(this, "WDL|CONTROL");
@@ -75,21 +82,17 @@ public class Main {
 
     private void loadConfig() {
         try {
-            if (Files.notExists(configDir)) {
-                server.getAssetManager().getAsset("config.toml").ifPresent(asset -> {
-                    try {
-                        asset.copyToDirectory(configDir);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
+            plugin.getAsset("config.toml").ifPresent(asset -> {
+                try {
+                    asset.copyToDirectory(configDir);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
             File configFile = new File(configDir.toFile(), "config.toml");
 
-            config = new Toml(
-                    new Toml().read(Main.class.getResourceAsStream("/resources/assets/config.toml")))
-                    .read(configFile);
+            config = new Toml().read(configFile);
         } catch (Exception e) {
             logger.error("Unable to load configuration!");
             logger.error(e.getMessage(), e);

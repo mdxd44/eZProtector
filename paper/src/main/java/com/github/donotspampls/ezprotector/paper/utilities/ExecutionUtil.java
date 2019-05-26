@@ -8,11 +8,11 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.utilities;
+package com.github.donotspampls.ezprotector.paper.utilities;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
+import com.github.donotspampls.ezprotector.paper.Main;
 
-import static com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil.color;
+import static com.github.donotspampls.ezprotector.paper.utilities.MessageUtil.color;
 
 public class ExecutionUtil {
 
