@@ -11,7 +11,6 @@
 package com.github.donotspampls.ezprotector.paper.utilities;
 
 import com.github.donotspampls.ezprotector.paper.Main;
-
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

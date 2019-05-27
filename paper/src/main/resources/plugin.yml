@@ -1,6 +1,6 @@
 name: ${parent.name}
-version: ${project.version}
-description: ${project.description}
+version: ${parent.version}
+description: ${parent.description}
 authors: [DoNotSpamPls, dvargas135, Gianluca]
 website: https://bit.ly/eZProtector
 api-version: 1.13

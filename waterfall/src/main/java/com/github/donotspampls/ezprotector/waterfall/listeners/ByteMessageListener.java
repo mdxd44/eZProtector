@@ -23,7 +23,6 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class ByteMessageListener implements Listener {
 

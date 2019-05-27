@@ -12,7 +12,6 @@ package com.github.donotspampls.ezprotector.paper;
 
 import com.github.donotspampls.ezprotector.paper.listeners.*;
 import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
-
 import io.papermc.lib.PaperLib;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,12 +50,12 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         prefix = MessageUtil.color(getConfig().getString("prefix"));
-        String version = getServer().getVersion();
+        String version = getServer().getBukkitVersion();
 
-        //if (!version.matches("1\\.1[2-9](.\\d)?")) {
-        //    getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
-        //    getServer().getPluginManager().disablePlugin(this);
-        //} else {
+        if (!version.matches("1\\.1[2-9](.\\d)?-R0.1-SNAPSHOT")) {
+            getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
+            getServer().getPluginManager().disablePlugin(this);
+        } else {
             // Save the default config
             saveDefaultConfig();
 
@@ -116,7 +115,7 @@ public class Main extends JavaPlugin {
 
             // Suggest Paper to unsuspecting server owners
             PaperLib.suggestPaper(this);
-        //}
+        }
     }
 
 }

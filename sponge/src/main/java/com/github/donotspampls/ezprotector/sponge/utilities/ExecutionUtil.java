@@ -10,7 +10,6 @@
 
 package com.github.donotspampls.ezprotector.sponge.utilities;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
 import com.google.inject.Inject;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.text.Text;
