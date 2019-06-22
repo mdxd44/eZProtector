@@ -21,6 +21,8 @@ import org.spongepowered.api.text.Text;
 
 import java.util.List;
 
+import static com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil.color;
+
 public class HiddenSyntaxes {
 
     /**
@@ -31,7 +33,7 @@ public class HiddenSyntaxes {
     @Listener
     public void onHiddenSyntax(SendCommandEvent event) {
         Toml config = Main.getConfig();
-        if (event.getSource() instanceof Player && config.getBoolean("custom-commands.blocked")) {
+        if (event.getSource() instanceof Player && config.getBoolean("hidden-syntaxes.blocked")) {
             Player player = (Player) event.getSource();
             String command = event.getCommand();
 
@@ -39,24 +41,22 @@ public class HiddenSyntaxes {
             List<String> whitelisted = config.getList("hidden-syntaxes.whitelisted");
 
             // Check if the command contains :. If that is true, check if the player hasn't got the bypass permission and that the command hasn't got any spaces in it
-            if (command.contains(":") && !whitelisted.contains(command.replace("/", "")) && !player.hasPermission("ezprotector.bypass.command.hiddensyntax")) {
+            if (command.contains(":") && !whitelisted.contains(command) && !player.hasPermission("ezprotector.bypass.command.hiddensyntax")) {
                 event.setCancelled(true);
 
                 // Replace placeholder with the executed command
                 String errorMessage = config.getString("hidden-syntaxes.error-message");
 
                 if (!errorMessage.trim().isEmpty())
-                    player.sendMessage(Text.of(MessageUtil.placeholders(errorMessage, player, null, command)));
+                    player.sendMessage(MessageUtil.placeholdersText(errorMessage, player, null, command));
 
                 if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) {
                     String punishCommand = config.getString("hidden-syntaxes.punish-player.command");
-                    // Replace placeholder with the error message in the config
-                    errorMessage = config.getString("hidden-syntaxes.error-message");
                     ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
                 }
 
                 if (config.getBoolean("hidden-syntaxes.notify-admins.enabled")) {
-                    String notifyMessage = MessageUtil.placeholders(config.getString("hidden-syntaxes.notify-admins.message"), player, null, command);
+                    Text notifyMessage = MessageUtil.placeholdersText(config.getString("hidden-syntaxes.notify-admins.message"), player, null, command);
                     ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.hiddensyntax");
                 }
             }

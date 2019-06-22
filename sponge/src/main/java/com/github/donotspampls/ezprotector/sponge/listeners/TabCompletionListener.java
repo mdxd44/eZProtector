@@ -29,34 +29,34 @@ public class TabCompletionListener {
      * @param event The tab complete event from which other information is gathered.
      */
     @Listener
-    public void onTabComplete(TabCompleteEvent event) {
+    public void onTabComplete(TabCompleteEvent.Command event) {
         Toml config = Main.getConfig();
         final List<String> blocked = config.getList("tab-completion.blacklisted");
 
         // If tab blocking is enabled and the player has tried to autocomplete, continue
         if (config.getBoolean("tab-completion.blocked") && event.getSource() instanceof Player) {
             Player player = (Player) event.getSource();
-            String cmd = event.getRawMessage().replaceAll("[/ ]", "");
+            String cmd = event.getRawMessage().replace(" ", "");
 
             // Try all the commands in the blacklisted config section to see if there is a match
             for (String command : blocked) {
-                if (command.equalsIgnoreCase(cmd) && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
+                if (command.contains(cmd) && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
                     event.setCancelled(true);
+
+                    System.out.println(command);
 
                     String errorMessage = config.getString("tab-completion.warn.message");
 
-                    if (config.getBoolean("tab-completion.warn.enabled") && !errorMessage.trim().isEmpty()) {
-                        player.sendMessage(Text.of(MessageUtil.placeholders(errorMessage, player, null, cmd)));
-                    }
+                    if (config.getBoolean("tab-completion.warn.enabled") && !errorMessage.trim().isEmpty())
+                        player.sendMessage(MessageUtil.placeholdersText(errorMessage, player, null, cmd));
 
                     if (config.getBoolean("tab-completion.punish-player.enabled")) {
                         String punishCommand = config.getString("tab-completion.punish-player.command");
-                        // Replace placeholder with the error message in the config
                         ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, cmd));
                     }
 
                     if (config.getBoolean("tab-completion.notify-admins.enabled")) {
-                        String notifyMessage = MessageUtil.placeholders(config.getString("tab-completion.notify-admins.message"), player, null, command);
+                        Text notifyMessage = MessageUtil.placeholdersText(config.getString("tab-completion.notify-admins.message"), player, null, command);
                         ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.tabcomplete");
                     }
                     break;

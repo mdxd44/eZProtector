@@ -28,30 +28,28 @@ public class CustomCommands {
      */
     @Listener
     public void execute(SendCommandEvent event) {
-        if (event.getSource() instanceof Player) {
+        Toml config = Main.getConfig();
+        if (event.getSource() instanceof Player && config.getBoolean("custom-commands.blocked")) {
             Player player = (Player) event.getSource();
             String command = event.getCommand();
-            Toml config = Main.getConfig();
 
             for (Object message : config.getList("custom-commands.commands")) {
                 // Replace placeholder with the command executed by the player
-                if (command.equalsIgnoreCase("/" + message) && !player.hasPermission("ezprotector.bypass.command.custom")) {
+                if (command.equalsIgnoreCase(message.toString()) && !player.hasPermission("ezprotector.bypass.command.custom")) {
                     event.setCancelled(true);
                     // Replace placeholder with the error message in the config
                     String errorMessage = config.getString("custom-commands.error-message");
 
                     if (!errorMessage.trim().isEmpty())
-                        player.sendMessage(Text.of(MessageUtil.placeholders(errorMessage, player, null, "/" + message)));
+                        player.sendMessage(MessageUtil.placeholdersText(errorMessage, player, null, "/" + message));
 
                     if (config.getBoolean("custom-commands.punish-player.enabled")) {
                         String punishCommand = config.getString("custom-commands.punish-player.command");
-                        // Replace placeholder with the error message in the config
-                        errorMessage = config.getString("custom-commands.punish-player.command");
                         ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, "/" + message));
                     }
 
                     if (config.getBoolean("custom-commands.notify-admins.enabled")) {
-                        String notifyMessage = MessageUtil.placeholders(config.getString("custom-commands.notify-admins.message"), player, null, command);
+                        Text notifyMessage = MessageUtil.placeholdersText(config.getString("custom-commands.notify-admins.message"), player, null, command);
                         ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.custom");
                     }
                 }

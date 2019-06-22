@@ -60,12 +60,11 @@ public class FakeCommands {
             // Replace placeholder with the error message in the config
             String errorMessage = config.getString("custom-version.error-message");
 
-            if (!errorMessage.trim().isEmpty()) player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
+            if (!errorMessage.trim().isEmpty())
+                player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
 
             if (config.getBoolean("custom-version.punish-player.enabled")) {
                 String punishCommand = config.getString("custom-version.punish-player.command");
-                // Replace placeholder with the error message in the config
-                errorMessage = config.getString("custom-version.error-message");
                 ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
             }
 
@@ -78,12 +77,11 @@ public class FakeCommands {
             event.setCancelled(true);
             String errorMessage = config.getString("custom-plugins.error-message");
 
-            if (!errorMessage.trim().isEmpty()) player.sendMessage(MessageUtil.placeholders(errorMessage, player, errorMessage, command));
+            if (!errorMessage.trim().isEmpty())
+                player.sendMessage(MessageUtil.placeholders(errorMessage, player, errorMessage, command));
 
             if (config.getBoolean("custom-plugins.punish-player.enabled")) {
                 String punishCommand = config.getString("custom-plugins.punish-player.command");
-                // Replace placeholder with the error message in the config
-                errorMessage = config.getString("custom-version.error-message");
                 ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
             }
 

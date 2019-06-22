@@ -11,22 +11,39 @@
 package com.github.donotspampls.ezprotector.sponge.utilities;
 
 import com.github.donotspampls.ezprotector.sponge.Main;
+
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 public class MessageUtil {
 
-    public static String color(String text) {
-        return TextSerializers.FORMATTING_CODE.serialize(Text.of(text));
+    public static String color(String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+        for (int i = 0; i < b.length - 1; i++) {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i+1]) > -1) {
+                b[i] = '\u00A7';
+                b[i+1] = Character.toLowerCase(b[i+1]);
+            }
+        }
+        return new String(b);
     }
 
     public static String placeholders(String args, Player player, String errorMessage, String command) {
-        return color(args)
+        return color(args
+                .replace("%player%", player.getName())
+                .replace("%errormessage%", errorMessage == null ? "" : errorMessage)
+                .replace("%command%", command == null ? "" : command)
+                .replace("%prefix%", Main.getPrefix()));
+    }
+
+    public static Text placeholdersText(String args, Player player, String errorMessage, String command) {
+        return TextSerializers.FORMATTING_CODE.deserialize(args
                 .replace("%player%", player.getName())
                 .replace("%errormessage%", errorMessage == null ? "" : color(errorMessage))
-                .replace("%command%", command == null ? "" : command)
-                .replace("%prefix%", Main.getPrefix());
+                .replace("%command%", command == null ? "" : color(command))
+                .replace("%prefix%", Main.getPrefix())
+        );
     }
 
 }

@@ -11,7 +11,6 @@
 package com.github.donotspampls.ezprotector.sponge;
 
 import com.github.donotspampls.ezprotector.sponge.listeners.*;
-import com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import org.slf4j.Logger;
@@ -28,15 +27,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil.color;
+
 @Plugin(id="ezprotector")
 public class Main {
 
     // Plugin Channels
     public static ChannelBinding.RawDataChannel ZIG;
     public static ChannelBinding.RawDataChannel BSM;
-    public static ChannelBinding.RawDataChannel MCBRAND;
     public static ChannelBinding.RawDataChannel SCHEMATICA;
-    public static ChannelBinding.RawDataChannel WDLINIT;
     public static ChannelBinding.RawDataChannel WDLCONTROL;
     private static String prefix;
 
@@ -51,7 +50,7 @@ public class Main {
     private Logger logger;
 
     @Inject
-    @ConfigDir(sharedRoot = false)
+    @ConfigDir(sharedRoot = true)
     private Path configDir;
     private static Toml config;
 
@@ -62,27 +61,25 @@ public class Main {
         // Save the default config
         loadConfig();
 
-        prefix = MessageUtil.color(getConfig().getString("prefix"));
+        prefix = color(getConfig().getString("prefix"));
 
         // Register mod channels
         ZIG = server.getChannelRegistrar().createRawChannel(this, "5zig_Set");
         BSM = server.getChannelRegistrar().createRawChannel(this, "BSM");
-        //MCBRAND = server.getChannelRegistrar().createRawChannel(this, "MC|Brand");
         SCHEMATICA = server.getChannelRegistrar().createRawChannel(this, "schematica");
-        WDLINIT = server.getChannelRegistrar().createRawChannel(this, "WDL|INIT");
         WDLCONTROL = server.getChannelRegistrar().createRawChannel(this, "WDL|CONTROL");
 
         // Register listeners
         server.getEventManager().registerListeners(this, new CustomCommands());
-        server.getEventManager().registerListeners(this, new FakeCommands());
         server.getEventManager().registerListeners(this, new HiddenSyntaxes());
+        server.getEventManager().registerListeners(this, new ModListener());
         server.getEventManager().registerListeners(this, new PlayerJoinListener());
         server.getEventManager().registerListeners(this, new TabCompletionListener());
     }
 
     private void loadConfig() {
         try {
-            plugin.getAsset("config.toml").ifPresent(asset -> {
+            plugin.getAsset("ezprotector.toml").ifPresent(asset -> {
                 try {
                     asset.copyToDirectory(configDir);
                 } catch (IOException e) {
@@ -90,7 +87,7 @@ public class Main {
                 }
             });
 
-            File configFile = new File(configDir.toFile(), "config.toml");
+            File configFile = new File(configDir.toFile(), "ezprotector.toml");
 
             config = new Toml().read(configFile);
         } catch (Exception e) {

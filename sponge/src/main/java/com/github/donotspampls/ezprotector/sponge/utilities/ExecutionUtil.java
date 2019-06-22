@@ -10,16 +10,15 @@
 
 package com.github.donotspampls.ezprotector.sponge.utilities;
 
-import com.google.inject.Inject;
-import org.spongepowered.api.Game;
+import org.spongepowered.api.Server;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
 
 import static com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil.color;
 
 public class ExecutionUtil {
 
-    @Inject
-    private static Game server;
+    private static Server server = Sponge.getServer();
 
     /**
      * Sends a notification message to all online admins
@@ -27,15 +26,15 @@ public class ExecutionUtil {
      * @param message    The notification message sent to the admins
      * @param permission The required permission to recieve the notification
      */
-    public static void notifyAdmins(String message, String permission) {
+    public static void notifyAdmins(Text message, String permission) {
         if (message.trim().isEmpty()) return;
 
-        server.getServer().getOnlinePlayers().stream()
+        server.getOnlinePlayers().stream()
                 .filter(admin -> admin.hasPermission(permission))
-                .forEach(admin -> admin.sendMessage(Text.of(color(message))));
+                .forEach(admin -> admin.sendMessage(message));
     }
 
     public static void executeConsoleCommand(String command) {
-        server.getCommandManager().process(server.getServer().getConsole(), command);
+        Sponge.getCommandManager().process(server.getConsole(), command);
     }
 }

@@ -1,0 +1,16 @@
+[
+    {
+        "modid": "ezprotector",
+        "name": "${parent.name}",
+        "version": "${parent.version}",
+        "description": "${parent.description}",
+        "authorList": [ "DoNotSpamPls" ],
+        "url": "${parent.url}",
+        "dependencies": [
+            "spongeapi@7.1.0"
+        ],
+        "requiredMods": [
+            "spongeapi@7.1.0"
+        ]
+    }
+]

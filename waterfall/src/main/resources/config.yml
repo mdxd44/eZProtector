@@ -89,7 +89,7 @@ custom-version:
 # This option allows you to block any command you wish by adding it to the list!
 custom-commands:
   blocked: true
-  error-message: '%prefix% You don''t have the permission to use this command! &4(%command%)'
+  error-message: '%prefix% You don''t have the permission to use this command! &4(/%command%)'
   commands:
   - a
   - about
@@ -103,7 +103,7 @@ custom-commands:
   - command_without_slash
   notify-admins:
     enabled: true
-    message: '%prefix% &e%player% &ftried to use a blocked command &4(%command%)'
+    message: '%prefix% &e%player% &ftried to use a blocked command &4(/%command%)'
   punish-player:
     enabled: false
     command: 'kick %player% %errormessage%'

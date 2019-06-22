@@ -29,7 +29,6 @@ public class PlayerJoinListener {
         Player p = (Player) event.getSource();
         Toml config = Main.getConfig();
 
-        // TODO: Maybe it's not used like this
         if (config.getBoolean("mods.betterpvp") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(Text.of(" §c §r§5 §r§1 §r§f §r§0 "));
         if (config.getBoolean("mods.voxelmap") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(Text.of(" §3 §6 §3 §6 §3 §6 §e "));
     }

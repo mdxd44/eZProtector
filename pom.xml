@@ -16,7 +16,7 @@
     <name>eZProtector</name>
     <description>Securing your server the easy way!</description>
     <url>https://github.com/DoNotSpamPls/eZProtector</url>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

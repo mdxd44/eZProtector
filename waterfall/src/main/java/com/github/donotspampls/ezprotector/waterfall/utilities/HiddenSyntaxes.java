@@ -41,12 +41,11 @@ public class HiddenSyntaxes {
 
             String errorMessage = config.getString("hidden-syntaxes.error-message");
 
-            if (!errorMessage.trim().isEmpty()) player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
+            if (!errorMessage.trim().isEmpty())
+                player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
 
             if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) {
                 String punishCommand = config.getString("hidden-syntaxes.punish-player.command");
-                // Replace placeholder with the error message in the config
-                errorMessage = config.getString("hidden-syntaxes.error-message");
                 ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
             }
 
