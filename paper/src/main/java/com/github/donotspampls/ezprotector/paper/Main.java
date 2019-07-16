@@ -52,7 +52,7 @@ public class Main extends JavaPlugin {
         prefix = MessageUtil.color(getConfig().getString("prefix"));
         String version = getServer().getBukkitVersion();
 
-        if (!version.matches("1\\.1[2-9](.\\d)?-R0.1-SNAPSHOT")) {
+        if (!version.matches("1\\.1[2-9](.\\d)?-(R0.1-)?SNAPSHOT")) {
             getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
             getServer().getPluginManager().disablePlugin(this);
         } else {
