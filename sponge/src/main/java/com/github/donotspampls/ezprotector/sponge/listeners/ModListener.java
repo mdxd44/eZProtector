@@ -20,8 +20,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ChannelRegistrationEvent;
 import org.spongepowered.api.text.Text;
 
-import java.util.Arrays;
-
 public class ModListener {
 
     @Listener

@@ -2,7 +2,7 @@
 
 # eZProtector [![Build Status](https://ci.codemc.org/view/Author/job/DoNotSpamPls/job/eZProtector/badge/icon)](https://ci.codemc.org/job/DoNotSpamPls/job/eZProtector/) [![Discord](https://img.shields.io/discord/390942438061113344.svg)](https://discord.gg/UGhVcBB)
 
-eZProtector is an advanced server protection plugin, made with simplicity and speed in mind. It has many useful features, such as changing the plugin list to a custom one, blocking many mods which give an advantage and more! If you'd like to download it, you can do so [here](PAPER LINK HERE)
+eZProtector is an advanced server protection plugin, made with simplicity and speed in mind. It has many useful features, such as changing the plugin list to a custom one, blocking many mods which give an advantage and more! If you'd like to download it, you can do so [here](https://papermc.io/forums/t/1-12-2-1-14-x-ezprotector/1361)
 
 If you'd like to get more information on how the plugin works, you can read the [wiki](https://github.com/DoNotSpamPls/eZProtector/wiki)
 

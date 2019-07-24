@@ -11,7 +11,6 @@
 package com.github.donotspampls.ezprotector.sponge.utilities;
 
 import com.github.donotspampls.ezprotector.sponge.Main;
-
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;

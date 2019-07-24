@@ -21,8 +21,6 @@ import org.spongepowered.api.text.Text;
 
 import java.util.List;
 
-import static com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil.color;
-
 public class HiddenSyntaxes {
 
     /**

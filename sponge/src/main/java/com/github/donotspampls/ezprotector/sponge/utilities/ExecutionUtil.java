@@ -14,8 +14,6 @@ import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
 
-import static com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil.color;
-
 public class ExecutionUtil {
 
     private static Server server = Sponge.getServer();
