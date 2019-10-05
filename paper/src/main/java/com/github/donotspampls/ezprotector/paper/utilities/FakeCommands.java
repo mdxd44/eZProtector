@@ -30,12 +30,12 @@ public class FakeCommands {
         String command = event.getMessage();
         FileConfiguration config = Main.getPlugin().getConfig();
 
-        if (command.split(" ")[0].matches("/ver|/version") && !player.hasPermission("ezprotector.bypass.command.version")
+        if (command.split(" ")[0].matches("(?i)/ver|/version") && !player.hasPermission("ezprotector.bypass.command.version")
                 && config.getBoolean("custom-version.enabled")) {
             event.setCancelled(true);
             String version = Main.getPlugin().getConfig().getString("custom-version.version");
             player.sendMessage(color("This server is running server version " + version));
-        } else if (command.split(" ")[0].matches("/pl|/plugins") && !player.hasPermission("ezprotector.bypass.command.plugins")
+        } else if (command.split(" ")[0].matches("(?i)/pl|/plugins") && !player.hasPermission("ezprotector.bypass.command.plugins")
                 && config.getBoolean("custom-plugins.enabled")) {
             event.setCancelled(true);
 
@@ -54,7 +54,7 @@ public class FakeCommands {
         String command = event.getMessage();
         FileConfiguration config = Main.getPlugin().getConfig();
 
-        if (command.split(" ")[0].matches("/ver|/version") && !player.hasPermission("ezprotector.bypass.command.version")
+        if (command.split(" ")[0].matches("(?i)/ver|/version") && !player.hasPermission("ezprotector.bypass.command.version")
                 && !config.getBoolean("custom-version.enabled")) {
             event.setCancelled(true);
             // Replace placeholder with the error message in the config
@@ -72,7 +72,7 @@ public class FakeCommands {
                 String notifyMessage = MessageUtil.placeholders(config.getString("custom-version.notify-admins.message"), player, null, command);
                 ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.version");
             }
-        } else if (command.split(" ")[0].matches("/pl|/plugins") && !player.hasPermission("ezprotector.bypass.command.plugins")
+        } else if (command.split(" ")[0].matches("(?i)/pl|/plugins") && !player.hasPermission("ezprotector.bypass.command.plugins")
                 && !config.getBoolean("custom-plugins.enabled")) {
             event.setCancelled(true);
             String errorMessage = config.getString("custom-plugins.error-message");
