@@ -16,6 +16,7 @@ import com.github.donotspampls.ezprotector.paper.utilities.FakeCommands;
 import com.github.donotspampls.ezprotector.paper.utilities.HiddenSyntaxes;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
@@ -28,7 +29,7 @@ public class CommandEventListener implements Listener {
      *
      * @param event The command event from which other information is gathered.
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         FileConfiguration config = Main.getPlugin().getConfig();
 
