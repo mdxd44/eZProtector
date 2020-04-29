@@ -92,7 +92,7 @@ public class Main extends JavaPlugin {
 
                 getServer().getPluginManager().registerEvents(new TabCompletionListener(), this);
             } else {
-                ZIG = "dev:null";
+                ZIG = "the5zigmod:5zig_set";
                 BSM = "bsm:settings";
                 MCBRAND = "minecraft:brand";
                 SCHEMATICA = "dev:null";
@@ -102,9 +102,12 @@ public class Main extends JavaPlugin {
                 getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, bml);
                 getServer().getMessenger().registerIncomingPluginChannel(this, BSM, bml);
                 getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, bml);
+                getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, bml);
                 getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, bml);
 
                 getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
+                getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
+                getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
                 getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
 
                 getServer().getPluginManager().registerEvents(new BrigadierListener(), this);

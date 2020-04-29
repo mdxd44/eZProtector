@@ -60,7 +60,9 @@ public class ByteMessageListener implements Listener {
              * 0x16 = Unused
              * 0x32 = Auto Reconnect
              */
-            player.sendData("5zig_Set", new byte[] {0x1|0x2|0x4|0x8|0x16|0x32});
+            if (player.getPendingConnection().getVersion() <= 340)
+                player.sendData("5zig_Set", new byte[] {0x1|0x2|0x4|0x8|0x16|0x32});
+            player.sendData("the5zigmod:5zig_set", new byte[] {0x1|0x2|0x4|0x8|0x16|0x32});
         }
     }
 
