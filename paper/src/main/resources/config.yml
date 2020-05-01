@@ -119,6 +119,10 @@ mods:
     block: false
   bettersprinting:
     block: false
+  fabric:
+    block: false
+    warning-message: '%prefix% &e%player% &ftried to join while having Fabric installed'
+    punish-command: kick %player% &4The Fabric mod is not allowed.
   forge:
     block: false
     warning-message: '%prefix% &e%player% &ftried to join while having Forge installed'

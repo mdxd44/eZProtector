@@ -3,7 +3,7 @@ version: ${parent.version}
 description: ${parent.description}
 authors: [DoNotSpamPls, dvargas135, Gianluca]
 website: https://bit.ly/eZProtector
-api-version: 1.13
+api-version: "1.13"
 
 main: com.github.donotspampls.ezprotector.paper.Main
 database: false
@@ -48,8 +48,12 @@ permissions:
   ezprotector.notify.mod.*:
     description: Gives access to all the notifies that eZProtector embodies for blocked mods.
     children:
+      ezprotector.notify.mod.fabric: true
       ezprotector.notify.mod.forge: true
       ezprotector.notify.mod.liteloader: true
+  ezprotector.notify.mod.fabric:
+    description: Notifies who attempted to join with the Fabric mod.
+    default: op
   ezprotector.notify.mod.forge:
     description: Notifies who attempted to join with the Forge mod.
     default: op
@@ -93,6 +97,7 @@ permissions:
       ezprotector.bypass.mod.5zig: true
       ezprotector.bypass.mod.betterpvp: true
       ezprotector.bypass.mod.bettersprinting: true
+      ezprotector.bypass.mod.fabric: true
       ezprotector.bypass.mod.forge: true
       ezprotector.bypass.mod.liteloader: true
       ezprotector.bypass.mod.schematica: true
@@ -106,6 +111,9 @@ permissions:
     default: op
   ezprotector.bypass.mod.bettersprinting:
     description: Bypasses the BetterSprinting mod.
+    default: op
+  ezprotector.bypass.mod.fabric:
+    description: Bypasses the Forge mod.
     default: op
   ezprotector.bypass.mod.forge:
     description: Bypasses the Forge mod.

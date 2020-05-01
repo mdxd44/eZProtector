@@ -24,13 +24,6 @@ import java.nio.charset.StandardCharsets;
 
 public class ByteMessageListener implements PluginMessageListener {
 
-    /**
-     * Listen for plugin messages by various mods
-     *
-     * @param channel The plugin channel used by the mod.
-     * @param player The player whose client sent the plugin message.
-     * @param value The bytes included in the plugin message.
-     */
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] value) {
         FileConfiguration config = Main.getPlugin().getConfig();
@@ -42,6 +35,7 @@ public class ByteMessageListener implements PluginMessageListener {
             // Converts the byte array to a string called "brand"
             String brand = new String(value, StandardCharsets.UTF_8);
 
+            if (config.getBoolean("mods.fabric.block")) blockFabric(player, brand, config);
             if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config);
             if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config);
         }
@@ -52,12 +46,6 @@ public class ByteMessageListener implements PluginMessageListener {
         if (config.getBoolean("mods.wdl.block")) blockWDL(player, channel);
     }
 
-    /**
-     * Blocks the 5-Zig mod for a certain player.
-     *
-     * @param player The player to execute the block on.
-     * @param channel The channel where the byte array should be sent.
-     */
     private void block5Zig(Player player, String channel) {
         if (channel.equalsIgnoreCase(Main.ZIG) && !player.hasPermission("ezprotector.bypass.mod.5zig")) {
             /*
@@ -72,12 +60,6 @@ public class ByteMessageListener implements PluginMessageListener {
         }
     }
 
-    /**
-     * Blocks the BetterSprinting mod for a certain player.
-     *
-     * @param player The player to execute the block on.
-     * @param channel The channel where the byte array should be sent.
-     */
     private void blockBSM(Player player, String channel) {
         if (channel.equalsIgnoreCase(Main.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
             // Send the data output as a byte array to the player
@@ -85,13 +67,16 @@ public class ByteMessageListener implements PluginMessageListener {
         }
     }
 
-    /**
-     * Kicks a certain player if Forge is found on the client
-     *
-     * @param player The player to execute the block on.
-     * @param brand The brand name recieved in the "MC|Brand" plugin message.
-     * @param config The plugin configuration on the particular server.
-     */
+    private void blockFabric(Player player, String brand, FileConfiguration config) {
+        if (brand.contains("fabric") && !player.hasPermission("ezprotector.bypass.mod.fabric")) {
+            String punishCommand = config.getString("mods.fabric.punish-command");
+            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+
+            String notifyMessage = MessageUtil.placeholders(config.getString("mods.fabric.warning-message"), player, null, null);
+            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.fabric");
+        }
+    }
+
     private void blockForge(Player player, String brand, FileConfiguration config) {
         if ((brand.equalsIgnoreCase("fml,forge") || brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
@@ -102,13 +87,6 @@ public class ByteMessageListener implements PluginMessageListener {
         }
     }
 
-    /**
-     * Kicks a certain player if LiteLoader is found on the client
-     *
-     * @param player The player to execute the block on.
-     * @param brand The brand name recieved in the "MC|Brand" plugin message.
-     * @param config The plugin configuration on the particular server.
-     */
     private void blockLiteLoader(Player player, String brand, FileConfiguration config) {
         if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
@@ -119,32 +97,18 @@ public class ByteMessageListener implements PluginMessageListener {
         }
     }
 
-    /**
-     * Creates a byte array with options that tell Schematica which features to block
-     *
-     * @return The byte array containing the Schematica block configuration.
-     */
     @SuppressWarnings("UnstableApiUsage")
     private static byte[] getSchematicaPayload() {
-        // Create the byte array data output
         final ByteArrayDataOutput output = ByteStreams.newDataOutput();
 
-        // Add bytes to data stream
         output.writeByte(0);
         output.writeBoolean(false);
         output.writeBoolean(false);
         output.writeBoolean(false);
 
-        // Convert the data stream to a byte array and return it
         return output.toByteArray();
     }
 
-    /**
-     * Kicks a certain player if WorldDownloader is found on the client
-     *
-     * @param player The player to execute the block on.
-     * @param channel The channel which the message was sent on.
-     */
     private void blockWDL(Player player, String channel) {
         if (channel.equalsIgnoreCase(Main.WDLINIT) && !player.hasPermission("ezprotector.bypass.mod.wdl")) {
             byte[][] packets = new byte[2][];

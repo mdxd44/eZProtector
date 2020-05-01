@@ -40,6 +40,7 @@ public class ByteMessageListener implements Listener {
             // Converts the byte array to a string called "brand"
             String brand = new String(e.getData(), StandardCharsets.UTF_8);
 
+            if (config.getBoolean("mods.fabric.block")) blockFabric(player, brand, config);
             if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config);
             if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config);
         }
@@ -71,6 +72,16 @@ public class ByteMessageListener implements Listener {
             if (player.getPendingConnection().getVersion() <= 340)
                 player.sendData("BSM", new byte[] {1});
             player.sendData("bsm:settings", new byte[] {1});
+        }
+    }
+
+    private void blockFabric(ProxiedPlayer player, String brand, Configuration config) {
+        if (brand.contains("fabric") && !player.hasPermission("ezprotector.bypass.mod.fabric")) {
+            String punishCommand = config.getString("mods.fabric.punish-command");
+            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+
+            String notifyMessage = MessageUtil.placeholders(config.getString("mods.fabric.warning-message"), player, null, null);
+            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.fabric");
         }
     }
 

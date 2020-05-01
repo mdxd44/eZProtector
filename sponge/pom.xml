@@ -4,7 +4,7 @@
     <parent>
         <artifactId>ezprotector</artifactId>
         <groupId>com.github.donotspampls.ezprotector</groupId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>7.1.0</version>
+            <version>7.2.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -52,14 +52,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.3</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <minimizeJar>true</minimizeJar>
                     <relocations>
                         <relocation>
                             <pattern>com.moandjiezana.toml</pattern>
-                            <!-- Replace this with your package! -->
                             <shadedPattern>com.github.donotspampls.ezprotector.sponge.toml</shadedPattern>
                         </relocation>
                     </relocations>
