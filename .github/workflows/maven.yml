@@ -14,17 +14,17 @@ jobs:
     - name: Build with Maven
       run: mvn package --file pom.xml
     - name: Upload Paper version
-        uses: actions/upload-artifact@v1
-        with:
-          name: Paper
-          path: paper/target/eZProtector-Paper.jar
+      uses: actions/upload-artifact@v1
+      with:
+        name: Paper
+        path: paper/target/eZProtector-Paper.jar
     - name: Upload Sponge version
-        uses: actions/upload-artifact@v1
-        with:
-          name: Sponge
-          path: sponge/target/eZProtector-Sponge.jar
+      uses: actions/upload-artifact@v1
+      with:
+        name: Sponge
+        path: sponge/target/eZProtector-Sponge.jar
     - name: Upload Waterfall version
-        uses: actions/upload-artifact@v1
-        with:
-          name: Waterfall
-          path: paper/target/eZProtector-Waterfall.jar
+      uses: actions/upload-artifact@v1
+      with:
+        name: Waterfall
+        path: paper/target/eZProtector-Waterfall.jar
