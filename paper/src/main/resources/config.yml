@@ -4,45 +4,32 @@
 # Here you can modify the prefix of the plugin.
 prefix: '&7[&aeZProtector&7]&f'
 
-# This feature blocks tab completion! (with various features added to it)
-# Punishments and notifications will *not* work on servers which are 1.13 or above
+# This module blocks tab completion for certain commands.
 tab-completion:
   blocked: true
-  # These commands will never be allowed to be tab completed!
-  blacklisted:
-  - plugins
-  - bukkit:plugins
-  - pl
-  - bukkit:pl
-  - icanhasbukkit
-  - ver
-  - bukkit:ver
-  - version
-  - bukkit:version
+  # If this is set to true, the commands in the list will be THE ONLY ones to be tab completed
+  whitelist: false
+  commands:
   - '?'
-  - bukkit:?
-  - a
   - about
+  - bukkit:?
   - bukkit:about
-  - help
   - bukkit:help
-  warn:
-    # If this option is set to true and a player holds the Tab key, they'll be spammed with the message below
-    enabled: false
-    message: '%prefix% &4You don''t have the permission to tab-complete commands!'
-  notify-admins:
-    # If this is set to true, players with notify permissions will also get spammed if a player holds the Tab key.
-    enabled: false
-    message: '%prefix% &e%player% &ftried to tab-complete a command &4(/%command%)'
-  punish-player:
-    # This shouldn't really be necessary, but it's here for convenience. It's not recommended to punish a player for pressing the Tab key in the chat!
-    enabled: false
-    command: 'kick %player% %errormessage%'
+  - bukkit:pl
+  - bukkit:plugins
+  - bukkit:ver
+  - bukkit:version
+  - help
+  - icanhasbukkit
+  - pl
+  - plugins
+  - ver
+  - version
 
 # This blocks players from using commands such as /bukkit:help or /essentials:warp, since they can use that to bypass various protections.
 hidden-syntaxes:
   blocked: true
-  error-message: '%prefix% &4That command syntax is forbidden!'
+  error-message: '%prefix% That command syntax is forbidden!'
   # If you add a command to this list, it will not be blocked.
   whitelisted:
     - whitelisted:commands
@@ -50,67 +37,53 @@ hidden-syntaxes:
     - syntaxes:here
   notify-admins:
     enabled: true
-    message: '%prefix% &e%player% &ftried to use a command with a hidden syntax &4(/%command%)'
+    message: '%prefix% &e%player% &ftried to use a command with a hidden syntax &4(%command%)'
   punish-player:
     enabled: false
     command: 'kick %player% %errormessage%'
 
 # This option allows you to set a custom list of plugins that will be shown if players do /plugins
-# This will *not* work if you add the plugins command to the blocked commands list.
 custom-plugins:
-  # If you enable this, the other three options will *not* work!
   enabled: true
   plugins: Fully, Custom, Plugins
-  # If the enabled option above is set to false, this message will be shown instead.
-  error-message: '%prefix% &4You are not allowed to see this server''s plugins!'
+  # The player will not see an error message, but admins can still be notified
   notify-admins:
     enabled: true
     message: '%prefix% &e%player% &ftried to see the server plugins'
-  # The punish feature will only work if you have the custom-plugins feature set to false.
-  punish-player:
-    enabled: false
-    command: 'kick %player% %errormessage%'
 
 # Same deal as with the custom plugins above, but for the version command!
-# It shows up as "This server is running server version Custom Version"
 custom-version:
-  # If you enable this, the other three options will *not* work!
   enabled: false
+  # It shows up as "This server is running server version Custom Version"
   version: "Custom Version"
-  # If the enabled option above is set to false, this message will be shown instead.
-  error-message: '%prefix% &4You are not allowed to see this server''s version!'
+  # The player will not see an error message, but admins can still be notified
   notify-admins:
     enabled: true
     message: '%prefix% &e%player% &ftried to see the server version'
-  # The punish feature will only work if you have the custom-version feature set to false.
-  punish-player:
-    enabled: false
-    command: 'kick %player% %errormessage%'
 
 # This option allows you to block any command you wish by adding it to the list!
 custom-commands:
   blocked: true
-  error-message: '%prefix% You don''t have the permission to use this command! &4(/%command%)'
+  error-message: '%prefix% You don''t have the permission to use this command! &4(%command%)'
   commands:
   - a
   - about
   - icanhasbukkit
-  #- pl      # These two commands are handled by the customized plugins section, so you don't need to add them here!
-  #- plugins
-  #- ver     # These two commands are handled by the customized version section, so you don't need to add them here!
-  #- version
+  - pl
+  - plugins
+  - ver
+  - version
   - '?'
   - plugman list
   - command_without_slash
   notify-admins:
     enabled: true
-    message: '%prefix% &e%player% &ftried to use a blocked command &4(/%command%)'
+    message: '%prefix% &e%player% &ftried to use a blocked command &4(%command%)'
   punish-player:
     enabled: false
     command: 'kick %player% %errormessage%'
 
 # This section allows you to block various mods (and even punish players for some of them!)
-# Most of these **do not** work for 1.13 or above
 mods:
   5zig:
     block: false
@@ -122,15 +95,19 @@ mods:
   fabric:
     block: false
     warning-message: '%prefix% &e%player% &ftried to join while having Fabric installed'
-    punish-command: kick %player% &4The Fabric mod is not allowed.
+    punish-command: kick %player% &4Fabric usage is not allowed.
   forge:
     block: false
     warning-message: '%prefix% &e%player% &ftried to join while having Forge installed'
-    punish-command: kick %player% &4The Forge mod is not allowed.
+    punish-command: kick %player% &4Forge usage is not allowed.
   liteloader:
     block: false
     warning-message: '%prefix% &e%player% &ftried to join while having LiteLoader installed'
-    punish-command: kick %player% &4The LiteLoader mod is not allowed.
+    punish-command: kick %player% &4LiteLoader usage is not allowed.
+  rift:
+    block: false
+    warning-message: '%prefix% &e%player% &ftried to join while having Rift installed'
+    punish-command: kick %player% &4Rift usage is not allowed.
   schematica:
     block: false
   voxelmap:

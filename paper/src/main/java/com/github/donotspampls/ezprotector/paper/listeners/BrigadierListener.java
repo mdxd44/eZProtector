@@ -1,5 +1,5 @@
 /*
- * eZProtector - Copyright (C) 2018-2019 DoNotSpamPls
+ * eZProtector - Copyright (C) 2018-2020 DoNotSpamPls
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,10 +28,13 @@ public class BrigadierListener implements Listener {
     @EventHandler
     public void onCommandSend(PlayerCommandSendEvent event) {
         FileConfiguration config = Main.getPlugin().getConfig();
-        final List<String> blocked = config.getStringList("tab-completion.blacklisted");
+        final List<String> blocked = config.getStringList("tab-completion.commands");
 
         if (config.getBoolean("tab-completion.blocked") && !event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete")) {
-            event.getCommands().removeAll(blocked);
+            if (!config.getBoolean("tab-completion.whitelist"))
+                event.getCommands().removeAll(blocked);
+            else
+                event.getCommands().removeIf(cmd -> !blocked.contains(cmd));
         }
     }
 

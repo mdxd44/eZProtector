@@ -1,5 +1,5 @@
 /*
- * eZProtector - Copyright (C) 2018-2019 DoNotSpamPls
+ * eZProtector - Copyright (C) 2018-2020 DoNotSpamPls
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -22,13 +22,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class CommandEventListener implements Listener {
 
-    /**
-     * Listener to intercept and check and commands executed by the player.
-     * This runs before the actual command in question is executed.
-     * If there is no issue, nothing happens, otherwise the command is blocked.
-     *
-     * @param event The command event from which other information is gathered.
-     */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         FileConfiguration config = Main.getPlugin().getConfig();
@@ -36,8 +29,7 @@ public class CommandEventListener implements Listener {
         if (config.getBoolean("custom-commands.blocked")) CustomCommands.execute(event);
         if (config.getBoolean("hidden-syntaxes.blocked")) HiddenSyntaxes.execute(event);
 
-        FakeCommands.executeBlock(event);
-        FakeCommands.executeCustom(event);
+        FakeCommands.execute(event);
     }
 
 }

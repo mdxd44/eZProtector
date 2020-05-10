@@ -2,97 +2,87 @@ name: ${parent.name}
 version: ${parent.version}
 description: ${parent.description}
 authors: [DoNotSpamPls, dvargas135, Gianluca]
-website: https://bit.ly/eZProtector
+website: https://github.com/DoNotSpamPls/eZProtector
 api-version: "1.13"
 
 main: com.github.donotspampls.ezprotector.paper.Main
 database: false
 
 permissions:
-  ezprotector.*:
-    description: Grants full access to the plugin.
+  ezprotector.notify:
+    description: Notifies admins about players that try to use illegal commands or join with a blocked mod
     children:
-      ezprotector.notify.*: true
-      ezprotector.bypass.*: true
+      ezprotector.notify.command: true
+      ezprotector.notify.mod: true
 
-  ezprotector.notify.*:
-    description: Gives access to all the notifies that eZProtector embodies.
+  ezprotector.notify.command:
+    description: Notifies admins about players that try to use illegal commands
     children:
-      ezprotector.notify.command.*: true
-      ezprotector.notify.mod.*: true
-
-  ezprotector.notify.command.*:
-    description: Gives access to all the notifies that eZProtector embodies for commands.
-    children:
-      ezprotector.notify.command.tabcomplete: true
-      ezprotector.notify.command.hiddensyntax: true
+      ezprotector.notify.command.hiddensyntaxes: true
       ezprotector.notify.command.plugins: true
       ezprotector.notify.command.version: true
       ezprotector.notify.command.custom: true
-  ezprotector.notify.command.tabcomplete:
-    description: Notifies who attempted to use tab completion.
-    default: op
-  ezprotector.notify.command.hiddensyntax:
-    description: Notifies who attempted to use hidden syntaxes.
+  ezprotector.notify.command.hiddensyntaxes:
+    description: "Notifies about players that try to use a command containing the : character"
     default: op
   ezprotector.notify.command.plugins:
-    description: Notifies who attempted to use the plugins command.
+    description: Notifies about players that try to see the server version (only if custom-plugins is enabled)
     default: op
   ezprotector.notify.command.version:
-    description: Notifies who attempted to use the version command.
+    description: Notifies about players that try to see the server version (only if custom-version is enabled)
     default: op
   ezprotector.notify.command.custom:
-    description: Notifies who attempted to use custom blocked commands.
+    description: Notifies about players that try to use a blocked command
     default: op
 
-  ezprotector.notify.mod.*:
-    description: Gives access to all the notifies that eZProtector embodies for blocked mods.
+  ezprotector.notify.mod:
+    description: Notifies admins about players that try to join with a mod the plugin blocks
     children:
       ezprotector.notify.mod.fabric: true
       ezprotector.notify.mod.forge: true
       ezprotector.notify.mod.liteloader: true
+      ezprotector.notify.mod.rift: true
   ezprotector.notify.mod.fabric:
-    description: Notifies who attempted to join with the Fabric mod.
+    description: Notifies about players that try to join while having Fabric installed
     default: op
   ezprotector.notify.mod.forge:
-    description: Notifies who attempted to join with the Forge mod.
+    description: Notifies about players that try to join while having Forge installed
     default: op
   ezprotector.notify.mod.liteloader:
-    description: Notifies who attempted to join with the LiteLoader mod.
+    description: Notifies about players that try to join while having LiteLoader installed
+    default: op
+  ezprotector.notify.mod.rift:
+    description: Notifies about players that try to join while having Rift installed
     default: op
 
-  ezprotector.bypass.*:
-    descrption: Bypasses of all the features blocked by eZProtector.
+  ezprotector.bypass:
+    descrption: Allows the usage of all features blocked by the plugin.
     children:
-      ezprotector.bypass.command.*: true
-      ezprotector.bypass.mod.*: true
+      ezprotector.bypass.command: true
+      ezprotector.bypass.mod: true
 
-  ezprotector.bypass.command.*:
-    description: Bypasses of all the commands blocked by eZProtector.
+  ezprotector.bypass.command:
+    description: Allows the usage of all features blocked by the plugin, except for mods
     children:
       ezprotector.bypass.command.tabcomplete: true
-      ezprotector.bypass.command.hiddensyntax: true
-      ezprotector.bypass.command.plugins: true
-      ezprotector.bypass.command.version: true
+      ezprotector.bypass.command.hiddensyntaxes: true
+      ezprotector.bypass.command.fake: true
       ezprotector.bypass.command.custom: true
   ezprotector.bypass.command.tabcomplete:
-    description: Bypasses the use of tab completion.
+    description: Allows the tab completion of all commands
     default: op
-  ezprotector.bypass.command.hiddensyntax:
-    description: Bypasses the use of hidden syntaxes.
+  ezprotector.bypass.command.hiddensyntaxes:
+    description: "Allows using commands that contain the : character"
     default: op
-  ezprotector.bypass.command.plugins:
-    description: Bypasses the use of the plugins command.
-    default: op
-  ezprotector.bypass.command.version:
-    description: Bypasses the use of the version command.
+  ezprotector.bypass.command.fake:
+    description: Allows seeing the real plugins list and server version
     default: op
   ezprotector.bypass.command.custom:
-    description: Bypasses the use of custom blocked commands.
+    description: Allows the usage of commands that are blocked by the plugin
     default: op
 
-  ezprotector.bypass.mod.*:
-    description: Bypasses of all the mods blocked by eZProtector.
+  ezprotector.bypass.mod:
+    description: Allows the usage of all the mods the plugin blocks
     children:
       ezprotector.bypass.mod.5zig: true
       ezprotector.bypass.mod.betterpvp: true
@@ -100,33 +90,37 @@ permissions:
       ezprotector.bypass.mod.fabric: true
       ezprotector.bypass.mod.forge: true
       ezprotector.bypass.mod.liteloader: true
+      ezprotector.bypass.mod.rift: true
       ezprotector.bypass.mod.schematica: true
       ezprotector.bypass.mod.voxelmap: true
       ezprotector.bypass.mod.wdl: true
   ezprotector.bypass.mod.5zig:
-    description: Bypasses the 5zig mod.
+    description: Allows the usage of the 5Zig mod
     default: op
   ezprotector.bypass.mod.betterpvp:
-    description: Bypasses the BetterPvP mod.
+    description: Allows the usage of the BetterPvP mod
     default: op
   ezprotector.bypass.mod.bettersprinting:
-    description: Bypasses the BetterSprinting mod.
+    description: Allows the usage of the BetterSprinting mod
     default: op
   ezprotector.bypass.mod.fabric:
-    description: Bypasses the Forge mod.
+    description: Allows logging in while having Fabric installed
     default: op
   ezprotector.bypass.mod.forge:
-    description: Bypasses the Forge mod.
+    description: Allows logging in while having Forge installed
     default: op
   ezprotector.bypass.mod.liteloader:
-    description: Bypasses the LiteLoader mod.
+    description: Allows logging in while having LiteLoader installed
+    default: op
+  ezprotector.bypass.mod.rift:
+    description: Allows logging in while having Rift installed
     default: op
   ezprotector.bypass.mod.schematica:
-    description: Bypasses the Schematica mod.
+    description: Allows the usage of the Schematica mod
     default: op
   ezprotector.bypass.mod.voxelmap:
-    description: Bypasses the VoxelMap mod.
+    description: Allows the usage of the VoxelMap mod
     default: op
   ezprotector.bypass.mod.wdl:
-    description: Bypasses the WorldDownloader mod.
+    description: Allows the usage of the WorldDownloader mod
     default: op

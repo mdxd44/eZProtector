@@ -1,5 +1,5 @@
 /*
- * eZProtector - Copyright (C) 2018-2019 DoNotSpamPls
+ * eZProtector - Copyright (C) 2018-2020 DoNotSpamPls
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -33,7 +33,11 @@ public class BrigadierListener implements Listener {
 
         if (config.getBoolean("tab-completion.blocked") && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
             for (String cmd : config.getStringList("tab-completion.blacklisted")) {
-                event.getCommands().remove(cmd);
+                if (!config.getBoolean("tab-completion.whitelist")) {
+                    event.getCommands().remove(cmd);
+                } else {
+                    
+                }
             }
         }
     }

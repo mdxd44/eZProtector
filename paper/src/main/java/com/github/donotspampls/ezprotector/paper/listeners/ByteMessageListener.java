@@ -1,5 +1,5 @@
 /*
- * eZProtector - Copyright (C) 2018-2019 DoNotSpamPls
+ * eZProtector - Copyright (C) 2018-2020 DoNotSpamPls
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,9 +13,7 @@ package com.github.donotspampls.ezprotector.paper.listeners;
 import com.github.donotspampls.ezprotector.paper.Main;
 import com.github.donotspampls.ezprotector.paper.utilities.ExecutionUtil;
 import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
-import com.github.donotspampls.ezprotector.paper.utilities.WDLPackets;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import com.github.donotspampls.ezprotector.paper.utilities.PacketUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -38,10 +36,11 @@ public class ByteMessageListener implements PluginMessageListener {
             if (config.getBoolean("mods.fabric.block")) blockFabric(player, brand, config);
             if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config);
             if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config);
+            if (config.getBoolean("mods.rift.block")) blockRift(player, brand, config);
         }
 
         if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica"))
-            player.sendPluginMessage(Main.getPlugin(), Main.SCHEMATICA, getSchematicaPayload());
+            player.sendPluginMessage(Main.getPlugin(), Main.SCHEMATICA, PacketUtil.getSchematicaPayload());
 
         if (config.getBoolean("mods.wdl.block")) blockWDL(player, channel);
     }
@@ -97,23 +96,21 @@ public class ByteMessageListener implements PluginMessageListener {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
-    private static byte[] getSchematicaPayload() {
-        final ByteArrayDataOutput output = ByteStreams.newDataOutput();
+    private void blockRift(Player player, String brand, FileConfiguration config) {
+        if (brand.contains("rift") && !player.hasPermission("ezprotector.bypass.mod.rift")) {
+            String punishCommand = config.getString("mods.rift.punish-command");
+            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
 
-        output.writeByte(0);
-        output.writeBoolean(false);
-        output.writeBoolean(false);
-        output.writeBoolean(false);
-
-        return output.toByteArray();
+            String notifyMessage = MessageUtil.placeholders(config.getString("mods.rift.warning-message"), player, null, null);
+            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.rift");
+        }
     }
 
     private void blockWDL(Player player, String channel) {
         if (channel.equalsIgnoreCase(Main.WDLINIT) && !player.hasPermission("ezprotector.bypass.mod.wdl")) {
             byte[][] packets = new byte[2][];
-            packets[0] = WDLPackets.createWDLPacket0();
-            packets[1] = WDLPackets.createWDLPacket1();
+            packets[0] = PacketUtil.createWDLPacket0();
+            packets[1] = PacketUtil.createWDLPacket1();
 
             for (byte[] packet : packets) player.sendPluginMessage(Main.getPlugin(), Main.WDLCONTROL, packet);
         }
