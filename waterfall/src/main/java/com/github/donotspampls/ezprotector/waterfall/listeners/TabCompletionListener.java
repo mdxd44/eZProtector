@@ -11,8 +11,6 @@
 package com.github.donotspampls.ezprotector.waterfall.listeners;
 
 import com.github.donotspampls.ezprotector.waterfall.Main;
-import com.github.donotspampls.ezprotector.waterfall.utilities.ExecutionUtil;
-import com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -31,37 +29,28 @@ public class TabCompletionListener implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         Configuration config = Main.getConfig();
-        final List<String> blocked = config.getStringList("tab-completion.blacklisted");
+        final List<String> blocked = config.getStringList("tab-completion.commands");
 
-        // If tab blocking is enabled and the player has tried to autocomplete, continue
         if (config.getBoolean("tab-completion.blocked") && event.getSender() instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-            String cmd = event.getCursor().replaceAll("[/ ]", "");
+            String cmd = event.getCursor().split(" ")[0].replace("/", "");
+            List<String> completions = event.getSuggestions();
 
-            // Try all the commands in the blacklisted config section to see if there is a match
-            for (String command : blocked) {
-                if (command.equalsIgnoreCase(cmd) && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
-                    event.setCancelled(true);
+            if (completions.isEmpty()) return;
 
-                    String errorMessage = config.getString("tab-completion.warn.message");
-
-                    if (config.getBoolean("tab-completion.warn.enabled") && !errorMessage.trim().isEmpty()) {
-                        player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, cmd));
-                    }
-
-                    if (config.getBoolean("tab-completion.punish-player.enabled")) {
-                        String punishCommand = config.getString("tab-completion.punish-player.command");
-                        // Replace placeholder with the error message in the config
-                        ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, cmd));
-                    }
-
-                    if (config.getBoolean("tab-completion.notify-admins.enabled")) {
-                        String notifyMessage = MessageUtil.placeholders(config.getString("tab-completion.notify-admins.message"), player, null, command);
-                        ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.tabcomplete");
-                    }
-                    break;
+            if (!player.hasPermission("ezprotector.bypass.command tabcomplete")) {
+                if (!config.getBoolean("tab-completion.whitelist")) {
+                    completions.removeIf(lcmd -> blocked.contains(lcmd.replace("/", "")));
+                    if (blocked.contains(cmd))
+                        event.setCancelled(true);
+                } else {
+                    if (completions.get(0).startsWith("/")) {
+                        completions.removeIf(lcmd -> !blocked.contains(lcmd.replace("/", "")));
+                    } else if (!blocked.contains(cmd))
+                        event.setCancelled(true);
                 }
             }
+
         }
     }
 

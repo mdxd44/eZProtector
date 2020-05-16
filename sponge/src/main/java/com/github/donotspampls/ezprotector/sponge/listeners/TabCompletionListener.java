@@ -43,8 +43,6 @@ public class TabCompletionListener {
                 if (command.contains(cmd) && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
                     event.setCancelled(true);
 
-                    System.out.println(command);
-
                     String errorMessage = config.getString("tab-completion.warn.message");
 
                     if (config.getBoolean("tab-completion.warn.enabled") && !errorMessage.trim().isEmpty())

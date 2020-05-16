@@ -8,14 +8,11 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.sponge.listeners;
+package com.github.donotspampls.ezprotector.sponge.utilities;
 
 import com.github.donotspampls.ezprotector.sponge.Main;
-import com.github.donotspampls.ezprotector.sponge.utilities.ExecutionUtil;
-import com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil;
 import com.moandjiezana.toml.Toml;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.text.Text;
 
@@ -23,13 +20,7 @@ import java.util.List;
 
 public class HiddenSyntaxes {
 
-    /**
-     * Intercepts a command containing the ":" character and blocks it.
-     *
-     * @param event The command event from which other information is gathered.
-     */
-    @Listener
-    public void onHiddenSyntax(SendCommandEvent event) {
+    public static void execute(SendCommandEvent event) {
         Toml config = Main.getConfig();
         if (event.getSource() instanceof Player && config.getBoolean("hidden-syntaxes.blocked")) {
             Player player = (Player) event.getSource();

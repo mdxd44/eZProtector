@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.sponge.listeners;
+package com.github.donotspampls.ezprotector.sponge.utilities;
 
 import com.github.donotspampls.ezprotector.sponge.Main;
 import com.github.donotspampls.ezprotector.sponge.utilities.ExecutionUtil;
@@ -21,13 +21,7 @@ import org.spongepowered.api.text.Text;
 
 public class CustomCommands {
 
-    /**
-     * Intercepts a command if it's found to be blocked by the server admin.
-     *
-     * @param event The command event from which other information is gathered.
-     */
-    @Listener
-    public void execute(SendCommandEvent event) {
+    public static void execute(SendCommandEvent event) {
         Toml config = Main.getConfig();
         if (event.getSource() instanceof Player && config.getBoolean("custom-commands.blocked")) {
             Player player = (Player) event.getSource();

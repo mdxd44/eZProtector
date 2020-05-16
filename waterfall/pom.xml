@@ -11,15 +11,12 @@
     <artifactId>ezprotector-waterfall</artifactId>
 
     <dependencies>
-
-        <!-- Waterfall API -->
         <dependency>
             <groupId>io.github.waterfallmc</groupId>
             <artifactId>waterfall-api</artifactId>
             <version>1.15-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>

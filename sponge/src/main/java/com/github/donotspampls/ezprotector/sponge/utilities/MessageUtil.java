@@ -11,11 +11,14 @@
 package com.github.donotspampls.ezprotector.sponge.utilities;
 
 import com.github.donotspampls.ezprotector.sponge.Main;
+import com.moandjiezana.toml.Toml;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 public class MessageUtil {
+
+    private static final Toml config = Main.getConfig();
 
     public static String color(String textToTranslate) {
         char[] b = textToTranslate.toCharArray();
@@ -44,5 +47,7 @@ public class MessageUtil {
                 .replace("%prefix%", Main.getPrefix())
         );
     }
+
+    // TODO: util methods
 
 }

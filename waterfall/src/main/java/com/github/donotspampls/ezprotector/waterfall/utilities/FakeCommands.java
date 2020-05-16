@@ -20,79 +20,47 @@ import static com.github.donotspampls.ezprotector.waterfall.utilities.MessageUti
 
 public class FakeCommands {
 
-    /**
-     * Intercepts the command and swaps the output with a fake one
-     *
-     * @param event The command event from which other information is gathered.
-     */
-    public static void executeCustom(ChatEvent event) {
+    public static void execute(ChatEvent event) {
         if (!(event.getSender() instanceof ProxiedPlayer)) return;
 
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-        String command = event.getMessage();
+        String command = event.getMessage().split(" ")[0];
         Configuration config = Main.getConfig();
 
-        if (command.split(" ")[0].matches("(?i)/ver|/version|/bungee") && !player.hasPermission("ezprotector.bypass.command.version")
-                && config.getBoolean("custom-version.enabled")) {
-            event.setCancelled(true);
-            String version = config.getString("custom-version.version");
-            player.sendMessage(color("This server is running server version " + version));
-        } else if (command.split(" ")[0].matches("(?i)/pl|/plugins") && !player.hasPermission("ezprotector.bypass.command.plugins")
-                && config.getBoolean("custom-plugins.enabled")) {
-            event.setCancelled(true);
+        if (event.isCancelled()) return;
 
-            String[] plugins = config.getString("custom-plugins.plugins").split(", ");
-            String pluginsList = String.join(ChatColor.WHITE + ", " + ChatColor.GREEN, plugins);
+        if (!player.hasPermission("ezprotector.bypass.command.fake")) {
+            if (config.getBoolean("custom-version.enabled")) {
+                String version = config.getString("custom-version.version");
 
-            // Create a fake /plugins output message using the string array above.
-            String customPlugins = ChatColor.WHITE + "Plugins (" + plugins.length + "): " + ChatColor.GREEN + pluginsList;
+                if (command.matches("(?i)/ver|/version")) {
+                    event.setCancelled(true);
+                    player.sendMessage(color("This server is running server version " + version));
+                }
 
-            player.sendMessage(customPlugins);
+                if (command.equalsIgnoreCase("/bungee")) {
+                    event.setCancelled(true);
+                    player.sendMessage(color("&9This server is running server version " + version));
+                }
+
+                MessageUtil.notifyAdmins("custom-version", player, command, "command.version");
+            }
+
+            if (command.matches("(?i)/pl|/plugins") && config.getBoolean("custom-plugins.enabled")) {
+                event.setCancelled(true);
+
+                String[] plugins = config.getString("custom-plugins.plugins").split(", ");
+                String pluginsList = String.join(ChatColor.WHITE + ", " + ChatColor.GREEN, plugins);
+
+                // Create a fake /plugins output message using the string array above.
+                String customPlugins = ChatColor.WHITE + "Plugins (" + plugins.length + "): " + ChatColor.GREEN + pluginsList;
+
+                player.sendMessage(customPlugins);
+
+                MessageUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
+            }
+
         }
     }
 
-    public static void executeBlock(ChatEvent event) {
-        if (!(event.getSender() instanceof ProxiedPlayer)) return;
-
-        ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-        String command = event.getMessage();
-        Configuration config = Main.getConfig();
-
-        if (command.split(" ")[0].matches("(?i)/ver|/version|/bungee") && !player.hasPermission("ezprotector.bypass.command.version")
-                && !config.getBoolean("custom-version.enabled")) {
-            event.setCancelled(true);
-            // Replace placeholder with the error message in the config
-            String errorMessage = config.getString("custom-version.error-message");
-
-            if (!errorMessage.trim().isEmpty())
-                player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
-
-            if (config.getBoolean("custom-version.punish-player.enabled")) {
-                String punishCommand = config.getString("custom-version.punish-player.command");
-                ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
-            }
-
-            if (config.getBoolean("custom-version.notify-admins.enabled")) {
-                String notifyMessage = MessageUtil.placeholders(config.getString("custom-version.notify-admins.message"), player, null, command);
-                ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.version");
-            }
-        } else if (command.split(" ")[0].matches("(?i)/pl|/plugins") && !player.hasPermission("ezprotector.bypass.command.plugins")
-                && !config.getBoolean("custom-plugins.enabled")) {
-            event.setCancelled(true);
-            String errorMessage = config.getString("custom-plugins.error-message");
-
-            if (!errorMessage.trim().isEmpty())
-                player.sendMessage(MessageUtil.placeholders(errorMessage, player, errorMessage, command));
-
-            if (config.getBoolean("custom-plugins.punish-player.enabled")) {
-                String punishCommand = config.getString("custom-plugins.punish-player.command");
-                ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
-            }
-
-            if (config.getBoolean("custom-plugins.notify-admins.enabled")) {
-                String notifyMessage = MessageUtil.placeholders(config.getString("custom-plugins.notify-admins.message"), player, null, command);
-                ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.plugins");
-            }
-        }
-    }
 }

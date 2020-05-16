@@ -8,28 +8,23 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.listeners;
+package com.github.donotspampls.ezprotector.sponge.listeners;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
-import com.github.donotspampls.ezprotector.waterfall.utilities.CustomCommands;
-import com.github.donotspampls.ezprotector.waterfall.utilities.FakeCommands;
-import com.github.donotspampls.ezprotector.waterfall.utilities.HiddenSyntaxes;
-import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
+import com.github.donotspampls.ezprotector.sponge.Main;
+import com.github.donotspampls.ezprotector.sponge.utilities.CustomCommands;
+import com.github.donotspampls.ezprotector.sponge.utilities.HiddenSyntaxes;
+import com.moandjiezana.toml.Toml;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.command.SendCommandEvent;
 
-public class CommandEventListener implements Listener {
+public class CommandEventListener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onCommand(ChatEvent event) {
-        Configuration config = Main.getConfig();
+    @Listener
+    public void onCommand(SendCommandEvent event) {
+        Toml config = Main.getConfig();
 
         if (config.getBoolean("custom-commands.blocked")) CustomCommands.execute(event);
         if (config.getBoolean("hidden-syntaxes.blocked")) HiddenSyntaxes.execute(event);
-
-        FakeCommands.execute(event);
     }
 
 }

@@ -60,10 +60,8 @@ public class ByteMessageListener implements PluginMessageListener {
     }
 
     private void blockBSM(Player player, String channel) {
-        if (channel.equalsIgnoreCase(Main.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
-            // Send the data output as a byte array to the player
+        if (channel.equalsIgnoreCase(Main.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting"))
             player.sendPluginMessage(Main.getPlugin(), channel, new byte[] {1});
-        }
     }
 
     private void blockFabric(Player player, String brand, FileConfiguration config) {

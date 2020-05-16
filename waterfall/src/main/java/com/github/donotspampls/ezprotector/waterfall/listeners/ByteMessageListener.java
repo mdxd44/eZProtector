@@ -54,17 +54,10 @@ public class ByteMessageListener implements Listener {
     private void block5Zig(ProxiedPlayer player, PluginMessageEvent e) {
         if (!player.hasPermission("ezprotector.bypass.mod.5zig")) {
             if (e.getTag().equalsIgnoreCase("5zig_Set") || e.getTag().equalsIgnoreCase("the5zigmod:5zig_set")) {
-                /*
-                 * 0x1 = Potion HUD
-                 * 0x2 = Potion Indicator
-                 * 0x4 = Armor HUD
-                 * 0x8 = Saturation
-                 * 0x16 = Unused
-                 * 0x32 = Auto Reconnect
-                 */
                 if (player.getPendingConnection().getVersion() <= 340)
                     player.sendData("5zig_Set", new byte[]{0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32});
-                player.sendData("the5zigmod:5zig_set", new byte[]{0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32});
+                else
+                    player.sendData("the5zigmod:5zig_set", new byte[]{0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32});
             }
         }
     }
@@ -74,7 +67,8 @@ public class ByteMessageListener implements Listener {
             if (e.getTag().equalsIgnoreCase("BSM") || e.getTag().equalsIgnoreCase("bsm:settings")) {
                 if (player.getPendingConnection().getVersion() <= 340)
                     player.sendData("BSM", new byte[]{1});
-                player.sendData("bsm:settings", new byte[]{1});
+                else
+                    player.sendData("bsm:settings", new byte[]{1});
             }
         }
     }
@@ -129,7 +123,8 @@ public class ByteMessageListener implements Listener {
                 for (byte[] packet : packets) {
                     if (player.getPendingConnection().getVersion() <= 340)
                         player.sendData("WDL|CONTROL", packet);
-                    player.sendData("wdl:control", packet);
+                    else
+                        player.sendData("wdl:control", packet);
                 }
             }
         }

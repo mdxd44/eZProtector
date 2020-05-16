@@ -11,6 +11,8 @@
 package com.github.donotspampls.ezprotector.sponge;
 
 import com.github.donotspampls.ezprotector.sponge.listeners.*;
+import com.github.donotspampls.ezprotector.sponge.utilities.CustomCommands;
+import com.github.donotspampls.ezprotector.sponge.utilities.HiddenSyntaxes;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import org.slf4j.Logger;
@@ -82,8 +84,8 @@ public class Main {
             plugin.getAsset("ezprotector.toml").ifPresent(asset -> {
                 try {
                     asset.copyToDirectory(configDir);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
             });
 

@@ -16,12 +16,6 @@ import static com.github.donotspampls.ezprotector.waterfall.utilities.MessageUti
 
 public class ExecutionUtil {
 
-    /**
-     * Sends a notification message to all online admins
-     *
-     * @param message    The notification message sent to the admins
-     * @param permission The required permission to recieve the notification
-     */
     public static void notifyAdmins(String message, String permission) {
         if (message.trim().isEmpty()) return;
 
@@ -33,4 +27,5 @@ public class ExecutionUtil {
     public static void executeConsoleCommand(String command) {
         Main.getServer().getPluginManager().dispatchCommand(Main.getServer().getConsole(), command);
     }
+
 }

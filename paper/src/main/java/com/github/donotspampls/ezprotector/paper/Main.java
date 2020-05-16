@@ -12,7 +12,7 @@ package com.github.donotspampls.ezprotector.paper;
 
 import com.github.donotspampls.ezprotector.paper.listeners.*;
 import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
-import io.papermc.lib.PaperLib;
+import com.github.donotspampls.ezprotector.paper.utilities.PaperLib;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -56,9 +56,7 @@ public class Main extends JavaPlugin {
             getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
             getServer().getPluginManager().disablePlugin(this);
         } else {
-            // Save the default config
             saveDefaultConfig();
-
             ByteMessageListener bml = new ByteMessageListener();
 
             // Check if the server is 1.13 or above
@@ -70,7 +68,7 @@ public class Main extends JavaPlugin {
                 newerversion = false;
             }
 
-            // Set mod channels (Forge 1.13 doesn't exist yet so we don't bother with most 1.13 mods)
+            // Set mod channels
             if (!newerversion) {
                 ZIG = "5zig_Set";
                 BSM = "BSM";
@@ -95,7 +93,7 @@ public class Main extends JavaPlugin {
                 ZIG = "the5zigmod:5zig_set";
                 BSM = "bsm:settings";
                 MCBRAND = "minecraft:brand";
-                SCHEMATICA = "dev:null";
+                SCHEMATICA = "dev:null"; // no schematica for 1.13+
                 WDLINIT = "wdl:init";
                 WDLCONTROL = "wdl:control";
 

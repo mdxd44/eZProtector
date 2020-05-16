@@ -17,36 +17,26 @@ import net.md_5.bungee.config.Configuration;
 
 public class CustomCommands {
 
-    /**
-     * Intercepts a command if it's found to be blocked by the server admin.
-     *
-     * @param event The command event from which other information is gathered.
-     */
     public static void execute(ChatEvent event) {
         if (!(event.getSender() instanceof ProxiedPlayer)) return;
 
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-        String command = event.getMessage();
+        String command = event.getMessage().split(" ")[0];
         Configuration config = Main.getConfig();
 
-        for (String message : config.getStringList("custom-commands.commands")) {
-            // Replace placeholder with the command executed by the player
-            if (command.split(" ")[0].equalsIgnoreCase("/" + message) && !player.hasPermission("ezprotector.bypass.command.custom")) {
-                event.setCancelled(true);
-                // Replace placeholder with the error message in the config
-                String errorMessage = config.getString("custom-commands.error-message");
+        if (!player.hasPermission("ezprotector.bypass.command.custom")) {
+            for (String message : config.getStringList("custom-commands.commands")) {
+                if (command.equalsIgnoreCase("/" + message)) {
+                    event.setCancelled(true);
 
-                if (!errorMessage.trim().isEmpty())
-                    player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, "/" + message));
+                    String errorMessage = config.getString("custom-commands.error-message");
+                    if (!errorMessage.trim().isEmpty())
+                        player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
 
-                if (config.getBoolean("custom-commands.punish-player.enabled")) {
-                    String punishCommand = config.getString("custom-commands.punish-player.command");
-                    ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, "/" + message));
-                }
+                    MessageUtil.punishPlayers("custom-commands", player, errorMessage, command);
+                    MessageUtil.notifyAdmins("custom-commands", player, command, "command.custom");
 
-                if (config.getBoolean("custom-commands.notify-admins.enabled")) {
-                    String notifyMessage = MessageUtil.placeholders(config.getString("custom-commands.notify-admins.message"), player, null, command);
-                    ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.custom");
+                    break;
                 }
             }
         }

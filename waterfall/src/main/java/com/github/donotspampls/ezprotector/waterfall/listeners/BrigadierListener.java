@@ -17,6 +17,8 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
+import java.util.List;
+
 public class BrigadierListener implements Listener {
 
     /**
@@ -30,15 +32,13 @@ public class BrigadierListener implements Listener {
 
         ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
         Configuration config = Main.getConfig();
+        final List<String> blocked = config.getStringList("tab-completion.commands");
 
         if (config.getBoolean("tab-completion.blocked") && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
-            for (String cmd : config.getStringList("tab-completion.blacklisted")) {
-                if (!config.getBoolean("tab-completion.whitelist")) {
-                    event.getCommands().remove(cmd);
-                } else {
-                    
-                }
-            }
+            if (!config.getBoolean("tab-completion.whitelist"))
+                event.getCommands().values().removeIf(cmd -> blocked.contains(cmd.getName()));
+            else
+                event.getCommands().values().removeIf(cmd -> !blocked.contains(cmd.getName()));
         }
     }
 

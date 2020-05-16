@@ -7,10 +7,10 @@
         "authorList": [ "DoNotSpamPls" ],
         "url": "${parent.url}",
         "dependencies": [
-            "spongeapi@7.1.0"
+            "spongeapi@7.2.0"
         ],
         "requiredMods": [
-            "spongeapi@7.1.0"
+            "spongeapi@7.2.0"
         ]
     }
 ]

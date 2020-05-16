@@ -32,9 +32,9 @@ hidden-syntaxes:
   error-message: '%prefix% That command syntax is forbidden!'
   # If you add a command to this list, it will not be blocked.
   whitelisted:
-    - whitelisted:commands
-    - with:hidden
-    - syntaxes:here
+  - whitelisted:commands
+  - with:hidden
+  - syntaxes:here
   notify-admins:
     enabled: true
     message: '%prefix% &e%player% &ftried to use a command with a hidden syntax &4(%command%)'
@@ -53,7 +53,7 @@ custom-plugins:
 
 # Same deal as with the custom plugins above, but for the version command!
 custom-version:
-  enabled: false
+  enabled: true
   # It shows up as "This server is running server version Custom Version"
   version: "Custom Version"
   # The player will not see an error message, but admins can still be notified
@@ -69,10 +69,10 @@ custom-commands:
   - a
   - about
   - icanhasbukkit
-  - pl
-  - plugins
-  - ver
-  - version
+  #- pl
+  #- plugins
+  #- ver
+  #- version
   - '?'
   - plugman list
   - command_without_slash

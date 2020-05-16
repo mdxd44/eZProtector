@@ -16,7 +16,7 @@ import org.spongepowered.api.text.Text;
 
 public class ExecutionUtil {
 
-    private static Server server = Sponge.getServer();
+    private static final Server server = Sponge.getServer();
 
     /**
      * Sends a notification message to all online admins

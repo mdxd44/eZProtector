@@ -19,11 +19,6 @@ import net.md_5.bungee.event.EventHandler;
 
 public class PlayerJoinListener implements Listener {
 
-    /**
-     * Sends out the mod blocks every time a player joins the server.
-     *
-     * @param event The join event from which other information is gathered.
-     */
     @EventHandler
     public void onPlayerJoin(PostLoginEvent event) {
         ProxiedPlayer p = event.getPlayer();

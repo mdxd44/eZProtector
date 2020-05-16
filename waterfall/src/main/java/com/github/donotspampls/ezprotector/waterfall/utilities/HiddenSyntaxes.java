@@ -19,40 +19,26 @@ import java.util.List;
 
 public class HiddenSyntaxes {
 
-    /**
-     * Intercepts a command containing the ":" character and blocks it.
-     *
-     * @param event The command event from which other information is gathered.
-     */
     public static void execute(ChatEvent event) {
         if (!(event.getSender() instanceof ProxiedPlayer)) return;
 
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-        String command = event.getMessage();
+        String command = event.getMessage().split(" ")[0].toLowerCase();
         Configuration config = Main.getConfig();
-
-        // Get the commands which will not be filtered by this check
         List<String> whitelisted = config.getStringList("hidden-syntaxes.whitelisted");
 
-        // Check if the command contains :. If that is true, check if the player hasn't got the bypass permission and that the command hasn't got any spaces in it
-        if (command.split(" ")[0].contains(":") && !whitelisted.contains(command.split(" ")[0].toLowerCase().replace("/", "")) && !player.hasPermission("ezprotector.bypass.command.hiddensyntax")) {
+        if (event.isCancelled()) return;
+
+        if (command.contains(":") && !whitelisted.contains(command.replace("/", ""))
+                && !player.hasPermission("ezprotector.bypass.command.hiddensyntaxes")) {
             event.setCancelled(true);
-            // Replace placeholder with the executed command
 
             String errorMessage = config.getString("hidden-syntaxes.error-message");
-
             if (!errorMessage.trim().isEmpty())
                 player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
 
-            if (config.getBoolean("hidden-syntaxes.punish-player.enabled")) {
-                String punishCommand = config.getString("hidden-syntaxes.punish-player.command");
-                ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
-            }
-
-            if (config.getBoolean("hidden-syntaxes.notify-admins.enabled")) {
-                String notifyMessage =  MessageUtil.placeholders(config.getString("hidden-syntaxes.notify-admins.message"), player, null, command);
-                ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.command.hiddensyntax");
-            }
+            MessageUtil.punishPlayers("hidden-syntaxes", player, errorMessage, command);
+            MessageUtil.notifyAdmins("hidden-syntaxes", player, command, "command.hiddensyntaxes");
         }
     }
 
