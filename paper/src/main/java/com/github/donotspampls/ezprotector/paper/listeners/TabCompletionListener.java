@@ -38,7 +38,7 @@ public class TabCompletionListener implements Listener {
 
             if (completions.isEmpty()) return;
 
-            if (!player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
+            if (!player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd)) {
                 if (!config.getBoolean("tab-completion.whitelist")) {
                     completions.removeIf(lcmd -> blocked.contains(lcmd.replace("/", "")));
                     if (blocked.contains(cmd))

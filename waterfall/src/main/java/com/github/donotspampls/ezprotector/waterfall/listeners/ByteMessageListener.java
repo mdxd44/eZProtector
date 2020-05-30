@@ -84,7 +84,7 @@ public class ByteMessageListener implements Listener {
     }
 
     private void blockForge(ProxiedPlayer player, String brand, Configuration config) {
-        if ((brand.equalsIgnoreCase("fml,forge") || brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
+        if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
             ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
 
@@ -115,7 +115,7 @@ public class ByteMessageListener implements Listener {
 
     private void blockWDL(ProxiedPlayer player, PluginMessageEvent event) {
         if (!player.hasPermission("ezprotector.bypass.mod.wdl")) {
-            if (event.getTag().equalsIgnoreCase("WDL|INIT") && event.getTag().equalsIgnoreCase("wdl:init")) {
+            if (event.getTag().equalsIgnoreCase("WDL|INIT") || event.getTag().equalsIgnoreCase("wdl:init")) {
                 byte[][] packets = new byte[2][];
                 packets[0] = PacketUtil.createWDLPacket0();
                 packets[1] = PacketUtil.createWDLPacket1();

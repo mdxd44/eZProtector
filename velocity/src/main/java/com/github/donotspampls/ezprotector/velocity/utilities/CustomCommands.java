@@ -8,26 +8,25 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.sponge.utilities;
+package com.github.donotspampls.ezprotector.velocity.utilities;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
+import com.github.donotspampls.ezprotector.velocity.Main;
 import com.moandjiezana.toml.Toml;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.command.SendCommandEvent;
+import com.velocitypowered.api.event.command.CommandExecuteEvent;
+import com.velocitypowered.api.proxy.Player;
 
 public class CustomCommands {
 
-    public static void execute(SendCommandEvent event) {
+    public static void execute(CommandExecuteEvent event) {
         Toml config = Main.getConfig();
-
-        if (event.getSource() instanceof Player) {
-            Player player = (Player) event.getSource();
+        if (event.getCommandSource() instanceof Player) {
+            Player player = (Player) event.getCommandSource();
             String command = event.getCommand();
 
             if (!player.hasPermission("ezprotector.bypass.command.custom")) {
                 for (Object message : config.getList("custom-commands.commands")) {
                     if (command.equalsIgnoreCase((String) message)) {
-                        event.setCancelled(true);
+                        event.setResult(CommandExecuteEvent.CommandResult.denied());
 
                         String errorMessage = config.getString("custom-commands.error-message");
                         if (!errorMessage.trim().isEmpty())

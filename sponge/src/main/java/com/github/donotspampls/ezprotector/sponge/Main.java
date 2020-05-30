@@ -10,9 +10,10 @@
 
 package com.github.donotspampls.ezprotector.sponge;
 
-import com.github.donotspampls.ezprotector.sponge.listeners.*;
-import com.github.donotspampls.ezprotector.sponge.utilities.CustomCommands;
-import com.github.donotspampls.ezprotector.sponge.utilities.HiddenSyntaxes;
+import com.github.donotspampls.ezprotector.sponge.listeners.CommandEventListener;
+import com.github.donotspampls.ezprotector.sponge.listeners.ModListener;
+import com.github.donotspampls.ezprotector.sponge.listeners.PlayerJoinListener;
+import com.github.donotspampls.ezprotector.sponge.listeners.TabCompletionListener;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import org.slf4j.Logger;
@@ -72,8 +73,7 @@ public class Main {
         WDLCONTROL = server.getChannelRegistrar().createRawChannel(this, "WDL|CONTROL");
 
         // Register listeners
-        server.getEventManager().registerListeners(this, new CustomCommands());
-        server.getEventManager().registerListeners(this, new HiddenSyntaxes());
+        server.getEventManager().registerListeners(this, new CommandEventListener());
         server.getEventManager().registerListeners(this, new ModListener());
         server.getEventManager().registerListeners(this, new PlayerJoinListener());
         server.getEventManager().registerListeners(this, new TabCompletionListener());

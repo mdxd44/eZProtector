@@ -8,13 +8,13 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.sponge.utilities;
+package com.github.donotspampls.ezprotector.velocity.utilities;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
+import com.github.donotspampls.ezprotector.velocity.Main;
 import com.moandjiezana.toml.Toml;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.serializer.TextSerializers;
+import com.velocitypowered.api.proxy.Player;
+import net.kyori.text.TextComponent;
+import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 
 public class MessageUtil {
 
@@ -33,15 +33,15 @@ public class MessageUtil {
 
     public static String placeholders(String args, Player player, String errorMessage, String command) {
         return color(args
-                .replace("%player%", player.getName())
+                .replace("%player%", player.getUsername())
                 .replace("%errormessage%", errorMessage == null ? "" : errorMessage)
                 .replace("%command%", command == null ? "" : command)
                 .replace("%prefix%", Main.getPrefix()));
     }
 
-    public static Text placeholdersText(String args, Player player, String errorMessage, String command) {
-        return TextSerializers.FORMATTING_CODE.deserialize(args
-                .replace("%player%", player.getName())
+    public static TextComponent placeholdersText(String args, Player player, String errorMessage, String command) {
+        return LegacyComponentSerializer.legacy().deserialize(args
+                .replace("%player%", player.getUsername())
                 .replace("%errormessage%", errorMessage == null ? "" : color(errorMessage))
                 .replace("%command%", command == null ? "" : color(command))
                 .replace("%prefix%", Main.getPrefix())
@@ -59,7 +59,7 @@ public class MessageUtil {
         if (config.getBoolean(module + ".notify-admins.enabled")) {
             String msg = config.getString(module + ".notify-admins.message");
 
-            Text notifyMessage =  MessageUtil.placeholdersText(msg, player, null, command);
+            TextComponent notifyMessage =  MessageUtil.placeholdersText(msg, player, null, command);
             ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify." + perm);
         }
     }

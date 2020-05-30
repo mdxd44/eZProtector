@@ -8,49 +8,44 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.sponge.listeners;
+package com.github.donotspampls.ezprotector.velocity.listeners;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
+import com.github.donotspampls.ezprotector.velocity.Main;
 import com.moandjiezana.toml.Toml;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.command.TabCompleteEvent;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.player.TabCompleteEvent;
+import com.velocitypowered.api.proxy.Player;
 
 import java.util.List;
 
 public class TabCompletionListener {
 
     /**
-     * Checks if a player is tab completing a forbidden command.
+     * Checks if a player is tab completing a forbidden command. (1.12)
      *
      * @param event The tab complete event from which other information is gathered.
      */
-    @Listener
-    public void onTabComplete(TabCompleteEvent.Command event) {
+    @Subscribe
+    public void onTabComplete(TabCompleteEvent event) {
         Toml config = Main.getConfig();
         final List<String> blocked = config.getList("tab-completion.commands");
 
-        if (config.getBoolean("tab-completion.blocked") && event.getSource() instanceof Player) {
-            Player player = (Player) event.getSource();
-            String cmd = event.getRawMessage().replace(" ", "");
-            List<String> completions = event.getTabCompletions();
-
-            System.out.println(blocked);
-
-            System.out.println(event.getTabCompletions());
-            System.out.println(event.getRawMessage());
+        if (config.getBoolean("tab-completion.blocked")) {
+            Player player = event.getPlayer();
+            String cmd = event.getPartialMessage().replace(" ", "");
+            List<String> completions = event.getSuggestions();
 
             if (completions.isEmpty()) return;
 
             if (!player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
                 if (!config.getBoolean("tab-completion.whitelist")) {
                     completions.removeIf(blocked::contains);
-                    if (blocked.contains(cmd)) event.setCancelled(true);
+                    if (blocked.contains(cmd)) completions.clear();
                 } else {
-                    // TODO: ???????
+                    // TODO: does velocity include / or not?
                     completions.removeIf(lcmd -> !blocked.contains(lcmd));
                     for (String lcmd : blocked) {
-                        if (lcmd.equalsIgnoreCase(cmd)) event.setCancelled(true);
+                        if (lcmd.equalsIgnoreCase(cmd)) completions.clear();
                     }
                 }
             }

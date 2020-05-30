@@ -36,14 +36,14 @@ public class FakeCommands {
                 if (command.matches("(?i)/ver|/version")) {
                     event.setCancelled(true);
                     player.sendMessage(color("This server is running server version " + version));
+                    MessageUtil.notifyAdmins("custom-version", player, command, "command.version");
                 }
 
                 if (command.equalsIgnoreCase("/bungee")) {
                     event.setCancelled(true);
                     player.sendMessage(color("&9This server is running server version " + version));
+                    MessageUtil.notifyAdmins("custom-version", player, command, "command.version");
                 }
-
-                MessageUtil.notifyAdmins("custom-version", player, command, "command.version");
             }
 
             if (command.matches("(?i)/pl|/plugins") && config.getBoolean("custom-plugins.enabled")) {

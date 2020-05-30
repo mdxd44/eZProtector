@@ -4,22 +4,19 @@
 # Here you can modify the prefix of the plugin.
 prefix = "&7[&aeZProtector&7]&f"
 
-# This module blocks tab completion for certain commands.
 [tab-completion]
     blocked = true
-    # If this is set to true, the commands in the list will be THE ONLY ones to be tab completed
     whitelist = false
+
     commands = [
         "sponge",
         "help",
         "?",
     ]
 
-# This blocks players from using commands such as /minecraft:help or /essentials:warp, since they can use that to bypass various protections.
 [hidden-syntaxes]
     blocked = true
     error-message = "%prefix% &4That command syntax is forbidden!"
-    # If you add a command to this list, it will not be blocked.
     whitelisted = [
         "whitelisted:commands",
         "with:hidden",
@@ -34,12 +31,15 @@ prefix = "&7[&aeZProtector&7]&f"
         enabled = false
         command = "kick %player% %errormessage%"
 
-# This option allows you to block any command you wish by adding it to the list!
 [custom-commands]
     blocked = true
     error-message = "%prefix% You don''t have the permission to use this command! &4(/%command%)"
     commands = [
-        "sponge",
+        "a",
+        "about",
+        "icanhasbukkit",
+        "?",
+        "plugman list",
         "command_without_slash"
     ]
 
@@ -51,7 +51,6 @@ prefix = "&7[&aeZProtector&7]&f"
         enabled = false
         command = "kick %player% %errormessage%"
 
-# This section allows you to block various mods (and even punish players for some of them!)
 [mods]
   5zig = false
   betterpvp = false
@@ -63,22 +62,20 @@ prefix = "&7[&aeZProtector&7]&f"
   # Extremely finnicky, may kick players with a generic "Disconnected" message
   [mods.fabric]
       block = false
-      warning-message = "%prefix% &e%player% &ftried to join while having Fabric installed"
-      punish-command = "kick %player% &4Fabric usage is not allowed."
+      warning-message = "%prefix% &e%player% &ftried to join while having Forge installed"
+      punish-command = "kick %player% &4The Forge mod is not allowed."
 
   [mods.forge]
     block = false
     warning-message = "%prefix% &e%player% &ftried to join while having Forge installed"
-    punish-command = "kick %player% &4Forge usage is not allowed."
+    punish-command = "kick %player% &4The Forge mod is not allowed."
 
   [mods.liteloader]
     block = false
     warning-message = "%prefix% &e%player% &ftried to join while having LiteLoader installed"
-    punish-command = "kick %player% &4LiteLoader usage is not allowed."
+    punish-command = "kick %player% &4The LiteLoader mod is not allowed."
 
   [mods.rift]
     block = false
-    warning-message = "%prefix% &e%player% &ftried to join while having Rift installed"
-    punish-command = "kick %player% &4Rift usage is not allowed."
-
-# This is the end of the config! Yay!
+    warning-message = "%prefix% &e%player% &ftried to join while having LiteLoader installed"
+    punish-command = "kick %player% &4The LiteLoader mod is not allowed."

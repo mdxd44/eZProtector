@@ -39,7 +39,7 @@ public class ByteMessageListener implements PluginMessageListener {
             if (config.getBoolean("mods.rift.block")) blockRift(player, brand, config);
         }
 
-        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica"))
+        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica")) // TODO: add channel check
             player.sendPluginMessage(Main.getPlugin(), Main.SCHEMATICA, PacketUtil.getSchematicaPayload());
 
         if (config.getBoolean("mods.wdl.block")) blockWDL(player, channel);
@@ -75,7 +75,7 @@ public class ByteMessageListener implements PluginMessageListener {
     }
 
     private void blockForge(Player player, String brand, FileConfiguration config) {
-        if ((brand.equalsIgnoreCase("fml,forge") || brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
+        if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
             ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
 

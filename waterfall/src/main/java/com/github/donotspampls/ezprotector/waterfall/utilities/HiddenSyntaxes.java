@@ -29,7 +29,7 @@ public class HiddenSyntaxes {
 
         if (event.isCancelled()) return;
 
-        if (command.contains(":") && !whitelisted.contains(command.replace("/", ""))
+        if (command.startsWith("/") && command.contains(":") && !whitelisted.contains(command.replace("/", ""))
                 && !player.hasPermission("ezprotector.bypass.command.hiddensyntaxes")) {
             event.setCancelled(true);
 

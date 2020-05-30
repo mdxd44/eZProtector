@@ -8,24 +8,24 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.sponge.listeners;
+package com.github.donotspampls.ezprotector.velocity.listeners;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
+import com.github.donotspampls.ezprotector.velocity.Main;
 import com.moandjiezana.toml.Toml;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.text.Text;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
+import com.velocitypowered.api.proxy.Player;
+import net.kyori.text.TextComponent;
 
 public class PlayerJoinListener {
 
-    @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Join event) {
-        Player p = (Player) event.getSource();
+    @Subscribe
+    public void onPlayerJoin(ServerConnectedEvent event) {
+        Player p = event.getPlayer();
         Toml config = Main.getConfig();
 
-        if (config.getBoolean("mods.betterpvp") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(Text.of(" §c §r§5 §r§1 §r§f §r§0 "));
-        if (config.getBoolean("mods.voxelmap") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(Text.of(" §3 §6 §3 §6 §3 §6 §e "));
+        if (config.getBoolean("mods.betterpvp") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(TextComponent.of(" §c §r§5 §r§1 §r§f §r§0 "));
+        if (config.getBoolean("mods.voxelmap") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(TextComponent.of(" §3 §6 §3 §6 §3 §6 §e "));
     }
 
 }

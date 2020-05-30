@@ -26,43 +26,45 @@ public class ModListener {
     public void onChannelRegister(ChannelRegistrationEvent.Register event) {
         Toml config = Main.getConfig();
         Player player = (Player) event.getSource();
+        String channel = event.getChannel();
 
-        if (config.getBoolean("mods.5zig") && event.getChannel().equals("5zig_Set")) block5Zig(player);
-        if (config.getBoolean("mods.bettersprinting") && event.getChannel().equals("BSM")) blockBSM(player);
+        if (config.getBoolean("mods.5zig")) block5Zig(player, channel);
+        if (config.getBoolean("mods.bettersprinting") && event.getChannel().equals("BSM")) blockBSM(player, channel);
 
-        if (config.getBoolean("mods.forge.block") && event.getChannel().equals("FML")) blockForge(player, config);
-        if (config.getBoolean("mods.liteloader.block") && event.getChannel().equals("PERMISSIONSREPL")) blockLiteLoader(player, config);
+        if (config.getBoolean("mods.fabric.block")) blockFabric(player, channel, config);
+        if (config.getBoolean("mods.forge.block")) blockForge(player, channel, config);
+        if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, channel, config);
+        if (config.getBoolean("mods.rift.block")) blockRift(player, channel, config);
 
         if (config.getBoolean("mods.schematica") && !player.hasPermission("ezprotector.bypass.mod.schematica")
-                && event.getChannel().equals("schematica"))
+                && channel.equalsIgnoreCase("schematica"))
             Main.SCHEMATICA.sendTo(player, buf -> buf.writeBytes(PacketUtil.createSchematicaPacket()));
 
-        if (config.getBoolean("mods.wdl") && event.getChannel().equals("WDL|CONTROL")) blockWDL(player);
-    };
+        if (config.getBoolean("mods.wdl")) blockWDL(player, channel);
+    }
 
-    private void block5Zig(Player player) {
-        if (!player.hasPermission("ezprotector.bypass.mod.5zig")) {
-            /*
-             * 0x1 = Potion HUD
-             * 0x2 = Potion Indicator
-             * 0x4 = Armor HUD
-             * 0x8 = Saturation
-             * 0x16 = Unused
-             * 0x32 = Auto Reconnect
-             */
+    private void block5Zig(Player player, String channel) {
+        if (channel.equalsIgnoreCase("5Zig_Set") && !player.hasPermission("ezprotector.bypass.mod.5zig"))
             Main.ZIG.sendTo(player, buf -> buf.writeBytes(new byte[] {0x1|0x2|0x4|0x8|0x16|0x32}));
-        }
     }
 
-    private void blockBSM(Player player) {
-        if (!player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
-            // Send the data output as a byte array to the player
+    private void blockBSM(Player player, String channel) {
+        if (channel.equalsIgnoreCase("BSM") && !player.hasPermission("ezprotector.bypass.mod.bettersprinting"))
             Main.BSM.sendTo(player, buf -> buf.writeBytes(new byte[] {1}));
+    }
+
+    private void blockFabric(Player player, String brand, Toml config) {
+        if (brand.contains("fabric") && !player.hasPermission("ezprotector.bypass.mod.fabric")) {
+            String punishCommand = config.getString("mods.fabric.punish-command");
+            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+
+            Text notifyMessage = MessageUtil.placeholdersText(config.getString("mods.fabric.warning-message"), player, null, null);
+            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.fabric");
         }
     }
 
-    private void blockForge(Player player, Toml config) {
-        if (!player.hasPermission("ezprotector.bypass.mod.forge")) {
+    private void blockForge(Player player, String brand, Toml config) {
+        if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
             ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
 
@@ -71,8 +73,8 @@ public class ModListener {
         }
     }
 
-    private void blockLiteLoader(Player player, Toml config) {
-        if (!player.hasPermission("ezprotector.bypass.mod.liteloader")) {
+    private void blockLiteLoader(Player player, String brand, Toml config) {
+        if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
             ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
 
@@ -81,8 +83,18 @@ public class ModListener {
         }
     }
 
-    private void blockWDL(Player player) {
-        if (!player.hasPermission("ezprotector.bypass.mod.wdl")) {
+    private void blockRift(Player player, String brand, Toml config) {
+        if (brand.contains("rift") && !player.hasPermission("ezprotector.bypass.mod.rift")) {
+            String punishCommand = config.getString("mods.rift.punish-command");
+            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+
+            Text notifyMessage = MessageUtil.placeholdersText(config.getString("mods.rift.warning-message"), player, null, null);
+            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.rift");
+        }
+    }
+
+    private void blockWDL(Player player, String channel) {
+        if (channel.contains("WDL") && !player.hasPermission("ezprotector.bypass.mod.wdl")) {
             byte[][] packets = new byte[2][];
             packets[0] = PacketUtil.createWDLPacket0();
             packets[1] = PacketUtil.createWDLPacket1();
