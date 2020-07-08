@@ -10,14 +10,19 @@
 
 package com.github.donotspampls.ezprotector.velocity.listeners;
 
-import com.github.donotspampls.ezprotector.velocity.Main;
 import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.PlayerAvailableCommandsEvent;
+import com.velocitypowered.api.proxy.Player;
 
 import java.util.List;
 
 public class BrigadierListener {
+
+    private final Toml config;
+    public BrigadierListener(Toml config) {
+        this.config = config;
+    }
 
     /**
      * Removes forbidden commands from Brigadier's command tree (1.13)
@@ -25,19 +30,19 @@ public class BrigadierListener {
      * @param event The event which removes the tab completions from the client.
      */
     @Subscribe
-    public void onCommandSend(PlayerAvailableCommandsEvent event) {
-        Toml config = Main.getConfig();
-        final List<String> blocked = config.getList("tab-completion.commands");
+    @SuppressWarnings({"unused", "UnstableApiUsage"})
+    public void onCommandSend(final PlayerAvailableCommandsEvent event) {
+        if (config.getBoolean("tab-completion.blocked")) {
+            final Player player = event.getPlayer();
+            final List<String> blocked = config.getList("tab-completion.commands");
 
-        System.out.println(event.getRootNode().getExamples());
-
-        if (config.getBoolean("tab-completion.blocked") && !event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete")) {
-            if (!config.getBoolean("tab-completion.whitelist"))
-                event.getRootNode().getChildren().stream()
-                        .filter(commandNode -> blocked.contains(commandNode.toString()))
-                        .iterator().remove();
-            else
-                event.getRootNode().getExamples().removeIf(cmd -> !blocked.contains(cmd));
+            if (!config.getBoolean("tab-completion.whitelist")) {
+                event.getRootNode().getChildren().removeIf(cmd ->
+                        !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && blocked.contains(cmd.getName()));
+            } else {
+                event.getRootNode().getChildren().removeIf(cmd ->
+                        !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && !blocked.contains(cmd.getName()));
+            }
         }
     }
 

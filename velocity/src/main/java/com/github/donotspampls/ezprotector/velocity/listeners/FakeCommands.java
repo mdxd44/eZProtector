@@ -8,21 +8,30 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.velocity.utilities;
+package com.github.donotspampls.ezprotector.velocity.listeners;
 
-import com.github.donotspampls.ezprotector.velocity.Main;
+import com.github.donotspampls.ezprotector.velocity.utilities.MessageUtil;
 import com.moandjiezana.toml.Toml;
+import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.text.TextComponent;
+import net.kyori.text.format.TextColor;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
-
-import java.awt.*;
 
 public class FakeCommands {
 
-    public static void execute(CommandExecuteEvent event) {
-        Toml config = Main.getConfig();
+    private final Toml config;
+    private final MessageUtil msgUtil;
+
+    public FakeCommands(Toml config, MessageUtil msgUtil) {
+        this.config = config;
+        this.msgUtil = msgUtil;
+    }
+
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void execute(CommandExecuteEvent event) {
         if (event.getCommandSource() instanceof Player) {
             Player player = (Player) event.getCommandSource();
             String command = event.getCommand();
@@ -30,7 +39,7 @@ public class FakeCommands {
             if (event.getResult() == CommandExecuteEvent.CommandResult.denied()) return;
 
             if (!player.hasPermission("ezprotector.bypass.command.fake")) {
-                if (command.matches("(?i)/ver|/version") && config.getBoolean("custom-version.enabled")) {
+                if (command.matches("(?i)ver|version") && config.getBoolean("custom-version.enabled")) {
                     event.setResult(CommandExecuteEvent.CommandResult.denied());
 
                     String version = config.getString("custom-version.version");
@@ -38,21 +47,26 @@ public class FakeCommands {
                             LegacyComponentSerializer.legacy().deserialize("This server is running server version " + version, '&')
                     );
 
-                    MessageUtil.notifyAdmins("custom-version", player, command, "command.version");
+                    msgUtil.notifyAdmins("custom-version", player, command, "command.version");
                 }
 
-                if (command.matches("(?i)/pl|/plugins") && config.getBoolean("custom-plugins.enabled")) {
+                if (command.matches("(?i)pl|plugins") && config.getBoolean("custom-plugins.enabled")) {
                     event.setResult(CommandExecuteEvent.CommandResult.denied());
 
                     String[] plugins = config.getString("custom-plugins.plugins").split(", ");
-                    String pluginsList = String.join(Color.WHITE + ", " + Color.GREEN, plugins);
+                    int pluginCount = plugins.length;
 
-                    // Create a fake /plugins output message using the string array above.
-                    String customPlugins = "Plugins (" + plugins.length + "): " + Color.GREEN + pluginsList;
+                    TextComponent.Builder output = TextComponent.builder("Plugins (" + pluginCount + "): ");
+                    for (int i = 0; i < pluginCount; i++) {
+                        output.append(plugins[i], TextColor.GREEN);
+                        if (i + 1 < pluginCount) {
+                            output.append(TextComponent.of(", ", TextColor.WHITE));
+                        }
+                    }
 
-                    player.sendMessage(TextComponent.of(customPlugins));
+                    player.sendMessage(output.build());
 
-                    MessageUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
+                    msgUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
                 }
             }
         }

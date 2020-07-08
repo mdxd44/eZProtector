@@ -8,22 +8,30 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.paper.utilities;
+package com.github.donotspampls.ezprotector.paper.listeners;
 
-import com.github.donotspampls.ezprotector.paper.Main;
+import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import static com.github.donotspampls.ezprotector.paper.utilities.MessageUtil.color;
+public class FakeCommands implements Listener {
 
-public class FakeCommands {
+    private final FileConfiguration config;
+    private final MessageUtil msgUtil;
 
-    public static void execute(PlayerCommandPreprocessEvent event) {
+    public FakeCommands(FileConfiguration config, MessageUtil msgUtil) {
+        this.config = config;
+        this.msgUtil = msgUtil;
+    }
+
+    @EventHandler
+    public void execute(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         String command = event.getMessage().split(" ")[0];
-        FileConfiguration config = Main.getPlugin().getConfig();
 
         if (event.isCancelled()) return;
 
@@ -32,9 +40,9 @@ public class FakeCommands {
                 event.setCancelled(true);
 
                 String version = config.getString("custom-version.version");
-                player.sendMessage(color("This server is running server version " + version));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "This server is running server version " + version));
 
-                MessageUtil.notifyAdmins("custom-version", player, command, "command.version");
+                msgUtil.notifyAdmins("custom-version", player, command, "command.version");
             }
 
             if (command.matches("(?i)/pl|/plugins") && config.getBoolean("custom-plugins.enabled")) {
@@ -48,7 +56,7 @@ public class FakeCommands {
 
                 player.sendMessage(customPlugins);
 
-                MessageUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
+                msgUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
             }
         }
     }

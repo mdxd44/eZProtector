@@ -10,18 +10,20 @@
 
 package com.github.donotspampls.ezprotector.waterfall.listeners;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
 import io.github.waterfallmc.waterfall.event.ProxyDefineCommandsEvent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
-import java.util.Collection;
 import java.util.List;
 
 public class BrigadierListener implements Listener {
+
+    private final Configuration config;
+    public BrigadierListener(Configuration config) {
+        this.config = config;
+    }
 
     /**
      * Removes forbidden commands from Brigadier's command tree (1.13)
@@ -32,15 +34,16 @@ public class BrigadierListener implements Listener {
     public void onCommandSend(ProxyDefineCommandsEvent event) {
         if (!(event.getReceiver() instanceof ProxiedPlayer)) return;
 
-        ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
-        Configuration config = Main.getConfig();
-        final List<String> blocked = config.getStringList("tab-completion.commands");
+        if (config.getBoolean("tab-completion.blocked")) {
+            final ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
+            final List<String> blocked = config.getStringList("tab-completion.commands");
 
-        if (config.getBoolean("tab-completion.blocked") && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
             if (!config.getBoolean("tab-completion.whitelist"))
-                event.getCommands().values().removeIf(cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && blocked.contains(cmd.getName()));
+                event.getCommands().values().removeIf(cmd ->
+                        !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && blocked.contains(cmd.getName()));
             else
-                event.getCommands().values().removeIf(cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && !blocked.contains(cmd.getName()));
+                event.getCommands().values().removeIf(cmd ->
+                        !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && !blocked.contains(cmd.getName()));
         }
     }
 

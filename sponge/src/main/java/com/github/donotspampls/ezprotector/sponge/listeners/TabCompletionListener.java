@@ -10,7 +10,6 @@
 
 package com.github.donotspampls.ezprotector.sponge.listeners;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
 import com.moandjiezana.toml.Toml;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -20,14 +19,13 @@ import java.util.List;
 
 public class TabCompletionListener {
 
-    /**
-     * Checks if a player is tab completing a forbidden command.
-     *
-     * @param event The tab complete event from which other information is gathered.
-     */
+    private final Toml config;
+    public TabCompletionListener(Toml config) {
+        this.config = config;
+    }
+
     @Listener
     public void onTabComplete(TabCompleteEvent.Command event) {
-        Toml config = Main.getConfig();
         final List<String> blocked = config.getList("tab-completion.commands");
 
         if (config.getBoolean("tab-completion.blocked") && event.getSource() instanceof Player) {

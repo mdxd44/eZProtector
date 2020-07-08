@@ -10,40 +10,42 @@
 
 package com.github.donotspampls.ezprotector.waterfall.utilities;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
 public class MessageUtil {
 
-    private static final Configuration config = Main.getConfig();
+    private final Configuration config;
+    private final ExecutionUtil execUtil;
 
-    public static String color(String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
+    public MessageUtil(Configuration config, ExecutionUtil execUtil) {
+        this.config = config;
+        this.execUtil = execUtil;
     }
 
-    public static String placeholders(String args, ProxiedPlayer player, String errorMessage, String command) {
-        return color(args)
-                .replace("%player%", player.getName())
-                .replace("%errormessage%", errorMessage == null ? "" : color(errorMessage))
-                .replace("%command%", command == null ? "" : command)
-                .replace("%prefix%", Main.getPrefix());
+    public String placeholders(String args, ProxiedPlayer player, String errorMessage, String command) {
+        String cargs =
+                args.replace("%player%", player.getName())
+                    .replace("%errormessage%", errorMessage == null ? "" : errorMessage)
+                    .replace("%command%", command == null ? "" : command);
+
+        return ChatColor.translateAlternateColorCodes('&', cargs);
     }
 
-    public static void punishPlayers(String module, ProxiedPlayer player, String errorMessage, String command) {
+    public void punishPlayers(String module, ProxiedPlayer player, String errorMessage, String command) {
         if (config.getBoolean(module + ".punish-player.enabled")) {
             String punishCommand = config.getString(module + ".punish-player.command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
+            execUtil.executeConsoleCommand(placeholders(punishCommand, player, errorMessage, command));
         }
     }
 
-    public static void notifyAdmins(String module, ProxiedPlayer player, String command, String perm) {
+    public void notifyAdmins(String module, ProxiedPlayer player, String command, String perm) {
         if (config.getBoolean(module + ".notify-admins.enabled")) {
             String msg = config.getString(module + ".notify-admins.message");
 
-            String notifyMessage =  MessageUtil.placeholders(msg, player, null, command);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify." + perm);
+            String notifyMessage = placeholders(msg, player, null, command);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify." + perm);
         }
     }
 

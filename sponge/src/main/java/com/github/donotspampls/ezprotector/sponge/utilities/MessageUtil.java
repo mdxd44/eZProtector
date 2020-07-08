@@ -10,7 +10,6 @@
 
 package com.github.donotspampls.ezprotector.sponge.utilities;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
 import com.moandjiezana.toml.Toml;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -18,7 +17,12 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 
 public class MessageUtil {
 
-    private static final Toml config = Main.getConfig();
+    private final Toml config;
+    private final ExecutionUtil execUtil = new ExecutionUtil();
+
+    public MessageUtil(Toml config) {
+        this.config = config;
+    }
 
     public static String color(String textToTranslate) {
         char[] b = textToTranslate.toCharArray();
@@ -31,36 +35,33 @@ public class MessageUtil {
         return new String(b);
     }
 
-    public static String placeholders(String args, Player player, String errorMessage, String command) {
+    public String placeholders(String args, Player player, String errorMessage, String command) {
         return color(args
                 .replace("%player%", player.getName())
                 .replace("%errormessage%", errorMessage == null ? "" : errorMessage)
-                .replace("%command%", command == null ? "" : command)
-                .replace("%prefix%", Main.getPrefix()));
+                .replace("%command%", command == null ? "" : command));
     }
 
-    public static Text placeholdersText(String args, Player player, String errorMessage, String command) {
+    public Text placeholdersText(String args, Player player, String errorMessage, String command) {
         return TextSerializers.FORMATTING_CODE.deserialize(args
                 .replace("%player%", player.getName())
                 .replace("%errormessage%", errorMessage == null ? "" : color(errorMessage))
-                .replace("%command%", command == null ? "" : color(command))
-                .replace("%prefix%", Main.getPrefix())
-        );
+                .replace("%command%", command == null ? "" : color(command)));
     }
 
-    public static void punishPlayers(String module, Player player, String errorMessage, String command) {
+    public void punishPlayers(String module, Player player, String errorMessage, String command) {
         if (config.getBoolean(module + ".punish-player.enabled")) {
             String punishCommand = config.getString(module + ".punish-player.command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, errorMessage, command));
+            execUtil.executeConsoleCommand(placeholders(punishCommand, player, errorMessage, command));
         }
     }
 
-    public static void notifyAdmins(String module, Player player, String command, String perm) {
+    public void notifyAdmins(String module, Player player, String command, String perm) {
         if (config.getBoolean(module + ".notify-admins.enabled")) {
             String msg = config.getString(module + ".notify-admins.message");
 
-            Text notifyMessage =  MessageUtil.placeholdersText(msg, player, null, command);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify." + perm);
+            Text notifyMessage =  placeholdersText(msg, player, null, command);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify." + perm);
         }
     }
 

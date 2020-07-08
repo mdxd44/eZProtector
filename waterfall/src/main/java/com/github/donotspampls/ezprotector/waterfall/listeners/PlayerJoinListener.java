@@ -11,6 +11,7 @@
 package com.github.donotspampls.ezprotector.waterfall.listeners;
 
 import com.github.donotspampls.ezprotector.waterfall.Main;
+import com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -19,10 +20,14 @@ import net.md_5.bungee.event.EventHandler;
 
 public class PlayerJoinListener implements Listener {
 
+    private final Configuration config;
+    public PlayerJoinListener(Configuration config) {
+        this.config = config;
+    }
+
     @EventHandler
     public void onPlayerJoin(PostLoginEvent event) {
         ProxiedPlayer p = event.getPlayer();
-        Configuration config = Main.getConfig();
 
         if (config.getBoolean("mods.betterpvp.block") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(" §c §r§5 §r§1 §r§f §r§0 ");
         if (config.getBoolean("mods.voxelmap.block") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(" §3 §6 §3 §6 §3 §6 §e ");

@@ -10,29 +10,20 @@
 
 package com.github.donotspampls.ezprotector.sponge.utilities;
 
-import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
 
 public class ExecutionUtil {
 
-    private static final Server server = Sponge.getServer();
-
-    /**
-     * Sends a notification message to all online admins
-     *
-     * @param message    The notification message sent to the admins
-     * @param permission The required permission to recieve the notification
-     */
-    public static void notifyAdmins(Text message, String permission) {
+    public void notifyAdmins(Text message, String permission) {
         if (message.trim().isEmpty()) return;
 
-        server.getOnlinePlayers().stream()
+        Sponge.getServer().getOnlinePlayers().stream()
                 .filter(admin -> admin.hasPermission(permission))
                 .forEach(admin -> admin.sendMessage(message));
     }
 
-    public static void executeConsoleCommand(String command) {
-        Sponge.getCommandManager().process(server.getConsole(), command);
+    public void executeConsoleCommand(String command) {
+        Sponge.getCommandManager().process(Sponge.getServer().getConsole(), command);
     }
 }

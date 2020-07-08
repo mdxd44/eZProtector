@@ -22,9 +22,17 @@ import org.spongepowered.api.text.Text;
 
 public class ModListener {
 
+    private final Toml config;
+    private final ExecutionUtil execUtil = new ExecutionUtil();
+    private final MessageUtil msgUtil;
+
+    public ModListener(Toml config, MessageUtil msgUtil) {
+        this.config = config;
+        this.msgUtil = msgUtil;
+    }
+
     @Listener
     public void onChannelRegister(ChannelRegistrationEvent.Register event) {
-        Toml config = Main.getConfig();
         Player player = (Player) event.getSource();
         String channel = event.getChannel();
 
@@ -56,40 +64,40 @@ public class ModListener {
     private void blockFabric(Player player, String brand, Toml config) {
         if (brand.contains("fabric") && !player.hasPermission("ezprotector.bypass.mod.fabric")) {
             String punishCommand = config.getString("mods.fabric.punish-command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+            execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
 
-            Text notifyMessage = MessageUtil.placeholdersText(config.getString("mods.fabric.warning-message"), player, null, null);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.fabric");
+            Text notifyMessage = msgUtil.placeholdersText(config.getString("mods.fabric.warning-message"), player, null, null);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.fabric");
         }
     }
 
     private void blockForge(Player player, String brand, Toml config) {
         if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+            execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
 
-            Text notifyMessage = MessageUtil.placeholdersText(config.getString("mods.forge.warning-message"), player, null, null);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
+            Text notifyMessage = msgUtil.placeholdersText(config.getString("mods.forge.warning-message"), player, null, null);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
         }
     }
 
     private void blockLiteLoader(Player player, String brand, Toml config) {
         if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+            execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
 
-            Text notifyMessage = MessageUtil.placeholdersText(config.getString("mods.liteloader.warning-message"), player, null, null);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
+            Text notifyMessage = msgUtil.placeholdersText(config.getString("mods.liteloader.warning-message"), player, null, null);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
         }
     }
 
     private void blockRift(Player player, String brand, Toml config) {
         if (brand.contains("rift") && !player.hasPermission("ezprotector.bypass.mod.rift")) {
             String punishCommand = config.getString("mods.rift.punish-command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+            execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
 
-            Text notifyMessage = MessageUtil.placeholdersText(config.getString("mods.rift.warning-message"), player, null, null);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.rift");
+            Text notifyMessage = msgUtil.placeholdersText(config.getString("mods.rift.warning-message"), player, null, null);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.rift");
         }
     }
 

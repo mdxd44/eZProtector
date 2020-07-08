@@ -10,7 +10,6 @@
 
 package com.github.donotspampls.ezprotector.paper.listeners;
 
-import com.github.donotspampls.ezprotector.paper.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +20,11 @@ import java.util.List;
 
 public class BrigadierListener implements Listener {
 
+    private final FileConfiguration config;
+    public BrigadierListener(FileConfiguration config) {
+        this.config = config;
+    }
+
     /**
      * Removes forbidden commands from Brigadier's command tree (1.13)
      *
@@ -28,15 +32,16 @@ public class BrigadierListener implements Listener {
      */
     @EventHandler
     public void onCommandSend(PlayerCommandSendEvent event) {
-        final Player player = event.getPlayer();
-        final FileConfiguration config = Main.getPlugin().getConfig();
-
-        if (config.getBoolean("tab-completion.blocked") && !player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
+        if (config.getBoolean("tab-completion.blocked")) {
+            final Player player = event.getPlayer();
             final List<String> blocked = config.getStringList("tab-completion.commands");
+
             if (!config.getBoolean("tab-completion.whitelist"))
-                event.getCommands().removeIf(cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd) && blocked.contains(cmd));
+                event.getCommands().removeIf(cmd ->
+                        !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd) && blocked.contains(cmd));
             else
-                event.getCommands().removeIf(cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd) && !blocked.contains(cmd));
+                event.getCommands().removeIf(cmd ->
+                        !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd) && !blocked.contains(cmd));
         }
     }
 

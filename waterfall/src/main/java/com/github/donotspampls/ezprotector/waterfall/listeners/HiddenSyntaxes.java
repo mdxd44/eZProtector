@@ -8,37 +8,47 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.utilities;
+package com.github.donotspampls.ezprotector.waterfall.listeners;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
+import com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.event.EventHandler;
 
 import java.util.List;
 
-public class HiddenSyntaxes {
+public class HiddenSyntaxes implements Listener {
 
-    public static void execute(ChatEvent event) {
+    private final Configuration config;
+    private final MessageUtil msgUtil;
+
+    public HiddenSyntaxes(Configuration config, MessageUtil msgUtil) {
+        this.config = config;
+        this.msgUtil = msgUtil;
+    }
+
+    @EventHandler
+    public void execute(ChatEvent event) {
         if (!(event.getSender() instanceof ProxiedPlayer)) return;
 
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
         String command = event.getMessage().split(" ")[0].toLowerCase();
-        Configuration config = Main.getConfig();
         List<String> whitelisted = config.getStringList("hidden-syntaxes.whitelisted");
 
         if (event.isCancelled()) return;
 
-        if (command.startsWith("/") && command.contains(":") && !whitelisted.contains(command.replace("/", ""))
+        if (config.getBoolean("hidden-syntaxes.blocked") && command.startsWith("/") && command.contains(":") && !whitelisted.contains(command.replace("/", ""))
                 && !player.hasPermission("ezprotector.bypass.command.hiddensyntaxes")) {
             event.setCancelled(true);
 
             String errorMessage = config.getString("hidden-syntaxes.error-message");
             if (!errorMessage.trim().isEmpty())
-                player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
+                player.sendMessage(msgUtil.placeholders(errorMessage, player, null, command));
 
-            MessageUtil.punishPlayers("hidden-syntaxes", player, errorMessage, command);
-            MessageUtil.notifyAdmins("hidden-syntaxes", player, command, "command.hiddensyntaxes");
+            msgUtil.punishPlayers("hidden-syntaxes", player, errorMessage, command);
+            msgUtil.notifyAdmins("hidden-syntaxes", player, command, "command.hiddensyntaxes");
         }
     }
 

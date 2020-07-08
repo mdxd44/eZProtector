@@ -8,31 +8,42 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.paper.utilities;
+package com.github.donotspampls.ezprotector.paper.listeners;
 
-import com.github.donotspampls.ezprotector.paper.Main;
+import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-public class CustomCommands {
+public class CustomCommands implements Listener {
 
-    public static void execute(PlayerCommandPreprocessEvent event) {
+    private final FileConfiguration config;
+    private final MessageUtil msgUtil;
+
+    public CustomCommands(FileConfiguration config, MessageUtil msgUtil) {
+        this.config = config;
+        this.msgUtil = msgUtil;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void execute(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        String command = event.getMessage().split(" ")[0];
-        FileConfiguration config = Main.getPlugin().getConfig();
 
-        if (!player.hasPermission("ezprotector.bypass.command.custom")) {
+        if (config.getBoolean("custom-commands.blocked") && !player.hasPermission("ezprotector.bypass.command.custom")) {
+            String command = event.getMessage().split(" ")[0];
             for (String message : config.getStringList("custom-commands.commands")) {
                 if (command.equalsIgnoreCase("/" + message)) {
                     event.setCancelled(true);
 
                     String errorMessage = config.getString("custom-commands.error-message");
                     if (!errorMessage.trim().isEmpty())
-                        player.sendMessage(MessageUtil.placeholders(errorMessage, player, null, command));
+                        player.sendMessage(msgUtil.placeholders(errorMessage, player, null, command));
 
-                    MessageUtil.punishPlayers("custom-commands", player, errorMessage, command);
-                    MessageUtil.notifyAdmins("custom-commands", player, command, "command.custom");
+                    msgUtil.punishPlayers("custom-commands", player, errorMessage, command);
+                    msgUtil.notifyAdmins("custom-commands", player, command, "command.custom");
 
                     break;
                 }

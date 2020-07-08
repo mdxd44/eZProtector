@@ -8,19 +8,27 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.sponge.utilities;
+package com.github.donotspampls.ezprotector.sponge.listeners;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
+import com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil;
 import com.moandjiezana.toml.Toml;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 
 public class CustomCommands {
 
-    public static void execute(SendCommandEvent event) {
-        Toml config = Main.getConfig();
+    private final Toml config;
+    private final MessageUtil msgUtil;
 
-        if (event.getSource() instanceof Player) {
+    public CustomCommands(Toml config, MessageUtil msgUtil) {
+        this.config = config;
+        this.msgUtil = msgUtil;
+    }
+
+    @Listener
+    public void execute(SendCommandEvent event) {
+        if (config.getBoolean("custom-commands.blocked") && event.getSource() instanceof Player) {
             Player player = (Player) event.getSource();
             String command = event.getCommand();
 
@@ -31,10 +39,10 @@ public class CustomCommands {
 
                         String errorMessage = config.getString("custom-commands.error-message");
                         if (!errorMessage.trim().isEmpty())
-                            player.sendMessage(MessageUtil.placeholdersText(errorMessage, player, null, command));
+                            player.sendMessage(msgUtil.placeholdersText(errorMessage, player, null, command));
 
-                        MessageUtil.punishPlayers("custom-commands", player, errorMessage, command);
-                        MessageUtil.notifyAdmins("custom-commands", player, command, "command.custom");
+                        msgUtil.punishPlayers("custom-commands", player, errorMessage, command);
+                        msgUtil.notifyAdmins("custom-commands", player, command, "command.custom");
 
                         break;
                     }

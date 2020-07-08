@@ -10,7 +10,6 @@
 
 package com.github.donotspampls.ezprotector.sponge.listeners;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
 import com.moandjiezana.toml.Toml;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -19,10 +18,14 @@ import org.spongepowered.api.text.Text;
 
 public class PlayerJoinListener {
 
+    private final Toml config;
+    public PlayerJoinListener(Toml config) {
+        this.config = config;
+    }
+
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
         Player p = (Player) event.getSource();
-        Toml config = Main.getConfig();
 
         if (config.getBoolean("mods.betterpvp") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(Text.of(" §c §r§5 §r§1 §r§f §r§0 "));
         if (config.getBoolean("mods.voxelmap") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(Text.of(" §3 §6 §3 §6 §3 §6 §e "));

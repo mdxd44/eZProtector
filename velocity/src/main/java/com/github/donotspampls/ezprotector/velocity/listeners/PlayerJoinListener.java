@@ -10,7 +10,6 @@
 
 package com.github.donotspampls.ezprotector.velocity.listeners;
 
-import com.github.donotspampls.ezprotector.velocity.Main;
 import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
@@ -19,13 +18,21 @@ import net.kyori.text.TextComponent;
 
 public class PlayerJoinListener {
 
-    @Subscribe
-    public void onPlayerJoin(ServerConnectedEvent event) {
-        Player p = event.getPlayer();
-        Toml config = Main.getConfig();
+    private final Toml config;
+    public PlayerJoinListener(Toml config) {
+        this.config = config;
+    }
 
-        if (config.getBoolean("mods.betterpvp") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(TextComponent.of(" §c §r§5 §r§1 §r§f §r§0 "));
-        if (config.getBoolean("mods.voxelmap") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(TextComponent.of(" §3 §6 §3 §6 §3 §6 §e "));
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void onPlayerJoin(final ServerConnectedEvent event) {
+        final Player p = event.getPlayer();
+
+        if (config.getBoolean("mods.betterpvp") && !p.hasPermission("ezprotector.bypass.mod.betterpvp"))
+            p.sendMessage(TextComponent.of(" §c §r§5 §r§1 §r§f §r§0 "));
+
+        if (config.getBoolean("mods.voxelmap") && !p.hasPermission("ezprotector.bypass.mod.voxelmap"))
+            p.sendMessage(TextComponent.of(" §3 §6 §3 §6 §3 §6 §e "));
     }
 
 }

@@ -10,27 +10,25 @@
 
 package com.github.donotspampls.ezprotector.paper.utilities;
 
-import com.github.donotspampls.ezprotector.paper.Main;
-
-import static com.github.donotspampls.ezprotector.paper.utilities.MessageUtil.color;
+import org.bukkit.ChatColor;
+import org.bukkit.Server;
 
 public class ExecutionUtil {
 
-    /**
-     * Sends a notification message to all online admins
-     *
-     * @param message    The notification message sent to the admins
-     * @param permission The required permission to recieve the notification
-     */
-    public static void notifyAdmins(String message, String permission) {
-        if (message.trim().isEmpty()) return;
-
-        Main.getPlugin().getServer().getOnlinePlayers().stream()
-                .filter(admin -> admin.hasPermission(permission))
-                .forEach(admin -> admin.sendMessage(color(message)));
+    private final Server server;
+    public ExecutionUtil(Server server) {
+        this.server = server;
     }
 
-    public static void executeConsoleCommand(String command) {
-        Main.getPlugin().getServer().dispatchCommand(Main.getPlugin().getServer().getConsoleSender(), command);
+    public void notifyAdmins(String message, String permission) {
+        if (message.trim().isEmpty()) return;
+
+        server.getOnlinePlayers().stream()
+                .filter(admin -> admin.hasPermission(permission))
+                .forEach(admin -> admin.sendMessage(ChatColor.translateAlternateColorCodes('&', message)));
+    }
+
+    public void executeConsoleCommand(String command) {
+        server.dispatchCommand(server.getConsoleSender(), command);
     }
 }

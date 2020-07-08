@@ -10,16 +10,17 @@
 
 package com.github.donotspampls.ezprotector.velocity.utilities;
 
-import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.text.TextComponent;
 
 public class ExecutionUtil {
 
-    @Inject
-    private static ProxyServer server;
+    private final ProxyServer server;
+    public ExecutionUtil (ProxyServer server) {
+        this.server = server;
+    }
 
-    public static void notifyAdmins(TextComponent message, String permission) {
+    public void notifyAdmins(TextComponent message, String permission) {
         if (message.isEmpty()) return;
 
         server.getAllPlayers().stream()
@@ -27,7 +28,7 @@ public class ExecutionUtil {
                 .forEach(admin -> admin.sendMessage(message));
     }
 
-    public static void executeConsoleCommand(String command) {
+    public void executeConsoleCommand(String command) {
         server.getCommandManager().executeAsync(server.getConsoleCommandSource(), command);
     }
 }

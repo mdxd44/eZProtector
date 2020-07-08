@@ -10,22 +10,26 @@
 
 package com.github.donotspampls.ezprotector.waterfall.utilities;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
-
-import static com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil.color;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 
 public class ExecutionUtil {
 
-    public static void notifyAdmins(String message, String permission) {
-        if (message.trim().isEmpty()) return;
-
-        Main.getServer().getPlayers().stream()
-                .filter(admin -> admin.hasPermission(permission))
-                .forEach(admin -> admin.sendMessage(color(message)));
+    private final ProxyServer server;
+    public ExecutionUtil(ProxyServer server) {
+        this.server = server;
     }
 
-    public static void executeConsoleCommand(String command) {
-        Main.getServer().getPluginManager().dispatchCommand(Main.getServer().getConsole(), command);
+    public void notifyAdmins(String message, String permission) {
+        if (message.trim().isEmpty()) return;
+
+        server.getPlayers().stream()
+                .filter(admin -> admin.hasPermission(permission))
+                .forEach(admin -> admin.sendMessage(ChatColor.translateAlternateColorCodes('&', message)));
+    }
+
+    public void executeConsoleCommand(String command) {
+        server.getPluginManager().dispatchCommand(server.getConsole(), command);
     }
 
 }

@@ -1,5 +1,4 @@
 name: Java CI
-
 on: [push]
 
 jobs:
@@ -23,6 +22,11 @@ jobs:
       with:
         name: Sponge
         path: sponge/target/eZProtector-Sponge.jar
+    - name: Upload Velocity version
+      uses: actions/upload-artifact@v1
+      with:
+        name: Velocity
+        path: velocity/target/eZProtector-Velocity.jar
     - name: Upload Waterfall version
       uses: actions/upload-artifact@v1
       with:

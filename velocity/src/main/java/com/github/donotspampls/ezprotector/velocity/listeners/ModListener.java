@@ -10,7 +10,6 @@
 
 package com.github.donotspampls.ezprotector.velocity.listeners;
 
-import com.github.donotspampls.ezprotector.velocity.Main;
 import com.github.donotspampls.ezprotector.velocity.utilities.ExecutionUtil;
 import com.github.donotspampls.ezprotector.velocity.utilities.MessageUtil;
 import com.github.donotspampls.ezprotector.velocity.utilities.PacketUtil;
@@ -24,10 +23,20 @@ import net.kyori.text.TextComponent;
 
 public class ModListener {
 
+    private final Toml config;
+    private final ExecutionUtil execUtil;
+    private final MessageUtil msgUtil;
+
+    public ModListener(Toml config, ExecutionUtil execUtil, MessageUtil msgUtil) {
+        this.config = config;
+        this.execUtil = execUtil;
+        this.msgUtil = msgUtil;
+    }
+
     @Subscribe
+    @SuppressWarnings("unused")
     public void onChannelRegister(PluginMessageEvent event) {
         if (event.getSource() instanceof Player) {
-            Toml config = Main.getConfig();
             Player player = (Player) event.getSource();
             String channel = event.getIdentifier().getId();
             int version = player.getProtocolVersion().getProtocol();
@@ -42,7 +51,10 @@ public class ModListener {
 
             if (config.getBoolean("mods.schematica") && !player.hasPermission("ezprotector.bypass.mod.schematica")
                     && channel.equalsIgnoreCase("schematica")) {
-                if (version <= 340) player.sendPluginMessage(new LegacyChannelIdentifier("schematica"), PacketUtil.createSchematicaPacket());
+                if (version <= 340)
+                    player.sendPluginMessage(
+                            new LegacyChannelIdentifier("schematica"), PacketUtil.createSchematicaPacket()
+                    );
             }
 
             if (config.getBoolean("mods.wdl")) blockWDL(player, channel, version);
@@ -51,23 +63,25 @@ public class ModListener {
 
     private void block5Zig(Player player, String channel, int version) {
         if (!player.hasPermission("ezprotector.bypass.mod.5zig")) {
-            if (channel.equalsIgnoreCase("5zig_Set") || channel.equalsIgnoreCase("the5zigmod:5zig_set")) {
+            if (channel.matches("(?i)5zig_Set|the5zigmod:5zig_set")) {
                 if (version <= 340)
-                    player.sendPluginMessage(new LegacyChannelIdentifier("5zig_Set"), new byte[]{0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32});
+                    player.sendPluginMessage(new LegacyChannelIdentifier("5zig_Set"),
+                            new byte[]{0x1|0x2|0x4|0x8|0x16|0x32});
                 else
                     player.sendPluginMessage(MinecraftChannelIdentifier.create("the5zigmod", "5zig_set"),
-                            new byte[]{0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32});
+                            new byte[]{0x1|0x2|0x4|0x8|0x16|0x32});
             }
         }
     }
 
     private void blockBSM(Player player, String channel, int version) {
         if (!player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
-            if (channel.equalsIgnoreCase("BSM") || channel.equalsIgnoreCase("bsm:settings")) {
+            if (channel.matches("(?i)BSM|bsm:settings")) {
                 if (version <= 340)
                     player.sendPluginMessage(new LegacyChannelIdentifier("BSM"), new byte[]{1});
                 else
-                    player.sendPluginMessage(MinecraftChannelIdentifier.create("bsm", "settings"), new byte[]{1});
+                    player.sendPluginMessage(MinecraftChannelIdentifier.create("bsm", "settings"),
+                            new byte[]{1});
             }
         }
     }
@@ -75,40 +89,48 @@ public class ModListener {
     private void blockFabric(Player player, String brand, Toml config) {
         if (brand.contains("fabric") && !player.hasPermission("ezprotector.bypass.mod.fabric")) {
             String punishCommand = config.getString("mods.fabric.punish-command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+            execUtil.executeConsoleCommand(
+                    msgUtil.placeholders(punishCommand, player, null, null));
 
-            TextComponent notifyMessage = MessageUtil.placeholdersText(config.getString("mods.fabric.warning-message"), player, null, null);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.fabric");
+            TextComponent notifyMessage = msgUtil.placeholdersText(
+                    config.getString("mods.fabric.warning-message"), player, null, null);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.fabric");
         }
     }
 
     private void blockForge(Player player, String brand, Toml config) {
-        if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
+        if ((brand.matches("(?i)fml|forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+            execUtil.executeConsoleCommand(
+                    msgUtil.placeholders(punishCommand, player, null, null));
 
-            TextComponent notifyMessage = MessageUtil.placeholdersText(config.getString("mods.forge.warning-message"), player, null, null);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
+            TextComponent notifyMessage = msgUtil.placeholdersText(
+                    config.getString("mods.forge.warning-message"), player, null, null);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
         }
     }
 
     private void blockLiteLoader(Player player, String brand, Toml config) {
-        if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
+        if ((brand.matches("(?i)LiteLoader|Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+            execUtil.executeConsoleCommand(
+                    msgUtil.placeholders(punishCommand, player, null, null));
 
-            TextComponent notifyMessage = MessageUtil.placeholdersText(config.getString("mods.liteloader.warning-message"), player, null, null);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
+            TextComponent notifyMessage = msgUtil.placeholdersText(
+                    config.getString("mods.liteloader.warning-message"), player, null, null);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
         }
     }
 
     private void blockRift(Player player, String brand, Toml config) {
         if (brand.contains("rift") && !player.hasPermission("ezprotector.bypass.mod.rift")) {
             String punishCommand = config.getString("mods.rift.punish-command");
-            ExecutionUtil.executeConsoleCommand(MessageUtil.placeholders(punishCommand, player, null, null));
+            execUtil.executeConsoleCommand(
+                    msgUtil.placeholders(punishCommand, player, null, null));
 
-            TextComponent notifyMessage = MessageUtil.placeholdersText(config.getString("mods.rift.warning-message"), player, null, null);
-            ExecutionUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.rift");
+            TextComponent notifyMessage = msgUtil.placeholdersText(
+                    config.getString("mods.rift.warning-message"), player, null, null);
+            execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.rift");
         }
     }
 
@@ -121,9 +143,11 @@ public class ModListener {
 
                 for (byte[] packet : packets) {
                     if (version <= 340)
-                        player.sendPluginMessage(new LegacyChannelIdentifier("WDL|CONTROL"), packet);
+                        player.sendPluginMessage(
+                                new LegacyChannelIdentifier("WDL|CONTROL"), packet);
                     else
-                        player.sendPluginMessage(MinecraftChannelIdentifier.create("wdl", "control"), packet);
+                        player.sendPluginMessage(
+                                MinecraftChannelIdentifier.create("wdl", "control"), packet);
                 }
             }
         }

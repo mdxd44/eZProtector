@@ -10,15 +10,18 @@
 
 package com.github.donotspampls.ezprotector.velocity.listeners;
 
-import com.github.donotspampls.ezprotector.velocity.Main;
 import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.TabCompleteEvent;
-import com.velocitypowered.api.proxy.Player;
 
 import java.util.List;
 
 public class TabCompletionListener {
+
+    private final Toml config;
+    public TabCompletionListener(Toml config) {
+        this.config = config;
+    }
 
     /**
      * Checks if a player is tab completing a forbidden command. (1.12)
@@ -26,23 +29,20 @@ public class TabCompletionListener {
      * @param event The tab complete event from which other information is gathered.
      */
     @Subscribe
-    public void onTabComplete(TabCompleteEvent event) {
-        Toml config = Main.getConfig();
-        final List<String> blocked = config.getList("tab-completion.commands");
-
+    @SuppressWarnings("unused")
+    public void onTabComplete(final TabCompleteEvent event) {
         if (config.getBoolean("tab-completion.blocked")) {
-            Player player = event.getPlayer();
-            String cmd = event.getPartialMessage().replace(" ", "");
-            List<String> completions = event.getSuggestions();
+            final String cmd = event.getPartialMessage().replace(" ", "");
+            final List<String> completions = event.getSuggestions();
+            final List<String> blocked = config.getList("tab-completion.commands");
 
             if (completions.isEmpty()) return;
 
-            if (!player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
+            if (!event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete." + cmd)) {
                 if (!config.getBoolean("tab-completion.whitelist")) {
                     completions.removeIf(blocked::contains);
                     if (blocked.contains(cmd)) completions.clear();
                 } else {
-                    // TODO: does velocity include / or not?
                     completions.removeIf(lcmd -> !blocked.contains(lcmd));
                     for (String lcmd : blocked) {
                         if (lcmd.equalsIgnoreCase(cmd)) completions.clear();

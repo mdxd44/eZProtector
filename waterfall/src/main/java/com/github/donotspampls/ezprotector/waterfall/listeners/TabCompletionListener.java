@@ -21,14 +21,13 @@ import java.util.List;
 
 public class TabCompletionListener implements Listener {
 
-    /**
-     * Checks if a player is tab completing a forbidden command. (1.12)
-     *
-     * @param event The tab complete event from which other information is gathered.
-     */
+    private final Configuration config;
+    public TabCompletionListener(Configuration config) {
+        this.config = config;
+    }
+
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
-        Configuration config = Main.getConfig();
         final List<String> blocked = config.getStringList("tab-completion.commands");
 
         if (config.getBoolean("tab-completion.blocked") && event.getSender() instanceof ProxiedPlayer) {

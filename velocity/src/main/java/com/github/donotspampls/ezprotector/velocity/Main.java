@@ -11,6 +11,8 @@
 package com.github.donotspampls.ezprotector.velocity;
 
 import com.github.donotspampls.ezprotector.velocity.listeners.*;
+import com.github.donotspampls.ezprotector.velocity.utilities.ExecutionUtil;
+import com.github.donotspampls.ezprotector.velocity.utilities.MessageUtil;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.event.Subscribe;
@@ -18,65 +20,71 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static com.github.donotspampls.ezprotector.velocity.utilities.MessageUtil.color;
-
-@Plugin(id="ezprotector", name = "${parent.name}",
-        description = "${parent.description}",
-        version = "${parent.version}",
-        authors = "DoNotSpamPls"
-)
+@Plugin(id = "ezprotector")
 public class Main {
 
-    private final ProxyServer server;
-    private final Logger logger;
-    private final Path configDir;
-
-    private static Toml config;
-    private static String prefix;
+    @Inject private ProxyServer server;
+    @Inject private Logger logger;
 
     @Inject
-    public Main(ProxyServer server, Logger logger, @DataDirectory Path configDir) {
-        this.server = server;
-        this.logger = logger;
-        this.configDir = configDir;
-    }
+    @DataDirectory
+    private Path configDir;
+
+    private Toml config;
 
     @Subscribe
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
     public void onProxyInitialization(ProxyInitializeEvent event) {
         // Load config
         try {
-            Files.copy(Main.class.getResourceAsStream("/resources/config.toml"), configDir.toFile().toPath());
+            if (!configDir.toFile().exists()) configDir.toFile().mkdir();
+
             File configFile = new File(configDir.toFile(), "config.toml");
+            if (!configFile.exists())
+                Files.copy(Main.class.getResourceAsStream("/resources/config.toml"), configFile.toPath());
             config = new Toml().read(configFile);
         } catch (IOException e) {
             logger.error("Unable to load configuration!");
             logger.error(e.getMessage(), e);
         }
 
-        prefix = color(getConfig().getString("prefix"));
+        ExecutionUtil execUtil = new ExecutionUtil(server);
+        MessageUtil msgUtil = new MessageUtil(config, execUtil);
 
-        server.getEventManager().register(this, new BrigadierListener());
-        server.getEventManager().register(this, new CommandEventListener());
-        server.getEventManager().register(this, new ModListener());
-        server.getEventManager().register(this, new PlayerJoinListener());
-        server.getEventManager().register(this, new TabCompletionListener());
-    }
+        // Register events
+        server.getEventManager().register(this, new BrigadierListener(config));
+        server.getEventManager().register(this, new CustomCommands(config, msgUtil));
+        server.getEventManager().register(this, new FakeCommands(config, msgUtil));
+        server.getEventManager().register(this, new HiddenSyntaxes(config, msgUtil));
+        server.getEventManager().register(this, new ModListener(config, execUtil, msgUtil));
+        server.getEventManager().register(this, new PlayerJoinListener(config));
+        server.getEventManager().register(this, new TabCompletionListener(config));
 
-    public static Toml getConfig() {
-        return config;
-    }
+        // Register channel identifiers
+        server.getChannelRegistrar().register(
+                MinecraftChannelIdentifier.create("the5zigmod", "5zig_set"),
+                MinecraftChannelIdentifier.create("bsm", "settings"),
+                MinecraftChannelIdentifier.create("minecraft", "brand"),
+                MinecraftChannelIdentifier.create("wdl", "init"),
+                MinecraftChannelIdentifier.create("wdl", "control"),
 
-    public static String getPrefix() {
-        return prefix;
+                new LegacyChannelIdentifier("5zig_Set"),
+                new LegacyChannelIdentifier("BSM"),
+                new LegacyChannelIdentifier("MC|Brand"),
+                new LegacyChannelIdentifier("schematica"),
+                new LegacyChannelIdentifier("WDL|INIT"),
+                new LegacyChannelIdentifier("WDL|CONTROL")
+        );
+
     }
 
 }

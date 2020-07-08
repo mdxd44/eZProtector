@@ -11,13 +11,15 @@
 package com.github.donotspampls.ezprotector.paper;
 
 import com.github.donotspampls.ezprotector.paper.listeners.*;
+import com.github.donotspampls.ezprotector.paper.utilities.ExecutionUtil;
 import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
 import com.github.donotspampls.ezprotector.paper.utilities.PaperLib;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-    // Variables
+    // Mod channels
     public static String ZIG;
     public static String BSM;
     public static String MCBRAND;
@@ -25,39 +27,18 @@ public class Main extends JavaPlugin {
     public static String WDLINIT;
     public static String WDLCONTROL;
 
-    private static String prefix;
-    private static Main plugin;
-
-    /**
-     * Gets the plugin variable from the main class.
-     *
-     * @return The plugin variable.
-     */
-    public static Main getPlugin() {
-        return plugin;
-    }
-
-    /**
-     * Gets the plugin's message prefix from the main class.
-     *
-     * @return The plugin variable.
-     */
-    public static String getPrefix() {
-        return prefix;
-    }
-
     @Override
     public void onEnable() {
-        plugin = this;
-        prefix = MessageUtil.color(getConfig().getString("prefix"));
-        String version = getServer().getBukkitVersion();
-
-        if (!version.matches("1\\.1[2-9](.\\d)?-(R0.1-)?SNAPSHOT")) {
+        if (!getServer().getBukkitVersion().matches("1\\.1[2-9](.\\d)?-(R0.1-)?SNAPSHOT")) {
             getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
             getServer().getPluginManager().disablePlugin(this);
         } else {
             saveDefaultConfig();
-            ByteMessageListener bml = new ByteMessageListener();
+            FileConfiguration config = getConfig();
+
+            ExecutionUtil execUtil = new ExecutionUtil(getServer());
+            MessageUtil msgUtil = new MessageUtil(config, execUtil);
+            ByteMessageListener bml = new ByteMessageListener(this, config, execUtil, msgUtil);
 
             // Check if the server is 1.13 or above
             boolean newerversion;
@@ -88,7 +69,7 @@ public class Main extends JavaPlugin {
                 getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
                 getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
 
-                getServer().getPluginManager().registerEvents(new TabCompletionListener(), this);
+                getServer().getPluginManager().registerEvents(new TabCompletionListener(config), this);
             } else {
                 ZIG = "the5zigmod:5zig_set";
                 BSM = "bsm:settings";
@@ -108,11 +89,13 @@ public class Main extends JavaPlugin {
                 getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
                 getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
 
-                getServer().getPluginManager().registerEvents(new BrigadierListener(), this);
+                getServer().getPluginManager().registerEvents(new BrigadierListener(config), this);
             }
 
-            getServer().getPluginManager().registerEvents(new CommandEventListener(), this);
-            getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+            getServer().getPluginManager().registerEvents(new CustomCommands(config, msgUtil), this);
+            getServer().getPluginManager().registerEvents(new FakeCommands(config, msgUtil), this);
+            getServer().getPluginManager().registerEvents(new HiddenSyntaxes(config, msgUtil), this);
+            getServer().getPluginManager().registerEvents(new PlayerJoinListener(config), this);
 
             // Suggest Paper to unsuspecting server owners
             PaperLib.suggestPaper(this);

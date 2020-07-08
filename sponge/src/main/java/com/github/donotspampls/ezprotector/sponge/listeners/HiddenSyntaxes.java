@@ -8,21 +8,29 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.sponge.utilities;
+package com.github.donotspampls.ezprotector.sponge.listeners;
 
-import com.github.donotspampls.ezprotector.sponge.Main;
+import com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil;
 import com.moandjiezana.toml.Toml;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 
 import java.util.List;
 
 public class HiddenSyntaxes {
 
-    public static void execute(SendCommandEvent event) {
-        Toml config = Main.getConfig();
+    private final Toml config;
+    private final MessageUtil msgUtil;
 
-        if (event.getSource() instanceof Player) {
+    public HiddenSyntaxes(Toml config, MessageUtil msgUtil) {
+        this.config = config;
+        this.msgUtil = msgUtil;
+    }
+
+    @Listener
+    public void execute(SendCommandEvent event) {
+        if (config.getBoolean("hidden-syntaxes.blocked") && event.getSource() instanceof Player) {
             Player player = (Player) event.getSource();
             String command = event.getCommand();
             List<String> whitelisted = config.getList("hidden-syntaxes.whitelisted");
@@ -34,10 +42,10 @@ public class HiddenSyntaxes {
 
                 String errorMessage = config.getString("hidden-syntaxes.error-message");
                 if (!errorMessage.trim().isEmpty())
-                    player.sendMessage(MessageUtil.placeholdersText(errorMessage, player, null, command));
+                    player.sendMessage(msgUtil.placeholdersText(errorMessage, player, null, command));
 
-                MessageUtil.punishPlayers("hidden-syntaxes", player, errorMessage, command);
-                MessageUtil.notifyAdmins("hidden-syntaxes", player, command, "command.hiddensyntaxes");
+                msgUtil.punishPlayers("hidden-syntaxes", player, errorMessage, command);
+                msgUtil.notifyAdmins("hidden-syntaxes", player, command, "command.hiddensyntaxes");
             }
         }
     }

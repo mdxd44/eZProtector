@@ -8,24 +8,32 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.donotspampls.ezprotector.waterfall.utilities;
+package com.github.donotspampls.ezprotector.waterfall.listeners;
 
-import com.github.donotspampls.ezprotector.waterfall.Main;
+import com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.event.EventHandler;
 
-import static com.github.donotspampls.ezprotector.waterfall.utilities.MessageUtil.color;
+public class FakeCommands implements Listener {
 
-public class FakeCommands {
+    private final Configuration config;
+    private final MessageUtil msgUtil;
 
-    public static void execute(ChatEvent event) {
+    public FakeCommands(Configuration config, MessageUtil msgUtil) {
+        this.config = config;
+        this.msgUtil = msgUtil;
+    }
+
+    @EventHandler
+    public void execute(ChatEvent event) {
         if (!(event.getSender() instanceof ProxiedPlayer)) return;
 
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
         String command = event.getMessage().split(" ")[0];
-        Configuration config = Main.getConfig();
 
         if (event.isCancelled()) return;
 
@@ -35,14 +43,16 @@ public class FakeCommands {
 
                 if (command.matches("(?i)/ver|/version")) {
                     event.setCancelled(true);
-                    player.sendMessage(color("This server is running server version " + version));
-                    MessageUtil.notifyAdmins("custom-version", player, command, "command.version");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "This server is running server version " + version));
+                    msgUtil.notifyAdmins("custom-version", player, command, "command.version");
                 }
 
                 if (command.equalsIgnoreCase("/bungee")) {
                     event.setCancelled(true);
-                    player.sendMessage(color("&9This server is running server version " + version));
-                    MessageUtil.notifyAdmins("custom-version", player, command, "command.version");
+                    player.sendMessage(
+                            ChatColor.translateAlternateColorCodes('&', "This server is running server version " + version)
+                    );
+                    msgUtil.notifyAdmins("custom-version", player, command, "command.version");
                 }
             }
 
@@ -57,7 +67,7 @@ public class FakeCommands {
 
                 player.sendMessage(customPlugins);
 
-                MessageUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
+                msgUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
             }
 
         }
