@@ -38,21 +38,20 @@ public class ByteMessageListener implements PluginMessageListener {
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] value) {
         if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
+
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {
             // Converts the byte array to a string called "brand"
             String brand = new String(value, StandardCharsets.UTF_8);
 
-            if (config.getBoolean("mods.fabric.block")) blockFabric(player, brand, config);
-            if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config);
-            if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config);
-            if (config.getBoolean("mods.rift.block")) blockRift(player, brand, config);
+            if (config.getBoolean("mods.fabric.block")) blockFabric(player, brand);
+            if (config.getBoolean("mods.forge.block")) blockForge(player, brand);
+            if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand);
+            if (config.getBoolean("mods.rift.block")) blockRift(player, brand);
         }
 
-        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica")) // TODO: add channel check
-            player.sendPluginMessage(plugin, Main.SCHEMATICA, PacketUtil.getSchematicaPayload());
-
+        if (config.getBoolean("mods.schematica.block")) blockSchematica(player, channel);
         if (config.getBoolean("mods.wdl.block")) blockWDL(player, channel);
     }
 
@@ -62,11 +61,12 @@ public class ByteMessageListener implements PluginMessageListener {
     }
 
     private void blockBSM(Player player, String channel) {
-        if (channel.equalsIgnoreCase(Main.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting"))
-            player.sendPluginMessage(plugin, channel, new byte[] {1});
+        if (channel.equalsIgnoreCase(Main.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
+            player.sendPluginMessage(plugin, channel, new byte[]{1});
+        }
     }
 
-    private void blockFabric(Player player, String brand, FileConfiguration config) {
+    private void blockFabric(Player player, String brand) {
         if (brand.contains("fabric") && !player.hasPermission("ezprotector.bypass.mod.fabric")) {
             String punishCommand = config.getString("mods.fabric.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
@@ -76,7 +76,7 @@ public class ByteMessageListener implements PluginMessageListener {
         }
     }
 
-    private void blockForge(Player player, String brand, FileConfiguration config) {
+    private void blockForge(Player player, String brand) {
         if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
@@ -86,7 +86,7 @@ public class ByteMessageListener implements PluginMessageListener {
         }
     }
 
-    private void blockLiteLoader(Player player, String brand, FileConfiguration config) {
+    private void blockLiteLoader(Player player, String brand) {
         if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
@@ -96,7 +96,7 @@ public class ByteMessageListener implements PluginMessageListener {
         }
     }
 
-    private void blockRift(Player player, String brand, FileConfiguration config) {
+    private void blockRift(Player player, String brand) {
         if (brand.contains("rift") && !player.hasPermission("ezprotector.bypass.mod.rift")) {
             String punishCommand = config.getString("mods.rift.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
@@ -104,6 +104,11 @@ public class ByteMessageListener implements PluginMessageListener {
             String notifyMessage = msgUtil.placeholders(config.getString("mods.rift.warning-message"), player, null, null);
             execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.rift");
         }
+    }
+
+    private void blockSchematica(Player player, String channel) {
+        if (channel.equalsIgnoreCase(Main.SCHEMATICA) && !player.hasPermission("ezprotector.bypass.mod.schematica"))
+            player.sendPluginMessage(plugin, channel, PacketUtil.getSchematicaPayload());
     }
 
     private void blockWDL(Player player, String channel) {

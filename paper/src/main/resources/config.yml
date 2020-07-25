@@ -1,10 +1,7 @@
 # eZProtector | Version ${project.version}
 # To see what are the placeholders available to you, read the information page here: https://git.io/vpDio
 
-# Here you can modify the prefix of the plugin.
-prefix: '&7[&aeZProtector&7]&f'
-
-# This module blocks tab completion for certain commands.
+# This module blocks certain commands from being tab completed
 tab-completion:
   blocked: true
   # If this is set to true, the commands in the list will be THE ONLY ones to be tab completed
@@ -26,10 +23,10 @@ tab-completion:
   - ver
   - version
 
-# This blocks players from using commands such as /bukkit:help or /essentials:warp, since they can use that to bypass various protections.
+# This blocks players from using commands such as /bukkit:help or /essentials:warp, since they be used to bypass blocks
 hidden-syntaxes:
   blocked: true
-  error-message: '%prefix% That command syntax is forbidden!'
+  error-message: '&7[&aeZProtector&7]&f That command syntax is forbidden!'
   # If you add a command to this list, it will not be blocked.
   whitelisted:
   - whitelisted:commands
@@ -37,7 +34,7 @@ hidden-syntaxes:
   - syntaxes:here
   notify-admins:
     enabled: true
-    message: '%prefix% &e%player% &ftried to use a command with a hidden syntax &4(%command%)'
+    message: '&7[&aeZProtector&7] &e%player% &ftried to use a command with a hidden syntax &4(%command%)'
   punish-player:
     enabled: false
     command: 'kick %player% %errormessage%'
@@ -46,25 +43,25 @@ hidden-syntaxes:
 custom-plugins:
   enabled: true
   plugins: Fully, Custom, Plugins
-  # The player will not see an error message, but admins can still be notified
+  # The player will not see an error message, but admins are still going to be notified
   notify-admins:
     enabled: true
-    message: '%prefix% &e%player% &ftried to see the server plugins'
+    message: '&7[&aeZProtector&7] &e%player% &ftried to see the server plugins'
 
-# Same deal as with the custom plugins above, but for the version command!
+# Same deal as with the custom plugins above, but for the /version command!
 custom-version:
   enabled: true
   # It shows up as "This server is running server version Custom Version"
   version: "Custom Version"
-  # The player will not see an error message, but admins can still be notified
+  # The player will not see an error message, but admins are still going to be notified
   notify-admins:
     enabled: true
-    message: '%prefix% &e%player% &ftried to see the server version'
+    message: '&7[&aeZProtector&7] &e%player% &ftried to see the server version'
 
 # This option allows you to block any command you wish by adding it to the list!
 custom-commands:
   blocked: true
-  error-message: '%prefix% You don''t have the permission to use this command! &4(%command%)'
+  error-message: '&7[&aeZProtector&7]&f You don''t have the permission to use this command! &4(%command%)'
   commands:
   - a
   - about
@@ -74,11 +71,10 @@ custom-commands:
   #- ver
   #- version
   - '?'
-  - plugman list
   - command_without_slash
   notify-admins:
     enabled: true
-    message: '%prefix% &e%player% &ftried to use a blocked command &4(%command%)'
+    message: '&7[&aeZProtector&7] &e%player% &ftried to use a blocked command &4(%command%)'
   punish-player:
     enabled: false
     command: 'kick %player% %errormessage%'
@@ -87,26 +83,26 @@ custom-commands:
 mods:
   5zig:
     block: false
-  # This option also blocks Xaero's Minimap!
+  # This option also blocks Xaero's Minimap
   betterpvp:
     block: false
   bettersprinting:
     block: false
   fabric:
     block: false
-    warning-message: '%prefix% &e%player% &ftried to join while having Fabric installed'
+    warning-message: '&7[&aeZProtector&7] &e%player% &ftried to join while having Fabric installed'
     punish-command: kick %player% &4Fabric usage is not allowed.
   forge:
     block: false
-    warning-message: '%prefix% &e%player% &ftried to join while having Forge installed'
+    warning-message: '&7[&aeZProtector&7] &e%player% &ftried to join while having Forge installed'
     punish-command: kick %player% &4Forge usage is not allowed.
   liteloader:
     block: false
-    warning-message: '%prefix% &e%player% &ftried to join while having LiteLoader installed'
+    warning-message: '&7[&aeZProtector&7] &e%player% &ftried to join while having LiteLoader installed'
     punish-command: kick %player% &4LiteLoader usage is not allowed.
   rift:
     block: false
-    warning-message: '%prefix% &e%player% &ftried to join while having Rift installed'
+    warning-message: '&7[&aeZProtector&7] &e%player% &ftried to join while having Rift installed'
     punish-command: kick %player% &4Rift usage is not allowed.
   schematica:
     block: false
@@ -114,5 +110,3 @@ mods:
     block: false
   wdl:
     block: false
-
-# This is the end of the config! Yay!

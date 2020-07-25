@@ -58,17 +58,6 @@ public class Main extends JavaPlugin {
                 WDLINIT = "WDL|INIT";
                 WDLCONTROL = "WDL|CONTROL";
 
-                getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, bml);
-                getServer().getMessenger().registerIncomingPluginChannel(this, BSM, bml);
-                getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, bml);
-                getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, bml);
-                getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, bml);
-
-                getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
-                getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
-                getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
-                getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
-
                 getServer().getPluginManager().registerEvents(new TabCompletionListener(config), this);
             } else {
                 ZIG = "the5zigmod:5zig_set";
@@ -78,19 +67,19 @@ public class Main extends JavaPlugin {
                 WDLINIT = "wdl:init";
                 WDLCONTROL = "wdl:control";
 
-                getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, bml);
-                getServer().getMessenger().registerIncomingPluginChannel(this, BSM, bml);
-                getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, bml);
-                getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, bml);
-                getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, bml);
-
-                getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
-                getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
-                getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
-                getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
-
                 getServer().getPluginManager().registerEvents(new BrigadierListener(config), this);
             }
+
+            getServer().getMessenger().registerIncomingPluginChannel(this, ZIG, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, BSM, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, MCBRAND, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, SCHEMATICA, bml);
+            getServer().getMessenger().registerIncomingPluginChannel(this, WDLINIT, bml);
+
+            getServer().getMessenger().registerOutgoingPluginChannel(this, ZIG);
+            getServer().getMessenger().registerOutgoingPluginChannel(this, BSM);
+            getServer().getMessenger().registerOutgoingPluginChannel(this, SCHEMATICA);
+            getServer().getMessenger().registerOutgoingPluginChannel(this, WDLCONTROL);
 
             getServer().getPluginManager().registerEvents(new CustomCommands(config, msgUtil), this);
             getServer().getPluginManager().registerEvents(new FakeCommands(config, msgUtil), this);

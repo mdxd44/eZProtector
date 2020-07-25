@@ -1,8 +1,0 @@
-{
-  "id": "ezprotector",
-  "name":"${parent.name}",
-  "version": "${parent.version}",
-  "description": "${parent.description}",
-  "authors": ["DoNotSpamPls"],
-  "main": "com.github.donotspampls.ezprotector.velocity.Main"
-}

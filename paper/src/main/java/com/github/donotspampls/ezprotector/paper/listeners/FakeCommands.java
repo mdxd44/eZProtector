@@ -53,7 +53,6 @@ public class FakeCommands implements Listener {
 
                 // Create a fake /plugins output message using the string array above.
                 String customPlugins = ChatColor.WHITE + "Plugins (" + plugins.length + "): " + ChatColor.GREEN + pluginsList;
-
                 player.sendMessage(customPlugins);
 
                 msgUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");

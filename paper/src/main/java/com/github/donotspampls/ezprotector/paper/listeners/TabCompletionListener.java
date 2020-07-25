@@ -33,10 +33,10 @@ public class TabCompletionListener implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         if (config.getBoolean("tab-completion.blocked") && event.getSender() instanceof Player) {
-            final Player player = (Player) event.getSender();
-            final String cmd = event.getBuffer().split(" ")[0].replace("/", "");
+            Player player = (Player) event.getSender();
+            String cmd = event.getBuffer().split(" ")[0].replace("/", "");
             List<String> completions = event.getCompletions();
-            final List<String> blocked = config.getStringList("tab-completion.commands");
+            List<String> blocked = config.getStringList("tab-completion.commands");
 
             if (completions.isEmpty()) return;
 

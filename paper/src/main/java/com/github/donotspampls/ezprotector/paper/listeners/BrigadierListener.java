@@ -33,8 +33,8 @@ public class BrigadierListener implements Listener {
     @EventHandler
     public void onCommandSend(PlayerCommandSendEvent event) {
         if (config.getBoolean("tab-completion.blocked")) {
-            final Player player = event.getPlayer();
-            final List<String> blocked = config.getStringList("tab-completion.commands");
+            Player player = event.getPlayer();
+            List<String> blocked = config.getStringList("tab-completion.commands");
 
             if (!config.getBoolean("tab-completion.whitelist"))
                 event.getCommands().removeIf(cmd ->
