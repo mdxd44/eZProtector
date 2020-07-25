@@ -32,7 +32,7 @@ public class PlayerJoinListener {
             p.sendMessage(TextComponent.of(" §c §r§5 §r§1 §r§f §r§0 "));
 
         if (config.getBoolean("mods.voxelmap") && !p.hasPermission("ezprotector.bypass.mod.voxelmap"))
-            p.sendMessage(TextComponent.of(" §3 §6 §3 §6 §3 §6 §e "));
+            p.sendMessage(TextComponent.of(" §3 §6 §3 §6 §3 §6 §e §3 §6 §3 §6 §3 §6 §d "));
     }
 
 }
