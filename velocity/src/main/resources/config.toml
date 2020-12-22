@@ -58,9 +58,9 @@
   wdl = false
 
   [mods.fabric]
-      block = false
-      warning-message = "&7[&aeZProtector&7]&f &e%player% &ftried to join while having Forge installed"
-      punish-command = "kick %player% &4The Forge mod is not allowed."
+    block = false
+    warning-message = "&7[&aeZProtector&7]&f &e%player% &ftried to join while having Fabric installed"
+    punish-command = "kick %player% &4The Fabric mod is not allowed."
 
   [mods.forge]
     block = false
@@ -74,5 +74,5 @@
 
   [mods.rift]
     block = false
-    warning-message = "&7[&aeZProtector&7]&f &e%player% &ftried to join while having LiteLoader installed"
-    punish-command = "kick %player% &4The LiteLoader mod is not allowed."
+    warning-message = "&7[&aeZProtector&7]&f &e%player% &ftried to join while having Rift installed"
+    punish-command = "kick %player% &4The Rift mod is not allowed."

@@ -52,11 +52,11 @@
         </repository>
         <repository>
             <id>velocity-repo</id>
-            <url>https://repo.velocitypowered.com/snapshots/</url>
+            <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>mc-repo</id>
-            <url>https://libraries.minecraft.net</url>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 

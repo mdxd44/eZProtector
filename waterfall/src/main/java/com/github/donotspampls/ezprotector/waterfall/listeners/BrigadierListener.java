@@ -35,8 +35,8 @@ public class BrigadierListener implements Listener {
         if (!(event.getReceiver() instanceof ProxiedPlayer)) return;
 
         if (config.getBoolean("tab-completion.blocked")) {
-            final ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
-            final List<String> blocked = config.getStringList("tab-completion.commands");
+            ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
+            List<String> blocked = config.getStringList("tab-completion.commands");
 
             if (!config.getBoolean("tab-completion.whitelist"))
                 event.getCommands().values().removeIf(cmd ->

@@ -11,16 +11,12 @@
     <artifactId>ezprotector-sponge</artifactId>
 
     <dependencies>
-
-        <!-- Sponge API -->
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>7.2.0</version>
+            <version>7.3.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- TOML Config API -->
         <dependency>
             <groupId>com.moandjiezana.toml</groupId>
             <artifactId>toml4j</artifactId>
@@ -33,7 +29,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -52,7 +47,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.3</version>
+                <version>3.2.4</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <minimizeJar>true</minimizeJar>
@@ -80,6 +75,5 @@
             </resource>
         </resources>
     </build>
-
 
 </project>

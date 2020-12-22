@@ -38,6 +38,7 @@ public class ByteMessageListener implements Listener {
         if (!(event.getSender() instanceof ProxiedPlayer)) return;
 
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
+        String channel = event.getTag().toLowerCase();
 
         if (config.getBoolean("mods.5zig.block")) block5Zig(player, event);
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, event);
@@ -46,16 +47,13 @@ public class ByteMessageListener implements Listener {
             // Converts the byte array to a string called "brand"
             String brand = new String(event.getData(), StandardCharsets.UTF_8);
 
-            if (config.getBoolean("mods.fabric.block")) blockFabric(player, brand, config);
-            if (config.getBoolean("mods.forge.block")) blockForge(player, brand, config);
-            if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand, config);
-            if (config.getBoolean("mods.rift.block")) blockRift(player, brand, config);
+            if (config.getBoolean("mods.fabric.block")) blockFabric(player, brand);
+            if (config.getBoolean("mods.forge.block")) blockForge(player, brand);
+            if (config.getBoolean("mods.liteloader.block")) blockLiteLoader(player, brand);
+            if (config.getBoolean("mods.rift.block")) blockRift(player, brand);
         }
 
-        if (config.getBoolean("mods.schematica.block") && !player.hasPermission("ezprotector.bypass.mod.schematica")) {
-            if (player.getPendingConnection().getVersion() <= 340) player.sendData("schematica", PacketUtil.getSchematicaPayload());
-        }
-
+        if (config.getBoolean("mods.schematica.block")) blockSchematica(player, event);
         if (config.getBoolean("mods.wdl.block")) blockWDL(player, event);
     }
 
@@ -63,9 +61,9 @@ public class ByteMessageListener implements Listener {
         if (!player.hasPermission("ezprotector.bypass.mod.5zig")) {
             if (e.getTag().equalsIgnoreCase("5zig_Set") || e.getTag().equalsIgnoreCase("the5zigmod:5zig_set")) {
                 if (player.getPendingConnection().getVersion() <= 340)
-                    player.sendData("5zig_Set", new byte[]{0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32});
+                    player.sendData("5zig_Set", new byte[]{0x1|0x2|0x4|0x8|0x16|0x32});
                 else
-                    player.sendData("the5zigmod:5zig_set", new byte[]{0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32});
+                    player.sendData("the5zigmod:5zig_set", new byte[]{0x1|0x2|0x4|0x8|0x16|0x32});
             }
         }
     }
@@ -81,7 +79,7 @@ public class ByteMessageListener implements Listener {
         }
     }
 
-    private void blockFabric(ProxiedPlayer player, String brand, Configuration config) {
+    private void blockFabric(ProxiedPlayer player, String brand) {
         if (brand.contains("fabric") && !player.hasPermission("ezprotector.bypass.mod.fabric")) {
             String punishCommand = config.getString("mods.fabric.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
@@ -91,7 +89,7 @@ public class ByteMessageListener implements Listener {
         }
     }
 
-    private void blockForge(ProxiedPlayer player, String brand, Configuration config) {
+    private void blockForge(ProxiedPlayer player, String brand) {
         if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
@@ -101,7 +99,7 @@ public class ByteMessageListener implements Listener {
         }
     }
 
-    private void blockLiteLoader(ProxiedPlayer player, String brand, Configuration config) {
+    private void blockLiteLoader(ProxiedPlayer player, String brand) {
         if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
@@ -111,7 +109,7 @@ public class ByteMessageListener implements Listener {
         }
     }
 
-    private void blockRift(ProxiedPlayer player, String brand, Configuration config) {
+    private void blockRift(ProxiedPlayer player, String brand) {
         if (brand.contains("rift") && !player.hasPermission("ezprotector.bypass.mod.rift")) {
             String punishCommand = config.getString("mods.rift.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
@@ -121,9 +119,16 @@ public class ByteMessageListener implements Listener {
         }
     }
 
-    private void blockWDL(ProxiedPlayer player, PluginMessageEvent event) {
+    private void blockSchematica(ProxiedPlayer player, PluginMessageEvent e) {
+        if (!player.hasPermission("ezprotector.bypass.mod.schematica")) {
+            if (player.getPendingConnection().getVersion() <= 340 && e.getTag().equalsIgnoreCase("schematica"))
+                player.sendData("schematica", PacketUtil.getSchematicaPayload());
+        }
+    }
+
+    private void blockWDL(ProxiedPlayer player, PluginMessageEvent e) {
         if (!player.hasPermission("ezprotector.bypass.mod.wdl")) {
-            if (event.getTag().equalsIgnoreCase("WDL|INIT") || event.getTag().equalsIgnoreCase("wdl:init")) {
+            if (e.getTag().equalsIgnoreCase("WDL|INIT") || e.getTag().equalsIgnoreCase("wdl:init")) {
                 byte[][] packets = new byte[2][];
                 packets[0] = PacketUtil.createWDLPacket0();
                 packets[1] = PacketUtil.createWDLPacket1();

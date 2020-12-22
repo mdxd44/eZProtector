@@ -4,6 +4,7 @@ description: ${parent.description}
 authors: [DoNotSpamPls, dvargas135, Gianluca]
 website: https://github.com/DoNotSpamPls/eZProtector
 api-version: "1.13"
+softdepend: [PlaceholderAPI]
 
 main: com.github.donotspampls.ezprotector.paper.Main
 database: false

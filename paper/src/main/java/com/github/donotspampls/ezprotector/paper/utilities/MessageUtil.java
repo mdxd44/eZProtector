@@ -10,6 +10,7 @@
 
 package com.github.donotspampls.ezprotector.paper.utilities;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,10 +19,12 @@ public class MessageUtil {
 
     private final FileConfiguration config;
     private final ExecutionUtil execUtil;
+    private final boolean papi;
 
-    public MessageUtil(FileConfiguration config, ExecutionUtil execUtil) {
+    public MessageUtil(FileConfiguration config, ExecutionUtil execUtil, boolean papi) {
         this.config = config;
         this.execUtil = execUtil;
+        this.papi = papi;
     }
 
     public String placeholders(String args, Player player, String errorMessage, String command) {
@@ -29,7 +32,13 @@ public class MessageUtil {
                 args.replace("%player%", player.getName())
                     .replace("%errormessage%", errorMessage == null ? "" : errorMessage)
                     .replace("%command%", command == null ? "" : command);
-        return ChatColor.translateAlternateColorCodes('&', cargs);
+
+        if (papi)
+            return PlaceholderAPI.setPlaceholders(player,
+                ChatColor.translateAlternateColorCodes('&', cargs));
+        else
+            return ChatColor.translateAlternateColorCodes('&', cargs);
+
     }
 
     public void punishPlayers(String module, Player player, String errorMessage, String command) {

@@ -27,6 +27,8 @@ public class Main extends JavaPlugin {
     public static String WDLINIT;
     public static String WDLCONTROL;
 
+    private boolean papi = false;
+
     @Override
     public void onEnable() {
         if (!getServer().getBukkitVersion().matches("1\\.1[2-9](.\\d)?-(R0.1-)?SNAPSHOT")) {
@@ -36,8 +38,10 @@ public class Main extends JavaPlugin {
             saveDefaultConfig();
             FileConfiguration config = getConfig();
 
+            if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) papi = true;
+
             ExecutionUtil execUtil = new ExecutionUtil(getServer());
-            MessageUtil msgUtil = new MessageUtil(config, execUtil);
+            MessageUtil msgUtil = new MessageUtil(config, execUtil, papi);
             ByteMessageListener bml = new ByteMessageListener(this, config, execUtil, msgUtil);
 
             // Check if the server is 1.13 or above

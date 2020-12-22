@@ -10,6 +10,8 @@
 
 package com.github.donotspampls.ezprotector.sponge.listeners;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.donotspampls.ezprotector.sponge.Main;
 import com.github.donotspampls.ezprotector.sponge.utilities.ExecutionUtil;
 import com.github.donotspampls.ezprotector.sponge.utilities.MessageUtil;
@@ -19,6 +21,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ChannelRegistrationEvent;
 import org.spongepowered.api.text.Text;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class ModListener {
 
@@ -34,10 +39,12 @@ public class ModListener {
     @Listener
     public void onChannelRegister(ChannelRegistrationEvent.Register event) {
         Player player = (Player) event.getSource();
-        String channel = event.getChannel();
+        String channel = event.getChannel().toLowerCase();
+
+        if (!player.isOnline()) return;
 
         if (config.getBoolean("mods.5zig")) block5Zig(player, channel);
-        if (config.getBoolean("mods.bettersprinting") && event.getChannel().equals("BSM")) blockBSM(player, channel);
+        if (config.getBoolean("mods.bettersprinting")) blockBSM(player, channel);
 
         if (config.getBoolean("mods.fabric.block")) blockFabric(player, channel, config);
         if (config.getBoolean("mods.forge.block")) blockForge(player, channel, config);
@@ -72,9 +79,10 @@ public class ModListener {
     }
 
     private void blockForge(Player player, String brand, Toml config) {
-        if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
+        if (brand.contains("forge") && !player.hasPermission("ezprotector.bypass.mod.forge")) {
             String punishCommand = config.getString("mods.forge.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
+
 
             Text notifyMessage = msgUtil.placeholdersText(config.getString("mods.forge.warning-message"), player, null, null);
             execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
@@ -82,7 +90,7 @@ public class ModListener {
     }
 
     private void blockLiteLoader(Player player, String brand, Toml config) {
-        if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
+        if (brand.contains("lite") && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
 

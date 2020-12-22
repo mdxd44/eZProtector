@@ -39,7 +39,7 @@ public class CustomCommands implements Listener {
                     event.setCancelled(true);
 
                     String errorMessage = config.getString("custom-commands.error-message");
-                    if (!errorMessage.trim().isEmpty())
+                    if (errorMessage != null && !errorMessage.trim().isEmpty())
                         player.sendMessage(msgUtil.placeholders(errorMessage, player, null, command));
 
                     msgUtil.punishPlayers("custom-commands", player, errorMessage, command);

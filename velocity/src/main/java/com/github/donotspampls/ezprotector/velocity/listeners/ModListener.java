@@ -38,7 +38,7 @@ public class ModListener {
     public void onChannelRegister(PluginMessageEvent event) {
         if (event.getSource() instanceof Player) {
             Player player = (Player) event.getSource();
-            String channel = event.getIdentifier().getId();
+            String channel = event.getIdentifier().getId().toLowerCase();
             int version = player.getProtocolVersion().getProtocol();
 
             if (config.getBoolean("mods.5zig")) block5Zig(player, channel, version);

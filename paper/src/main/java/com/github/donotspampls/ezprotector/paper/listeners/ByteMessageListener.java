@@ -36,14 +36,15 @@ public class ByteMessageListener implements PluginMessageListener {
     }
 
     @Override
-    public void onPluginMessageReceived(String channel, Player player, byte[] value) {
-        if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
+    public void onPluginMessageReceived(String ch, Player player, byte[] value) {
+        String channel = ch.toLowerCase();
 
+        if (config.getBoolean("mods.5zig.block")) block5Zig(player, channel);
         if (config.getBoolean("mods.bettersprinting.block")) blockBSM(player, channel);
 
         if (channel.equalsIgnoreCase(Main.MCBRAND)) {
             // Converts the byte array to a string called "brand"
-            String brand = new String(value, StandardCharsets.UTF_8);
+            String brand = new String(value, StandardCharsets.UTF_8).toLowerCase();
 
             if (config.getBoolean("mods.fabric.block")) blockFabric(player, brand);
             if (config.getBoolean("mods.forge.block")) blockForge(player, brand);
@@ -87,7 +88,7 @@ public class ByteMessageListener implements PluginMessageListener {
     }
 
     private void blockLiteLoader(Player player, String brand) {
-        if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
+        if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
             String punishCommand = config.getString("mods.liteloader.punish-command");
             execUtil.executeConsoleCommand(msgUtil.placeholders(punishCommand, player, null, null));
 

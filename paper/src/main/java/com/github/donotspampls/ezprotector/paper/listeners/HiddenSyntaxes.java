@@ -43,7 +43,7 @@ public class HiddenSyntaxes implements Listener {
                 event.setCancelled(true);
 
                 String errorMessage = config.getString("hidden-syntaxes.error-message");
-                if (!errorMessage.trim().isEmpty())
+                if (errorMessage != null && !errorMessage.trim().isEmpty())
                     player.sendMessage(msgUtil.placeholders(errorMessage, player, null, command));
 
                 msgUtil.punishPlayers("hidden-syntaxes", player, errorMessage, command);

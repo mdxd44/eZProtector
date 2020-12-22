@@ -33,11 +33,6 @@ public class TabCompletionListener {
             String cmd = event.getRawMessage().replace(" ", "");
             List<String> completions = event.getTabCompletions();
 
-            System.out.println(blocked);
-
-            System.out.println(event.getTabCompletions());
-            System.out.println(event.getRawMessage());
-
             if (completions.isEmpty()) return;
 
             if (!player.hasPermission("ezprotector.bypass.command.tabcomplete")) {
@@ -45,10 +40,9 @@ public class TabCompletionListener {
                     completions.removeIf(blocked::contains);
                     if (blocked.contains(cmd)) event.setCancelled(true);
                 } else {
-                    // TODO: ???????
                     completions.removeIf(lcmd -> !blocked.contains(lcmd));
                     for (String lcmd : blocked) {
-                        if (lcmd.equalsIgnoreCase(cmd)) event.setCancelled(true);
+                        if (lcmd.equalsIgnoreCase(cmd)) return; // subcommand tab completion
                     }
                 }
             }
