@@ -10,6 +10,7 @@
 
 package com.github.donotspampls.ezprotector.paper.listeners;
 
+import com.github.donotspampls.ezprotector.paper.Main;
 import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,22 +21,21 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class FakeCommands implements Listener {
 
-    private final FileConfiguration config;
-    private final MessageUtil msgUtil;
-
-    public FakeCommands(FileConfiguration config, MessageUtil msgUtil) {
-        this.config = config;
-        this.msgUtil = msgUtil;
+    private final Main plugin;
+    public FakeCommands(Main plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void execute(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        String command = event.getMessage().split(" ")[0];
-
         if (event.isCancelled()) return;
 
         if (!player.hasPermission("ezprotector.bypass.command.fake")) {
+            FileConfiguration config = plugin.getConfig();
+            MessageUtil msgUtil = plugin.getMsgUtil();
+            String command = event.getMessage().split(" ")[0];
+
             if (command.matches("(?i)/ver|/version") && config.getBoolean("custom-version.enabled")) {
                 event.setCancelled(true);
 

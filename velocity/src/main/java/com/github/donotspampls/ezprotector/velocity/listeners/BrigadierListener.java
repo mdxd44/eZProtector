@@ -30,7 +30,7 @@ public class BrigadierListener {
      * @param event The event which removes the tab completions from the client.
      */
     @Subscribe
-    @SuppressWarnings({"unused", "UnstableApiUsage"})
+    @SuppressWarnings({"UnstableApiUsage"})
     public void onCommandSend(final PlayerAvailableCommandsEvent event) {
         if (config.getBoolean("tab-completion.blocked")) {
             final Player player = event.getPlayer();

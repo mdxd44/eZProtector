@@ -10,6 +10,7 @@
 
 package com.github.donotspampls.ezprotector.paper.listeners;
 
+import com.github.donotspampls.ezprotector.paper.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,9 +21,9 @@ import java.util.List;
 
 public class TabCompletionListener implements Listener {
 
-    private final FileConfiguration config;
-    public TabCompletionListener(FileConfiguration config) {
-        this.config = config;
+    private final Main plugin;
+    public TabCompletionListener(Main plugin) {
+        this.plugin = plugin;
     }
 
     /**
@@ -32,6 +33,8 @@ public class TabCompletionListener implements Listener {
      */
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
+        FileConfiguration config = plugin.getConfig();
+
         if (config.getBoolean("tab-completion.blocked") && event.getSender() instanceof Player) {
             Player player = (Player) event.getSender();
             String cmd = event.getBuffer().split(" ")[0].replace("/", "");

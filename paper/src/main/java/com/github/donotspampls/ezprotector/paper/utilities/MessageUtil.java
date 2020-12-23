@@ -10,6 +10,7 @@
 
 package com.github.donotspampls.ezprotector.paper.utilities;
 
+import com.github.donotspampls.ezprotector.paper.Main;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,12 +18,12 @@ import org.bukkit.entity.Player;
 
 public class MessageUtil {
 
-    private final FileConfiguration config;
+    private final Main plugin;
     private final ExecutionUtil execUtil;
     private final boolean papi;
 
-    public MessageUtil(FileConfiguration config, ExecutionUtil execUtil, boolean papi) {
-        this.config = config;
+    public MessageUtil(Main plugin, ExecutionUtil execUtil, boolean papi) {
+        this.plugin = plugin;
         this.execUtil = execUtil;
         this.papi = papi;
     }
@@ -42,6 +43,7 @@ public class MessageUtil {
     }
 
     public void punishPlayers(String module, Player player, String errorMessage, String command) {
+        FileConfiguration config = plugin.getConfig();
         if (config.getBoolean(module + ".punish-player.enabled")) {
             String punishCommand = config.getString(module + ".punish-player.command");
             execUtil.executeConsoleCommand(placeholders(punishCommand, player, errorMessage, command));
@@ -49,6 +51,7 @@ public class MessageUtil {
     }
 
     public void notifyAdmins(String module, Player player, String command, String perm) {
+        FileConfiguration config = plugin.getConfig();
         if (config.getBoolean(module + ".notify-admins.enabled")) {
             String msg = config.getString(module + ".notify-admins.message");
 

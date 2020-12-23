@@ -10,6 +10,7 @@
 
 package com.github.donotspampls.ezprotector.paper.listeners;
 
+import com.github.donotspampls.ezprotector.paper.Main;
 import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -21,19 +22,18 @@ import java.util.List;
 
 public class HiddenSyntaxes implements Listener {
 
-    private final FileConfiguration config;
-    private final MessageUtil msgUtil;
-
-    public HiddenSyntaxes(FileConfiguration config, MessageUtil msgUtil) {
-        this.config = config;
-        this.msgUtil = msgUtil;
+    private final Main plugin;
+    public HiddenSyntaxes(Main plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void execute(PlayerCommandPreprocessEvent event) {
+        FileConfiguration config = plugin.getConfig();
         if (config.getBoolean("hidden-syntaxes.blocked")) {
             Player player = event.getPlayer();
             String command = event.getMessage().split(" ")[0].toLowerCase();
+            MessageUtil msgUtil = plugin.getMsgUtil();
             List<String> whitelisted = config.getStringList("hidden-syntaxes.whitelisted");
 
             if (event.isCancelled()) return;

@@ -10,6 +10,7 @@
 
 package com.github.donotspampls.ezprotector.paper.listeners;
 
+import com.github.donotspampls.ezprotector.paper.Main;
 import com.github.donotspampls.ezprotector.paper.utilities.MessageUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -20,20 +21,19 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class CustomCommands implements Listener {
 
-    private final FileConfiguration config;
-    private final MessageUtil msgUtil;
-
-    public CustomCommands(FileConfiguration config, MessageUtil msgUtil) {
-        this.config = config;
-        this.msgUtil = msgUtil;
+    private final Main plugin;
+    public CustomCommands(Main plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void execute(PlayerCommandPreprocessEvent event) {
+        FileConfiguration config = plugin.getConfig();
         Player player = event.getPlayer();
 
         if (config.getBoolean("custom-commands.blocked") && !player.hasPermission("ezprotector.bypass.command.custom")) {
             String command = event.getMessage().split(" ")[0];
+            MessageUtil msgUtil = plugin.getMsgUtil();
             for (String message : config.getStringList("custom-commands.commands")) {
                 if (command.equalsIgnoreCase("/" + message)) {
                     event.setCancelled(true);

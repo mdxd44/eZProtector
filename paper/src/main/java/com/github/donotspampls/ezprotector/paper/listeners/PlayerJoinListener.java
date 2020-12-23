@@ -10,6 +10,7 @@
 
 package com.github.donotspampls.ezprotector.paper.listeners;
 
+import com.github.donotspampls.ezprotector.paper.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,17 +19,21 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
-    private final FileConfiguration config;
-    public PlayerJoinListener(FileConfiguration config) {
-        this.config = config;
+    private final Main plugin;
+    public PlayerJoinListener(Main plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        FileConfiguration config = plugin.getConfig();
         Player p = event.getPlayer();
 
-        if (config.getBoolean("mods.betterpvp.block") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) p.sendMessage(" §c §r§5 §r§1 §r§f §r§0 ");
-        if (config.getBoolean("mods.voxelmap.block") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) p.sendMessage(" §3 §6 §3 §6 §3 §6 §e §3 §6 §3 §6 §3 §6 §d ");
+        if (config.getBoolean("mods.betterpvp.block") && !p.hasPermission("ezprotector.bypass.mod.betterpvp"))
+            p.sendMessage(" §c §r§5 §r§1 §r§f §r§0 ");
+
+        if (config.getBoolean("mods.voxelmap.block") && !p.hasPermission("ezprotector.bypass.mod.voxelmap"))
+            p.sendMessage(" §3 §6 §3 §6 §3 §6 §e §3 §6 §3 §6 §3 §6 §d ");
     }
 
 }

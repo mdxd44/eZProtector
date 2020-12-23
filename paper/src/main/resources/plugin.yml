@@ -9,6 +9,13 @@ softdepend: [PlaceholderAPI]
 main: com.github.donotspampls.ezprotector.paper.Main
 database: false
 
+commands:
+  ezp:
+    description: Reloads the plugin configuration.
+    aliases: [ezprotector]
+    usage: /ezp reload
+    permission: ezprotector.reload
+
 permissions:
   ezprotector.notify:
     description: Notifies admins about players that try to use illegal commands or join with a blocked mod
