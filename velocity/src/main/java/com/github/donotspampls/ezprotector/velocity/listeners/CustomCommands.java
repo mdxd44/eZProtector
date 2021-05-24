@@ -36,7 +36,7 @@ public class CustomCommands {
 
                 if (!player.hasPermission("ezprotector.bypass.command.custom")) {
                     for (Object message : config.getList("custom-commands.commands")) {
-                        if (command.equalsIgnoreCase((String) message)) {
+                        if (command.startsWith((String) message)) {
                             event.setResult(CommandExecuteEvent.CommandResult.denied());
 
                             String errorMessage = config.getString("custom-commands.error-message");
