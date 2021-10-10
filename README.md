@@ -1,3 +1,12 @@
+# eZProtector is no longer maintained
+
+Unfortunately, I have found less and less time and motivation to maintain eZProtector. This has resulted in updates being few and far between, with no information as to what the compatibility with latest Minecraft versions is like. Because of this, I have made the tough decision to abandon the maintenance of the plugin.
+
+Thanks for using eZProtector over the years! I hope it has served you well. 🙂
+
+[If you think you have the skills required to maintain this plugin, feel free to contact me on Discord (DoNotSpamPls#8787) or over [email](mailto:hello@dnsp.dev).]
+
+------
 <p align="center"><img src="https://owo.whats-th.is/b120fb.png"></p>
 
 # eZProtector [![Build Status](https://github.com/DoNotSpamPls/eZProtector/workflows/Java%20CI/badge.svg)](https://github.com/DoNotSpamPls/eZProtector/actions) [![Discord](https://img.shields.io/discord/390942438061113344.svg)](https://discord.gg/UGhVcBB)
