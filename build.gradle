@@ -1,0 +1,39 @@
+plugins {
+    id "java"
+}
+
+group = "com.github.donotspampls.ezprotector"
+version = "1.1.0"
+compileJava.options.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "paper-repo"
+        url = "https://papermc.io/repo/repository/maven-public/"
+    }
+    maven {
+        name = "sponge-repo"
+        url = "https://repo.spongepowered.org/maven/"
+    }
+    maven {
+        name = "velocitypowered-repo"
+        url = "https://nexus.velocitypowered.com/repository/maven-public/"
+    }
+    maven {
+        name = "placeholderapi-repo"
+        url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+}
+
+dependencies {
+    compileOnly "com.velocitypowered:velocity-api:3.+"
+    annotationProcessor "com.velocitypowered:velocity-api:3.+"
+
+    compileOnly "io.github.waterfallmc:waterfall-api:1.17-R0.1-SNAPSHOT"
+
+    compileOnly "org.spongepowered:spongeapi:7.3.0"
+
+    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT" // TODO: 1.17 api
+    compileOnly "me.clip:placeholderapi:2.10.10"
+}
