@@ -1,10 +1,27 @@
+//file:noinspection UnnecessaryQualifiedReference
+//file:noinspection GroovyAssignabilityCheck
+
 plugins {
     id "java"
+    id "checkstyle"
+    id "com.github.spotbugs" version "4.7.9"
+    id "org.cadixdev.licenser" version "0.6.1"
 }
+
+apply from: "gradle/checkstyle.gradle"
 
 group = "com.github.donotspampls.ezprotector"
 version = "1.1.0"
+
 compileJava.options.encoding = "UTF-8"
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+license {
+    header = project.rootProject.file("HEADER.txt")
+}
 
 repositories {
     mavenCentral()
@@ -36,4 +53,14 @@ dependencies {
 
     compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT" // TODO: 1.17 api
     compileOnly "me.clip:placeholderapi:2.10.10"
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            stylesheet = "fancy-hist.xsl"
+        }
+    }
 }

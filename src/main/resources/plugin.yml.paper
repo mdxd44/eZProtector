@@ -6,7 +6,7 @@ website: https://github.com/DoNotSpamPls/eZProtector
 api-version: "1.13"
 softdepend: [PlaceholderAPI]
 
-main: com.github.donotspampls.ezprotector.paper.Main
+main: Main
 database: false
 
 commands:
