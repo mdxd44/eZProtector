@@ -18,7 +18,7 @@
 package net.elytrium.ezprotector.paper.listeners;
 
 import java.nio.charset.StandardCharsets;
-import net.elytrium.ezprotector.paper.Main;
+import net.elytrium.ezprotector.paper.PaperPlugin;
 import net.elytrium.ezprotector.paper.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.paper.utilities.MessageUtil;
 import net.elytrium.ezprotector.paper.utilities.PacketUtil;
@@ -52,7 +52,7 @@ public class ByteMessageListener implements PluginMessageListener {
       this.blockBSM(player, channel);
     }
 
-    if (channel.equalsIgnoreCase(Main.MCBRAND)) {
+    if (channel.equalsIgnoreCase(PaperPlugin.MCBRAND)) {
       // Converts the byte array to a string called "brand"
       String brand = new String(value, StandardCharsets.UTF_8).toLowerCase();
 
@@ -79,13 +79,13 @@ public class ByteMessageListener implements PluginMessageListener {
   }
 
   private void block5Zig(Player player, String channel) {
-    if (channel.equalsIgnoreCase(Main.ZIG) && !player.hasPermission("ezprotector.bypass.mod.5zig")) {
+    if (channel.equalsIgnoreCase(PaperPlugin.ZIG) && !player.hasPermission("ezprotector.bypass.mod.5zig")) {
       player.sendPluginMessage(this.plugin, channel, new byte[] {0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32});
     }
   }
 
   private void blockBSM(Player player, String channel) {
-    if (channel.equalsIgnoreCase(Main.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
+    if (channel.equalsIgnoreCase(PaperPlugin.BSM) && !player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
       player.sendPluginMessage(this.plugin, channel, new byte[] {1});
     }
   }
@@ -131,19 +131,19 @@ public class ByteMessageListener implements PluginMessageListener {
   }
 
   private void blockSchematica(Player player, String channel) {
-    if (channel.equalsIgnoreCase(Main.SCHEMATICA) && !player.hasPermission("ezprotector.bypass.mod.schematica")) {
+    if (channel.equalsIgnoreCase(PaperPlugin.SCHEMATICA) && !player.hasPermission("ezprotector.bypass.mod.schematica")) {
       player.sendPluginMessage(this.plugin, channel, PacketUtil.getSchematicaPayload());
     }
   }
 
   private void blockWDL(Player player, String channel) {
-    if (channel.equalsIgnoreCase(Main.WDLINIT) && !player.hasPermission("ezprotector.bypass.mod.wdl")) {
+    if (channel.equalsIgnoreCase(PaperPlugin.WDLINIT) && !player.hasPermission("ezprotector.bypass.mod.wdl")) {
       byte[][] packets = new byte[2][];
       packets[0] = PacketUtil.createWDLPacket0();
       packets[1] = PacketUtil.createWDLPacket1();
 
       for (byte[] packet : packets) {
-        player.sendPluginMessage(this.plugin, Main.WDLCONTROL, packet);
+        player.sendPluginMessage(this.plugin, PaperPlugin.WDLCONTROL, packet);
       }
     }
   }

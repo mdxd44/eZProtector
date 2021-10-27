@@ -33,7 +33,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public class Main extends JavaPlugin {
+public class PaperPlugin extends JavaPlugin {
 
   // Mod channels
   public static String ZIG;
@@ -135,5 +135,4 @@ public class Main extends JavaPlugin {
   public MessageUtil getMsgUtil() {
     return this.msgUtil;
   }
-
 }

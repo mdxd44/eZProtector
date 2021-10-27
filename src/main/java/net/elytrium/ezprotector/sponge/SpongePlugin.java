@@ -39,7 +39,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.plugin.PluginManager;
 
 @Plugin(id = "ezprotector")
-public class Main {
+public class SpongePlugin {
 
   // Plugin Channels
   public static ChannelBinding.RawDataChannel ZIG;

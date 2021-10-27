@@ -17,21 +17,20 @@
 
 package net.elytrium.ezprotector.waterfall.listeners;
 
+import net.elytrium.ezprotector.shared.config.Settings;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 public class FakeCommands implements Listener {
 
-  private final Configuration config;
   private final MessageUtil msgUtil;
 
-  public FakeCommands(Configuration config, MessageUtil msgUtil) {
-    this.config = config;
+  public FakeCommands(MessageUtil msgUtil) {
     this.msgUtil = msgUtil;
   }
 
@@ -49,34 +48,36 @@ public class FakeCommands implements Listener {
     }
 
     if (!player.hasPermission("ezprotector.bypass.command.fake")) {
-      if (this.config.getBoolean("custom-version.enabled")) {
-        String version = this.config.getString("custom-version.version");
+      if (Settings.IMP.CUSTOM_PLUGINS.ENABLED) {
+        String version = Settings.IMP.CUSTOM_VERSION.VERSION;
 
-        if (command.matches("(?i)/ver|/version")) {
+        if (command.matches("(?i)/ver|/version") && Settings.IMP.CUSTOM_VERSION.ENABLED) {
           event.setCancelled(true);
-          player.sendMessage(ChatColor.translateAlternateColorCodes('&', "This server is running server version " + version));
+          player.sendMessage(TextComponent.fromLegacyText(
+              ChatColor.translateAlternateColorCodes('&', "This server is running server version " + version)
+          ));
           this.msgUtil.notifyAdmins("custom-version", player, command, "command.version");
         }
 
-        if (command.equalsIgnoreCase("/bungee")) {
+        if (command.equalsIgnoreCase("/bungee") && Settings.IMP.CUSTOM_VERSION.ENABLED) {
           event.setCancelled(true);
-          player.sendMessage(
+          player.sendMessage(TextComponent.fromLegacyText(
               ChatColor.translateAlternateColorCodes('&', "This server is running server version " + version)
-          );
+          ));
           this.msgUtil.notifyAdmins("custom-version", player, command, "command.version");
         }
       }
 
-      if (command.matches("(?i)/pl|/plugins") && this.config.getBoolean("custom-plugins.enabled")) {
+      if (command.matches("(?i)/pl|/plugins") && Settings.IMP.CUSTOM_PLUGINS.ENABLED) {
         event.setCancelled(true);
 
-        String[] plugins = this.config.getString("custom-plugins.plugins").split(", ");
+        String[] plugins = Settings.IMP.CUSTOM_PLUGINS.PLUGINS.split(", ");
         String pluginsList = String.join(ChatColor.WHITE + ", " + ChatColor.GREEN, plugins);
 
         // Create a fake /plugins output message using the string array above.
         String customPlugins = ChatColor.WHITE + "Plugins (" + plugins.length + "): " + ChatColor.GREEN + pluginsList;
 
-        player.sendMessage(customPlugins);
+        player.sendMessage(TextComponent.fromLegacyText(customPlugins));
 
         this.msgUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
       }

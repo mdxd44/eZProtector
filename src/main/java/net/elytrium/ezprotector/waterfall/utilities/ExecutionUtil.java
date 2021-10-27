@@ -19,6 +19,7 @@ package net.elytrium.ezprotector.waterfall.utilities;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ExecutionUtil {
 
@@ -35,7 +36,7 @@ public class ExecutionUtil {
 
     this.server.getPlayers().stream()
         .filter(admin -> admin.hasPermission(permission))
-        .forEach(admin -> admin.sendMessage(ChatColor.translateAlternateColorCodes('&', message)));
+        .forEach(admin -> admin.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message))));
   }
 
   public void executeConsoleCommand(String command) {

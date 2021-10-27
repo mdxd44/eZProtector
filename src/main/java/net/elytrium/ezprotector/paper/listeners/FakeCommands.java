@@ -17,7 +17,7 @@
 
 package net.elytrium.ezprotector.paper.listeners;
 
-import net.elytrium.ezprotector.paper.Main;
+import net.elytrium.ezprotector.paper.PaperPlugin;
 import net.elytrium.ezprotector.paper.utilities.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,9 +28,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class FakeCommands implements Listener {
 
-  private final Main plugin;
+  private final PaperPlugin plugin;
 
-  public FakeCommands(Main plugin) {
+  public FakeCommands(PaperPlugin plugin) {
     this.plugin = plugin;
   }
 

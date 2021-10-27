@@ -1,5 +1,6 @@
-//file:noinspection UnnecessaryQualifiedReference
 //file:noinspection GroovyAssignabilityCheck
+
+import com.github.spotbugs.snom.SpotBugsTask
 
 plugins {
     id "java"
@@ -8,19 +9,13 @@ plugins {
     id "org.cadixdev.licenser" version "0.6.1"
 }
 
-apply from: "gradle/checkstyle.gradle"
-
 group = "com.github.donotspampls.ezprotector"
-version = "1.1.0"
+version = "2.0"
 
 compileJava.options.encoding = "UTF-8"
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
-}
-
-license {
-    header = project.rootProject.file("HEADER.txt")
 }
 
 repositories {
@@ -53,9 +48,29 @@ dependencies {
 
     compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT" // TODO: 1.17 api
     compileOnly "me.clip:placeholderapi:2.10.10"
+
+    compileOnly "com.github.spotbugs:spotbugs-annotations:4.4.1"
 }
 
-tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+processResources {
+    expand project.properties
+}
+
+license {
+    header = project.rootProject.file("HEADER.txt")
+}
+
+checkstyle {
+    toolVersion "9.0.1"
+    configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    configProperties = [configDirectory: "${project.rootDir}/config/checkstyle"]
+
+    // The build should immediately fail if we have errors.
+    maxErrors = 0
+    maxWarnings = 0
+}
+
+tasks.withType(SpotBugsTask) {
     reports {
         html {
             enabled = true
@@ -64,3 +79,16 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
         }
     }
 }
+
+sourceSets.main.java.srcDir(tasks.register("generateTemplates", Copy) { task ->
+    def props = [
+            "version": project.version
+    ]
+    task.inputs.properties props
+
+    task.from file("src/main/templates")
+    task.into layout.buildDirectory.dir("../build/generated/sources/templates")
+    task.expand props
+}.map {
+    it.outputs
+})

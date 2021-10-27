@@ -18,18 +18,18 @@
 package net.elytrium.ezprotector.paper.utilities;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.elytrium.ezprotector.paper.Main;
+import net.elytrium.ezprotector.paper.PaperPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class MessageUtil {
 
-  private final Main plugin;
+  private final PaperPlugin plugin;
   private final ExecutionUtil execUtil;
   private final boolean papi;
 
-  public MessageUtil(Main plugin, ExecutionUtil execUtil, boolean papi) {
+  public MessageUtil(PaperPlugin plugin, ExecutionUtil execUtil, boolean papi) {
     this.plugin = plugin;
     this.execUtil = execUtil;
     this.papi = papi;

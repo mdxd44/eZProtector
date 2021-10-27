@@ -17,7 +17,7 @@
 
 package net.elytrium.ezprotector.paper.listeners;
 
-import net.elytrium.ezprotector.paper.Main;
+import net.elytrium.ezprotector.paper.PaperPlugin;
 import net.elytrium.ezprotector.paper.utilities.MessageUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -28,9 +28,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class CustomCommands implements Listener {
 
-  private final Main plugin;
+  private final PaperPlugin plugin;
 
-  public CustomCommands(Main plugin) {
+  public CustomCommands(PaperPlugin plugin) {
     this.plugin = plugin;
   }
 

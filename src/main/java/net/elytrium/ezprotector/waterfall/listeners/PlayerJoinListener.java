@@ -17,29 +17,24 @@
 
 package net.elytrium.ezprotector.waterfall.listeners;
 
+import net.elytrium.ezprotector.shared.config.Settings;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 public class PlayerJoinListener implements Listener {
-
-  private final Configuration config;
-
-  public PlayerJoinListener(Configuration config) {
-    this.config = config;
-  }
 
   @EventHandler
   public void onPlayerJoin(PostLoginEvent event) {
     ProxiedPlayer p = event.getPlayer();
 
-    if (this.config.getBoolean("mods.betterpvp.block") && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) {
-      p.sendMessage(" §c §r§5 §r§1 §r§f §r§0 ");
+    if (Settings.IMP.MODS.BETTERPVP.BLOCK && !p.hasPermission("ezprotector.bypass.mod.betterpvp")) {
+      p.sendMessage(TextComponent.fromLegacyText(" §c §r§5 §r§1 §r§f §r§0 "));
     }
-    if (this.config.getBoolean("mods.voxelmap.block") && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) {
-      p.sendMessage(" §3 §6 §3 §6 §3 §6 §e §3 §6 §3 §6 §3 §6 §d ");
+    if (Settings.IMP.MODS.VOXELMAP.BLOCK && !p.hasPermission("ezprotector.bypass.mod.voxelmap")) {
+      p.sendMessage(TextComponent.fromLegacyText(" §3 §6 §3 §6 §3 §6 §e §3 §6 §3 §6 §3 §6 §d "));
     }
   }
 }

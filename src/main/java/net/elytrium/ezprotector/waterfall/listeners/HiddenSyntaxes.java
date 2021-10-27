@@ -18,20 +18,19 @@
 package net.elytrium.ezprotector.waterfall.listeners;
 
 import java.util.List;
+import net.elytrium.ezprotector.shared.config.Settings;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 public class HiddenSyntaxes implements Listener {
 
-  private final Configuration config;
   private final MessageUtil msgUtil;
 
-  public HiddenSyntaxes(Configuration config, MessageUtil msgUtil) {
-    this.config = config;
+  public HiddenSyntaxes(MessageUtil msgUtil) {
     this.msgUtil = msgUtil;
   }
 
@@ -43,25 +42,23 @@ public class HiddenSyntaxes implements Listener {
 
     ProxiedPlayer player = (ProxiedPlayer) event.getSender();
     String command = event.getMessage().split(" ")[0].toLowerCase();
-    List<String> whitelisted = this.config.getStringList("hidden-syntaxes.whitelisted");
+    List<String> whitelisted = Settings.IMP.HIDDEN_SYNTAXES.WHITELISTED;
 
     if (event.isCancelled()) {
       return;
     }
 
-    if (this.config.getBoolean("hidden-syntaxes.blocked")
-        && command.startsWith("/") && command.contains(":")
-        && !whitelisted.contains(command.replace("/", ""))
-        && !player.hasPermission("ezprotector.bypass.command.hiddensyntaxes")) {
+    if (Settings.IMP.HIDDEN_SYNTAXES.BLOCKED && command.startsWith("/") && command.contains(":")
+        && !whitelisted.contains(command.replace("/", "")) && !player.hasPermission("ezprotector.bypass.command.hiddensyntaxes")) {
       event.setCancelled(true);
 
-      String errorMessage = this.config.getString("hidden-syntaxes.error-message");
+      String errorMessage = Settings.IMP.HIDDEN_SYNTAXES.ERROR_MESSAGE;
       if (!errorMessage.trim().isEmpty()) {
-        player.sendMessage(this.msgUtil.placeholders(errorMessage, player, null, command));
+        player.sendMessage(TextComponent.fromLegacyText(this.msgUtil.placeholders(errorMessage, player, null, command)));
       }
 
-      this.msgUtil.punishPlayers("hidden-syntaxes", player, errorMessage, command);
-      this.msgUtil.notifyAdmins("hidden-syntaxes", player, command, "command.hiddensyntaxes");
+      this.msgUtil.punishPlayers(Settings.IMP.HIDDEN_SYNTAXES.PUNISH_PLAYER, player, errorMessage, command);
+      this.msgUtil.notifyAdmins(Settings.IMP.HIDDEN_SYNTAXES, player, command, "command.hiddensyntaxes");
     }
   }
 }

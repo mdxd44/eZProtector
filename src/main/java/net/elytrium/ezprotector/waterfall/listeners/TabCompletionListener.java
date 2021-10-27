@@ -18,25 +18,19 @@
 package net.elytrium.ezprotector.waterfall.listeners;
 
 import java.util.List;
+import net.elytrium.ezprotector.shared.config.Settings;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 public class TabCompletionListener implements Listener {
 
-  private final Configuration config;
-
-  public TabCompletionListener(Configuration config) {
-    this.config = config;
-  }
-
   @EventHandler
   public void onTabComplete(TabCompleteEvent event) {
-    final List<String> blocked = this.config.getStringList("tab-completion.commands");
+    List<String> blocked = Settings.IMP.TAB_COMPLETION.COMMANDS;
 
-    if (this.config.getBoolean("tab-completion.blocked") && event.getSender() instanceof ProxiedPlayer) {
+    if (Settings.IMP.TAB_COMPLETION.BLOCKED && event.getSender() instanceof ProxiedPlayer) {
       ProxiedPlayer player = (ProxiedPlayer) event.getSender();
       String cmd = event.getCursor().split(" ")[0].replace("/", "");
       List<String> completions = event.getSuggestions();
@@ -46,7 +40,7 @@ public class TabCompletionListener implements Listener {
       }
 
       if (!player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd)) {
-        if (!this.config.getBoolean("tab-completion.whitelist")) {
+        if (!Settings.IMP.TAB_COMPLETION.WHITELIST) {
           completions.removeIf(lcmd -> blocked.contains(lcmd.replace("/", "")));
           if (blocked.contains(cmd)) {
             event.setCancelled(true);

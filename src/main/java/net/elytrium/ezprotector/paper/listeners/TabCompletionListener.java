@@ -18,7 +18,7 @@
 package net.elytrium.ezprotector.paper.listeners;
 
 import java.util.List;
-import net.elytrium.ezprotector.paper.Main;
+import net.elytrium.ezprotector.paper.PaperPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,9 +27,9 @@ import org.bukkit.event.server.TabCompleteEvent;
 
 public class TabCompletionListener implements Listener {
 
-  private final Main plugin;
+  private final PaperPlugin plugin;
 
-  public TabCompletionListener(Main plugin) {
+  public TabCompletionListener(PaperPlugin plugin) {
     this.plugin = plugin;
   }
 

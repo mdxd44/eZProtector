@@ -17,17 +17,15 @@
 
 package net.elytrium.ezprotector.waterfall.utilities;
 
+import net.elytrium.ezprotector.shared.config.Settings;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
 
 public class MessageUtil {
 
-  private final Configuration config;
   private final ExecutionUtil execUtil;
 
-  public MessageUtil(Configuration config, ExecutionUtil execUtil) {
-    this.config = config;
+  public MessageUtil(ExecutionUtil execUtil) {
     this.execUtil = execUtil;
   }
 
@@ -40,14 +38,14 @@ public class MessageUtil {
     return ChatColor.translateAlternateColorCodes('&', cargs);
   }
 
-  public void punishPlayers(String module, ProxiedPlayer player, String errorMessage, String command) {
-    if (this.config.getBoolean(module + ".punish-player.enabled")) {
+  public void punishPlayers(Settings.PUNISH_PLAYER module, ProxiedPlayer player, String errorMessage, String command) {
+    if (module.ENABLED) {
       String punishCommand = this.config.getString(module + ".punish-player.command");
       this.execUtil.executeConsoleCommand(this.placeholders(punishCommand, player, errorMessage, command));
     }
   }
 
-  public void notifyAdmins(String module, ProxiedPlayer player, String command, String perm) {
+  public void notifyAdmins(Settings.CUSTOM_COMMANDS module, ProxiedPlayer player, String command, String perm) {
     if (this.config.getBoolean(module + ".notify-admins.enabled")) {
       String msg = this.config.getString(module + ".notify-admins.message");
 

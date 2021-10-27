@@ -1,4 +1,0 @@
-name: ${parent.name}
-main: Main
-version: ${parent.version}
-author: DoNotSpamPls

@@ -19,18 +19,12 @@ package net.elytrium.ezprotector.waterfall.listeners;
 
 import io.github.waterfallmc.waterfall.event.ProxyDefineCommandsEvent;
 import java.util.List;
+import net.elytrium.ezprotector.shared.config.Settings;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 public class BrigadierListener implements Listener {
-
-  private final Configuration config;
-
-  public BrigadierListener(Configuration config) {
-    this.config = config;
-  }
 
   /**
    * Removes forbidden commands from Brigadier's command tree (1.13)
@@ -43,11 +37,11 @@ public class BrigadierListener implements Listener {
       return;
     }
 
-    if (this.config.getBoolean("tab-completion.blocked")) {
+    if (Settings.IMP.TAB_COMPLETION.BLOCKED) {
       ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
-      List<String> blocked = this.config.getStringList("tab-completion.commands");
+      List<String> blocked = Settings.IMP.TAB_COMPLETION.COMMANDS;
 
-      if (!this.config.getBoolean("tab-completion.whitelist")) {
+      if (!Settings.IMP.TAB_COMPLETION.WHITELIST) {
         event.getCommands().values().removeIf(
             cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && blocked.contains(cmd.getName())
         );

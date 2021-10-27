@@ -1,11 +1,11 @@
 [
     {
         "modid": "ezprotector",
-        "name": "${parent.name}",
-        "version": "${parent.version}",
-        "description": "${parent.description}",
-        "authorList": [ "DoNotSpamPls" ],
-        "url": "${parent.url}",
+        "name": "eZProtector",
+        "version": "${project.version}",
+        "description": "Securing your server the easy way!",
+        "authorList": [ "DoNotSpamPls", "mdxd44 (Elytrium)" ],
+        "url": "https://github.com/Elytrium/eZProtector/",
         "dependencies": [
             "spongeapi@7.2.0"
         ],

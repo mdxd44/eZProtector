@@ -18,23 +18,21 @@
 package net.elytrium.ezprotector.waterfall.listeners;
 
 import java.nio.charset.StandardCharsets;
+import net.elytrium.ezprotector.shared.config.Settings;
 import net.elytrium.ezprotector.waterfall.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
 import net.elytrium.ezprotector.waterfall.utilities.PacketUtil;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 public class ByteMessageListener implements Listener {
 
-  private final Configuration config;
   private final ExecutionUtil execUtil;
   private final MessageUtil msgUtil;
 
-  public ByteMessageListener(Configuration config, ExecutionUtil execUtil, MessageUtil msgUtil) {
-    this.config = config;
+  public ByteMessageListener(ExecutionUtil execUtil, MessageUtil msgUtil) {
     this.execUtil = execUtil;
     this.msgUtil = msgUtil;
   }
@@ -47,10 +45,10 @@ public class ByteMessageListener implements Listener {
 
     ProxiedPlayer player = (ProxiedPlayer) event.getSender();
 
-    if (this.config.getBoolean("mods.5zig.block")) {
+    if (Settings.IMP.MODS.FIVE_ZIG.BLOCK) {
       this.block5Zig(player, event);
     }
-    if (this.config.getBoolean("mods.bettersprinting.block")) {
+    if (Settings.IMP.MODS.BETTERSPRINTING.BLOCK) {
       this.blockBSM(player, event);
     }
 
@@ -58,24 +56,24 @@ public class ByteMessageListener implements Listener {
       // Converts the byte array to a string called "brand"
       String brand = new String(event.getData(), StandardCharsets.UTF_8);
 
-      if (this.config.getBoolean("mods.fabric.block")) {
+      if (Settings.IMP.MODS.FABRIC.BLOCK) {
         this.blockFabric(player, brand);
       }
-      if (this.config.getBoolean("mods.forge.block")) {
+      if (Settings.IMP.MODS.FORGE.BLOCK) {
         this.blockForge(player, brand);
       }
-      if (this.config.getBoolean("mods.liteloader.block")) {
+      if (Settings.IMP.MODS.LITELOADER.BLOCK) {
         this.blockLiteLoader(player, brand);
       }
-      if (this.config.getBoolean("mods.rift.block")) {
+      if (Settings.IMP.MODS.RIFT.BLOCK) {
         this.blockRift(player, brand);
       }
     }
 
-    if (this.config.getBoolean("mods.schematica.block")) {
+    if (Settings.IMP.MODS.SCHEMATICA.BLOCK) {
       this.blockSchematica(player, event);
     }
-    if (this.config.getBoolean("mods.wdl.block")) {
+    if (Settings.IMP.MODS.WDL.BLOCK) {
       this.blockWDL(player, event);
     }
   }
@@ -106,40 +104,40 @@ public class ByteMessageListener implements Listener {
 
   private void blockFabric(ProxiedPlayer player, String brand) {
     if (brand.contains("fabric") && !player.hasPermission("ezprotector.bypass.mod.fabric")) {
-      String punishCommand = this.config.getString("mods.fabric.punish-command");
+      String punishCommand = Settings.IMP.MODS.FABRIC.PUNISH_COMMAND;
       this.execUtil.executeConsoleCommand(this.msgUtil.placeholders(punishCommand, player, null, null));
 
-      String notifyMessage = this.msgUtil.placeholders(this.config.getString("mods.fabric.warning-message"), player, null, null);
+      String notifyMessage = this.msgUtil.placeholders(Settings.IMP.MODS.FABRIC.WARNING_MESSAGE, player, null, null);
       this.execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.fabric");
     }
   }
 
   private void blockForge(ProxiedPlayer player, String brand) {
     if ((brand.contains("fml") || brand.contains("forge")) && !player.hasPermission("ezprotector.bypass.mod.forge")) {
-      String punishCommand = this.config.getString("mods.forge.punish-command");
+      String punishCommand = Settings.IMP.MODS.FORGE.PUNISH_COMMAND;
       this.execUtil.executeConsoleCommand(this.msgUtil.placeholders(punishCommand, player, null, null));
 
-      String notifyMessage = this.msgUtil.placeholders(this.config.getString("mods.forge.warning-message"), player, null, null);
+      String notifyMessage = this.msgUtil.placeholders(Settings.IMP.MODS.FORGE.WARNING_MESSAGE, player, null, null);
       this.execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.forge");
     }
   }
 
   private void blockLiteLoader(ProxiedPlayer player, String brand) {
     if ((brand.equalsIgnoreCase("LiteLoader") || brand.contains("Lite")) && !player.hasPermission("ezprotector.bypass.mod.liteloader")) {
-      String punishCommand = this.config.getString("mods.liteloader.punish-command");
+      String punishCommand = Settings.IMP.MODS.LITELOADER.PUNISH_COMMAND;
       this.execUtil.executeConsoleCommand(this.msgUtil.placeholders(punishCommand, player, null, null));
 
-      String notifyMessage = this.msgUtil.placeholders(this.config.getString("mods.liteloader.warning-message"), player, null, null);
+      String notifyMessage = this.msgUtil.placeholders(Settings.IMP.MODS.LITELOADER.WARNING_MESSAGE, player, null, null);
       this.execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.liteloader");
     }
   }
 
   private void blockRift(ProxiedPlayer player, String brand) {
     if (brand.contains("rift") && !player.hasPermission("ezprotector.bypass.mod.rift")) {
-      String punishCommand = this.config.getString("mods.rift.punish-command");
+      String punishCommand = Settings.IMP.MODS.RIFT.PUNISH_COMMAND;
       this.execUtil.executeConsoleCommand(this.msgUtil.placeholders(punishCommand, player, null, null));
 
-      String notifyMessage = this.msgUtil.placeholders(this.config.getString("mods.rift.warning-message"), player, null, null);
+      String notifyMessage = this.msgUtil.placeholders(Settings.IMP.MODS.RIFT.WARNING_MESSAGE, player, null, null);
       this.execUtil.notifyAdmins(notifyMessage, "ezprotector.notify.mod.rift");
     }
   }

@@ -18,7 +18,7 @@
 package net.elytrium.ezprotector.sponge.listeners;
 
 import com.moandjiezana.toml.Toml;
-import net.elytrium.ezprotector.sponge.Main;
+import net.elytrium.ezprotector.sponge.SpongePlugin;
 import net.elytrium.ezprotector.sponge.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.sponge.utilities.MessageUtil;
 import net.elytrium.ezprotector.sponge.utilities.PacketUtil;
@@ -69,7 +69,7 @@ public class ModListener {
 
     if (this.config.getBoolean("mods.schematica") && !player.hasPermission("ezprotector.bypass.mod.schematica")
         && channel.equalsIgnoreCase("schematica")) {
-      Main.SCHEMATICA.sendTo(player, buf -> buf.writeBytes(PacketUtil.createSchematicaPacket()));
+      SpongePlugin.SCHEMATICA.sendTo(player, buf -> buf.writeBytes(PacketUtil.createSchematicaPacket()));
     }
 
     if (this.config.getBoolean("mods.wdl")) {
@@ -79,13 +79,13 @@ public class ModListener {
 
   private void block5Zig(Player player, String channel) {
     if (channel.equalsIgnoreCase("5Zig_Set") && !player.hasPermission("ezprotector.bypass.mod.5zig")) {
-      Main.ZIG.sendTo(player, buf -> buf.writeBytes(new byte[] {0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32}));
+      SpongePlugin.ZIG.sendTo(player, buf -> buf.writeBytes(new byte[] {0x1 | 0x2 | 0x4 | 0x8 | 0x16 | 0x32}));
     }
   }
 
   private void blockBSM(Player player, String channel) {
     if (channel.equalsIgnoreCase("BSM") && !player.hasPermission("ezprotector.bypass.mod.bettersprinting")) {
-      Main.BSM.sendTo(player, buf -> buf.writeBytes(new byte[] {1}));
+      SpongePlugin.BSM.sendTo(player, buf -> buf.writeBytes(new byte[] {1}));
     }
   }
 
@@ -137,7 +137,7 @@ public class ModListener {
       packets[1] = PacketUtil.createWDLPacket1();
 
       for (byte[] packet : packets) {
-        Main.WDLCONTROL.sendTo(player, buf -> buf.writeBytes(packet));
+        SpongePlugin.WDLCONTROL.sendTo(player, buf -> buf.writeBytes(packet));
       }
     }
   }

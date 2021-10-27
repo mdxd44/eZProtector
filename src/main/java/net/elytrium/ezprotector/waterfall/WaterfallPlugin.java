@@ -18,9 +18,9 @@
 package net.elytrium.ezprotector.waterfall;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
+import net.elytrium.ezprotector.shared.PluginImpl;
+import net.elytrium.ezprotector.shared.IPlatform;
+import net.elytrium.ezprotector.shared.config.Settings;
 import net.elytrium.ezprotector.waterfall.listeners.BrigadierListener;
 import net.elytrium.ezprotector.waterfall.listeners.ByteMessageListener;
 import net.elytrium.ezprotector.waterfall.listeners.CustomCommands;
@@ -33,14 +33,10 @@ import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
 import net.md_5.bungee.api.event.ProxyReloadEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.event.EventHandler;
+import org.slf4j.Logger;
 
-public class Main extends Plugin implements Listener {
-
-  private Configuration config;
+public class WaterfallPlugin extends Plugin implements Listener, IPlatform {
 
   @Override
   public void onEnable() {
@@ -48,54 +44,41 @@ public class Main extends Plugin implements Listener {
     try {
       Class.forName("io.github.waterfallmc.waterfall.event.ProxyDefineCommandsEvent");
     } catch (ClassNotFoundException e) {
-      this.getLogger().severe(
+      this.getPluginLogger().error(
           "eZProtector is incompatible with this version of BungeeCord! Please make sure to use Waterfall(b262+), Travertine(b89+) or a compatible fork"
       );
       return;
     }
 
+    new PluginImpl(this);
+
     // Load the configuration
-    this.loadConfig();
+    this.reloadConfig();
 
     ExecutionUtil execUtil = new ExecutionUtil(getProxy());
-    MessageUtil msgUtil = new MessageUtil(this.config, execUtil);
+    MessageUtil msgUtil = new MessageUtil(execUtil);
 
     // Register listeners
-    getProxy().getPluginManager().registerListener(this, new BrigadierListener(this.config));
-    getProxy().getPluginManager().registerListener(this, new ByteMessageListener(this.config, execUtil, msgUtil));
-    getProxy().getPluginManager().registerListener(this, new CustomCommands(this.config, msgUtil));
-    getProxy().getPluginManager().registerListener(this, new FakeCommands(this.config, msgUtil));
-    getProxy().getPluginManager().registerListener(this, new HiddenSyntaxes(this.config, msgUtil));
-    getProxy().getPluginManager().registerListener(this, new PlayerJoinListener(this.config));
-    getProxy().getPluginManager().registerListener(this, new TabCompletionListener(this.config));
+    this.getProxy().getPluginManager().registerListener(this, new BrigadierListener());
+    this.getProxy().getPluginManager().registerListener(this, new ByteMessageListener(execUtil, msgUtil));
+    this.getProxy().getPluginManager().registerListener(this, new CustomCommands(msgUtil));
+    this.getProxy().getPluginManager().registerListener(this, new FakeCommands(msgUtil));
+    this.getProxy().getPluginManager().registerListener(this, new HiddenSyntaxes(msgUtil));
+    this.getProxy().getPluginManager().registerListener(this, new PlayerJoinListener());
+    this.getProxy().getPluginManager().registerListener(this, new TabCompletionListener());
   }
 
-  @SuppressWarnings("ResultOfMethodCallIgnored")
-  private void loadConfig() {
-    // Copy default config
-    if (!getDataFolder().exists()) {
-      getDataFolder().mkdir();
-    }
-    File file = new File(getDataFolder(), "config.yml");
-
-    if (!file.exists()) {
-      try (InputStream in = getResourceAsStream("config.yml")) {
-        Files.copy(in, file.toPath());
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-
-    // Load configuration
-    try {
-      this.config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
-    } catch (IOException ignored) {
-      //
-    }
+  private void reloadConfig() {
+    Settings.IMP.reload(new File(this.getDataFolder().getAbsoluteFile(), "config.yml"));
   }
 
   @EventHandler
   public void onReload(ProxyReloadEvent event) {
-    this.loadConfig();
+    this.reloadConfig();
+  }
+
+  @Override
+  public Logger getPluginLogger() {
+    return this.getSLF4JLogger();
   }
 }

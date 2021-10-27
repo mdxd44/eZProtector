@@ -42,7 +42,7 @@ import net.elytrium.ezprotector.velocity.utilities.MessageUtil;
 import org.slf4j.Logger;
 
 @Plugin(id = "ezprotector")
-public class Main {
+public class VelocityPlugin {
 
   @Inject
   private ProxyServer server;
@@ -66,7 +66,7 @@ public class Main {
 
       File configFile = new File(this.configDir.toFile(), "config.toml");
       if (!configFile.exists()) {
-        Files.copy(Main.class.getResourceAsStream("/resources/config.toml"), configFile.toPath());
+        Files.copy(VelocityPlugin.class.getResourceAsStream("/resources/config.toml"), configFile.toPath());
       }
       this.config = new Toml().read(configFile);
     } catch (IOException e) {

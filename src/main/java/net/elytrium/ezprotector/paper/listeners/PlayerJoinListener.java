@@ -17,7 +17,7 @@
 
 package net.elytrium.ezprotector.paper.listeners;
 
-import net.elytrium.ezprotector.paper.Main;
+import net.elytrium.ezprotector.paper.PaperPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,9 +26,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
-  private final Main plugin;
+  private final PaperPlugin plugin;
 
-  public PlayerJoinListener(Main plugin) {
+  public PlayerJoinListener(PaperPlugin plugin) {
     this.plugin = plugin;
   }
 

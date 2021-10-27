@@ -17,20 +17,19 @@
 
 package net.elytrium.ezprotector.waterfall.listeners;
 
+import net.elytrium.ezprotector.shared.config.Settings;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 public class CustomCommands implements Listener {
 
-  private final Configuration config;
   private final MessageUtil msgUtil;
 
-  public CustomCommands(Configuration config, MessageUtil msgUtil) {
-    this.config = config;
+  public CustomCommands(MessageUtil msgUtil) {
     this.msgUtil = msgUtil;
   }
 
@@ -43,18 +42,18 @@ public class CustomCommands implements Listener {
     ProxiedPlayer player = (ProxiedPlayer) event.getSender();
     String command = event.getMessage().split(" ")[0];
 
-    if (this.config.getBoolean("custom-commands.blocked") && !player.hasPermission("ezprotector.bypass.command.custom")) {
-      for (String message : this.config.getStringList("custom-commands.commands")) {
+    if (Settings.IMP.CUSTOM_COMMANDS.BLOCKED && !player.hasPermission("ezprotector.bypass.command.custom")) {
+      for (String message : Settings.IMP.CUSTOM_COMMANDS.COMMANDS) {
         if (command.equalsIgnoreCase("/" + message)) {
           event.setCancelled(true);
 
-          String errorMessage = this.config.getString("custom-commands.error-message");
+          String errorMessage = Settings.IMP.CUSTOM_COMMANDS.ERROR_MESSAGE;
           if (!errorMessage.trim().isEmpty()) {
-            player.sendMessage(this.msgUtil.placeholders(errorMessage, player, null, command));
+            player.sendMessage(TextComponent.fromLegacyText(this.msgUtil.placeholders(errorMessage, player, null, command)));
           }
 
-          this.msgUtil.punishPlayers("custom-commands", player, errorMessage, command);
-          this.msgUtil.notifyAdmins("custom-commands", player, command, "command.custom");
+          this.msgUtil.punishPlayers(Settings.IMP.CUSTOM_COMMANDS.PUNISH_PLAYER, player, errorMessage, command);
+          this.msgUtil.notifyAdmins(Settings.IMP.CUSTOM_COMMANDS, player, command, "command.custom");
 
           break;
         }
