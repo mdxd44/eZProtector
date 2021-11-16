@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import net.elytrium.ezprotector.paper.PaperPlugin;
 import net.elytrium.ezprotector.paper.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.paper.utilities.MessageUtil;
-import net.elytrium.ezprotector.paper.utilities.PacketUtil;
+import net.elytrium.ezprotector.shared.utils.PacketUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -132,7 +132,7 @@ public class ByteMessageListener implements PluginMessageListener {
 
   private void blockSchematica(Player player, String channel) {
     if (channel.equalsIgnoreCase(PaperPlugin.SCHEMATICA) && !player.hasPermission("ezprotector.bypass.mod.schematica")) {
-      player.sendPluginMessage(this.plugin, channel, PacketUtil.getSchematicaPayload());
+      player.sendPluginMessage(this.plugin, channel, PacketUtil.createSchematicaPacket());
     }
   }
 

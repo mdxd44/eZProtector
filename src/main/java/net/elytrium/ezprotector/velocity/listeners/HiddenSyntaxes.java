@@ -26,11 +26,10 @@ import net.elytrium.ezprotector.velocity.utilities.MessageUtil;
 
 public class HiddenSyntaxes {
 
-  private final Toml config;
+  private Toml config;
   private final MessageUtil msgUtil;
 
-  public HiddenSyntaxes(Toml config, MessageUtil msgUtil) {
-    this.config = config;
+  public HiddenSyntaxes(MessageUtil msgUtil) {
     this.msgUtil = msgUtil;
   }
 

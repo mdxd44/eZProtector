@@ -18,5 +18,5 @@
 name: eZProtector
 main: net.elytrium.ezprotector.waterfall.WaterfallPlugin
 version: ${project.version}
-author: DoNotSpamPls, mdxd44 (Elytrium)
+author: DoNotSpamPls, mdxd44, hevav
 description: Securing your server the easy way!

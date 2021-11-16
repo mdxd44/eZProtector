@@ -18,25 +18,26 @@
 package net.elytrium.ezprotector.waterfall;
 
 import java.io.File;
+import net.elytrium.ezprotector.shared.Platform;
 import net.elytrium.ezprotector.shared.PluginImpl;
-import net.elytrium.ezprotector.shared.IPlatform;
-import net.elytrium.ezprotector.shared.config.Settings;
+import net.elytrium.ezprotector.shared.Settings;
 import net.elytrium.ezprotector.waterfall.listeners.BrigadierListener;
 import net.elytrium.ezprotector.waterfall.listeners.ByteMessageListener;
 import net.elytrium.ezprotector.waterfall.listeners.CustomCommands;
 import net.elytrium.ezprotector.waterfall.listeners.FakeCommands;
 import net.elytrium.ezprotector.waterfall.listeners.HiddenSyntaxes;
 import net.elytrium.ezprotector.waterfall.listeners.PlayerJoinListener;
-import net.elytrium.ezprotector.waterfall.listeners.TabCompletionListener;
 import net.elytrium.ezprotector.waterfall.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
-import net.md_5.bungee.api.event.ProxyReloadEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.event.EventHandler;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class WaterfallPlugin extends Plugin implements Listener, IPlatform {
+@SuppressWarnings("unused")
+public class WaterfallPlugin extends Plugin implements Listener, Platform {
+
+  private final Logger logger = LoggerFactory.getLogger(this.getLogger().getName());
 
   @Override
   public void onEnable() {
@@ -50,7 +51,7 @@ public class WaterfallPlugin extends Plugin implements Listener, IPlatform {
       return;
     }
 
-    new PluginImpl(this);
+    PluginImpl.setInstance(this);
 
     // Load the configuration
     this.reloadConfig();
@@ -65,20 +66,17 @@ public class WaterfallPlugin extends Plugin implements Listener, IPlatform {
     this.getProxy().getPluginManager().registerListener(this, new FakeCommands(msgUtil));
     this.getProxy().getPluginManager().registerListener(this, new HiddenSyntaxes(msgUtil));
     this.getProxy().getPluginManager().registerListener(this, new PlayerJoinListener());
-    this.getProxy().getPluginManager().registerListener(this, new TabCompletionListener());
+
+    // It was removed, because it is unnecessary, the tab completion won't work if there's no space char, and if the sender doesn't have needed perms.
+    //this.getProxy().getPluginManager().registerListener(this, new TabCompletionListener());
   }
 
   private void reloadConfig() {
     Settings.IMP.reload(new File(this.getDataFolder().getAbsoluteFile(), "config.yml"));
   }
 
-  @EventHandler
-  public void onReload(ProxyReloadEvent event) {
-    this.reloadConfig();
-  }
-
   @Override
   public Logger getPluginLogger() {
-    return this.getSLF4JLogger();
+    return this.logger;
   }
 }

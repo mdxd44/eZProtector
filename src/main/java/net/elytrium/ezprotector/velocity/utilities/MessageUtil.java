@@ -24,18 +24,17 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class MessageUtil {
 
-  private final Toml config;
+  private Toml config;
   private final ExecutionUtil execUtil;
 
-  public MessageUtil(Toml config, ExecutionUtil execUtil) {
-    this.config = config;
+  public MessageUtil(ExecutionUtil execUtil) {
     this.execUtil = execUtil;
   }
 
   public String color(String textToTranslate) {
     char[] b = textToTranslate.toCharArray();
     for (int i = 0; i < b.length - 1; i++) {
-      if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
+      if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr" .indexOf(b[i + 1]) > -1) {
         b[i] = '§';
         b[i + 1] = Character.toLowerCase(b[i + 1]);
       }

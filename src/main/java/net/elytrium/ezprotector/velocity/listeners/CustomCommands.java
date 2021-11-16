@@ -25,11 +25,10 @@ import net.elytrium.ezprotector.velocity.utilities.MessageUtil;
 
 public class CustomCommands {
 
-  private final Toml config;
+  private Toml config;
   private final MessageUtil msgUtil;
 
-  public CustomCommands(Toml config, MessageUtil msgUtil) {
-    this.config = config;
+  public CustomCommands(MessageUtil msgUtil) {
     this.msgUtil = msgUtil;
   }
 

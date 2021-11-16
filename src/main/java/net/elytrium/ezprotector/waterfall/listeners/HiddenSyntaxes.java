@@ -17,10 +17,7 @@
 
 package net.elytrium.ezprotector.waterfall.listeners;
 
-import java.util.List;
-import net.elytrium.ezprotector.shared.config.Settings;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -39,7 +36,7 @@ public class HiddenSyntaxes implements Listener {
     if (!(event.getSender() instanceof ProxiedPlayer)) {
       return;
     }
-
+/*
     ProxiedPlayer player = (ProxiedPlayer) event.getSender();
     String command = event.getMessage().split(" ")[0].toLowerCase();
     List<String> whitelisted = Settings.IMP.HIDDEN_SYNTAXES.WHITELISTED;
@@ -60,5 +57,6 @@ public class HiddenSyntaxes implements Listener {
       this.msgUtil.punishPlayers(Settings.IMP.HIDDEN_SYNTAXES.PUNISH_PLAYER, player, errorMessage, command);
       this.msgUtil.notifyAdmins(Settings.IMP.HIDDEN_SYNTAXES, player, command, "command.hiddensyntaxes");
     }
+    */
   }
 }

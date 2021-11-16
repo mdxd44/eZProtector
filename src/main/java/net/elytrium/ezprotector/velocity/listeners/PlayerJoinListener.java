@@ -25,11 +25,7 @@ import net.kyori.adventure.text.Component;
 
 public class PlayerJoinListener {
 
-  private final Toml config;
-
-  public PlayerJoinListener(Toml config) {
-    this.config = config;
-  }
+  private Toml config;
 
   @Subscribe
   @SuppressWarnings("unused")

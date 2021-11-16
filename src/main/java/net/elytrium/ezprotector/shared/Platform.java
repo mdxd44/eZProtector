@@ -15,24 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.elytrium.ezprotector.sponge.utilities;
+package net.elytrium.ezprotector.shared;
 
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.text.Text;
+import org.slf4j.Logger;
 
-public class ExecutionUtil {
+public interface Platform {
 
-  public void notifyAdmins(Text message, String permission) {
-    if (message.trim().isEmpty()) {
-      return;
-    }
-
-    Sponge.getServer().getOnlinePlayers().stream()
-        .filter(admin -> admin.hasPermission(permission))
-        .forEach(admin -> admin.sendMessage(message));
-  }
-
-  public void executeConsoleCommand(String command) {
-    Sponge.getCommandManager().process(Sponge.getServer().getConsole(), command);
-  }
+  Logger getPluginLogger();
 }

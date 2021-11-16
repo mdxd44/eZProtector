@@ -15,11 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.elytrium.ezprotector.shared;
+package net.elytrium.ezprotector.shared.handlers.tab;
 
-import org.slf4j.Logger;
+import java.util.function.Predicate;
 
-public interface IPlatform {
+public interface PlatformTabCompletion {
 
-  Logger getPluginLogger();
+  <E, C> Object blockCommand(E event, Predicate<? super C> filter);
+
+  <C> String getCommandName(C command);
+
+  <E> boolean hasPermission(E event, String permission);
 }

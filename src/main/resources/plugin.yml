@@ -16,21 +16,18 @@
 #
 
 name: eZProtector
+main: net.elytrium.ezprotector.paper.PaperPlugin
 version: ${project.version}
+authors: [DoNotSpamPls, dvargas135, Gianluca, mdxd44, hevav]
 description: Securing your server the easy way!
-authors: [DoNotSpamPls, dvargas135, Gianluca, Elytrium (mdxd44)]
-website: https://github.com/DoNotSpamPls/eZProtector
+website: https://github.com/Elytrium/eZProtector
 api-version: "1.13"
 softdepend: [PlaceholderAPI]
 
-main: net.elytrium.ezprotector.paper.PaperPlugin
-database: false
-
 commands:
-  ezp:
-    description: Reloads the plugin configuration.
-    aliases: [ezprotector]
-    usage: /ezp reload
+  ezprotector:
+    description: Shows information about the plugin and reloads it.
+    aliases: [ezp]
     permission: ezprotector.reload
 
 permissions:
@@ -39,7 +36,6 @@ permissions:
     children:
       ezprotector.notify.command: true
       ezprotector.notify.mod: true
-
   ezprotector.notify.command:
     description: Notifies admins about players that try to use illegal commands
     children:
@@ -48,7 +44,7 @@ permissions:
       ezprotector.notify.command.version: true
       ezprotector.notify.command.custom: true
   ezprotector.notify.command.hiddensyntaxes:
-    description: "Notifies about players that try to use a command containing the : character"
+    description: "Notifies about players that try to use a command containing the ':' character"
     default: op
   ezprotector.notify.command.plugins:
     description: Notifies about players that try to see the server version (only if custom-plugins is enabled)
@@ -59,7 +55,6 @@ permissions:
   ezprotector.notify.command.custom:
     description: Notifies about players that try to use a blocked command
     default: op
-
   ezprotector.notify.mod:
     description: Notifies admins about players that try to join with a mod the plugin blocks
     children:
@@ -79,13 +74,11 @@ permissions:
   ezprotector.notify.mod.rift:
     description: Notifies about players that try to join while having Rift installed
     default: op
-
   ezprotector.bypass:
     descrption: Allows the usage of all features blocked by the plugin.
     children:
       ezprotector.bypass.command: true
       ezprotector.bypass.mod: true
-
   ezprotector.bypass.command:
     description: Allows the usage of all features blocked by the plugin, except for mods
     children:
@@ -105,7 +98,6 @@ permissions:
   ezprotector.bypass.command.custom:
     description: Allows the usage of commands that are blocked by the plugin
     default: op
-
   ezprotector.bypass.mod:
     description: Allows the usage of all the mods the plugin blocks
     children:

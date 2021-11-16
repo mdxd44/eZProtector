@@ -29,11 +29,10 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class FakeCommands {
 
-  private final Toml config;
+  private Toml config;
   private final MessageUtil msgUtil;
 
-  public FakeCommands(Toml config, MessageUtil msgUtil) {
-    this.config = config;
+  public FakeCommands(MessageUtil msgUtil) {
     this.msgUtil = msgUtil;
   }
 

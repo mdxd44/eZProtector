@@ -17,6 +17,7 @@
 
 package net.elytrium.ezprotector.paper;
 
+import java.io.File;
 import net.elytrium.ezprotector.paper.listeners.BrigadierListener;
 import net.elytrium.ezprotector.paper.listeners.ByteMessageListener;
 import net.elytrium.ezprotector.paper.listeners.CustomCommands;
@@ -27,13 +28,16 @@ import net.elytrium.ezprotector.paper.listeners.TabCompletionListener;
 import net.elytrium.ezprotector.paper.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.paper.utilities.MessageUtil;
 import net.elytrium.ezprotector.paper.utilities.PaperLib;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.elytrium.ezprotector.shared.Platform;
+import net.elytrium.ezprotector.shared.PluginImpl;
+import net.elytrium.ezprotector.shared.Settings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
-public class PaperPlugin extends JavaPlugin {
+public class PaperPlugin extends JavaPlugin implements Platform {
 
   // Mod channels
   public static String ZIG;
@@ -49,12 +53,13 @@ public class PaperPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    PluginImpl.setInstance(this);
+    Settings.IMP.reload(new File(this.getDataFolder().getAbsoluteFile(), "config.yml"));
+
     if (!getServer().getBukkitVersion().matches("1\\.1[2-9](.\\d)?-(R0.1-)?SNAPSHOT")) {
       getLogger().severe("eZProtector is not supported on versions lower than 1.12.2!");
       getServer().getPluginManager().disablePlugin(this);
     } else {
-      saveDefaultConfig();
-
       if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
         this.papi = true;
       }
@@ -80,7 +85,7 @@ public class PaperPlugin extends JavaPlugin {
         WDLINIT = "WDL|INIT";
         WDLCONTROL = "WDL|CONTROL";
 
-        getServer().getPluginManager().registerEvents(new TabCompletionListener(this), this);
+        getServer().getPluginManager().registerEvents(new TabCompletionListener(), this);
       } else {
         ZIG = "the5zigmod:5zig_set";
         BSM = "bsm:settings";
@@ -89,7 +94,7 @@ public class PaperPlugin extends JavaPlugin {
         WDLINIT = "wdl:init";
         WDLCONTROL = "wdl:control";
 
-        getServer().getPluginManager().registerEvents(new BrigadierListener(this), this);
+        getServer().getPluginManager().registerEvents(new BrigadierListener(), this);
       }
 
       getCommand("ezp").setExecutor(this);
@@ -118,14 +123,13 @@ public class PaperPlugin extends JavaPlugin {
   }
 
   @Override
-  public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+  public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String @NotNull [] args) {
     if (args.length != 1) {
       return false;
     }
 
     if (args[0].equals("reload")) {
-      reloadConfig();
-      sender.sendMessage(new TextComponent("Config reloaded!"));
+      sender.sendMessage("Config reloaded!");
       return true;
     }
 
@@ -134,5 +138,10 @@ public class PaperPlugin extends JavaPlugin {
 
   public MessageUtil getMsgUtil() {
     return this.msgUtil;
+  }
+
+  @Override
+  public Logger getPluginLogger() {
+    return this.getSLF4JLogger();
   }
 }

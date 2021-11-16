@@ -18,7 +18,6 @@
 package net.elytrium.ezprotector.velocity;
 
 import com.google.inject.Inject;
-import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
@@ -27,64 +26,52 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import net.elytrium.ezprotector.BuildConstants;
+import net.elytrium.ezprotector.shared.Platform;
+import net.elytrium.ezprotector.shared.PluginImpl;
+import net.elytrium.ezprotector.shared.Settings;
 import net.elytrium.ezprotector.velocity.listeners.BrigadierListener;
-import net.elytrium.ezprotector.velocity.listeners.CustomCommands;
-import net.elytrium.ezprotector.velocity.listeners.FakeCommands;
-import net.elytrium.ezprotector.velocity.listeners.HiddenSyntaxes;
-import net.elytrium.ezprotector.velocity.listeners.ModListener;
-import net.elytrium.ezprotector.velocity.listeners.PlayerJoinListener;
-import net.elytrium.ezprotector.velocity.listeners.TabCompletionListener;
 import net.elytrium.ezprotector.velocity.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.velocity.utilities.MessageUtil;
 import org.slf4j.Logger;
 
-@Plugin(id = "ezprotector")
-public class VelocityPlugin {
+@Plugin(id = "ezprotector", name = "eZProtector", version = BuildConstants.VERSION,
+    description = "Securing your server the easy way!",
+    url = "https://github.com/Elytrium/eZProtector",
+    authors = {"DoNotSpamPls", "mdxd44", "hevav"})
+public class VelocityPlugin implements Platform {
+
+  private final ProxyServer server;
+  private final Logger logger;
+  private final Path configDir;
 
   @Inject
-  private ProxyServer server;
-  @Inject
-  private Logger logger;
-
-  @Inject
-  @DataDirectory
-  private Path configDir;
-
-  private Toml config;
+  public VelocityPlugin(ProxyServer server, Logger logger, @DataDirectory Path configDir) {
+    this.server = server;
+    this.logger = logger;
+    this.configDir = configDir;
+  }
 
   @Subscribe
-  @SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
   public void onProxyInitialization(ProxyInitializeEvent event) {
-    // Load config
-    try {
-      if (!this.configDir.toFile().exists()) {
-        this.configDir.toFile().mkdir();
-      }
+    PluginImpl.setInstance(this);
 
-      File configFile = new File(this.configDir.toFile(), "config.toml");
-      if (!configFile.exists()) {
-        Files.copy(VelocityPlugin.class.getResourceAsStream("/resources/config.toml"), configFile.toPath());
-      }
-      this.config = new Toml().read(configFile);
-    } catch (IOException e) {
-      this.logger.error("Unable to load configuration!");
-      this.logger.error(e.getMessage(), e);
-    }
+    Settings.IMP.reload(new File(this.configDir.toFile(), "config.yml"));
 
     ExecutionUtil execUtil = new ExecutionUtil(this.server);
-    MessageUtil msgUtil = new MessageUtil(this.config, execUtil);
+    MessageUtil msgUtil = new MessageUtil(execUtil);
 
     // Register events
-    this.server.getEventManager().register(this, new BrigadierListener(this.config));
-    this.server.getEventManager().register(this, new CustomCommands(this.config, msgUtil));
-    this.server.getEventManager().register(this, new FakeCommands(this.config, msgUtil));
-    this.server.getEventManager().register(this, new HiddenSyntaxes(this.config, msgUtil));
-    this.server.getEventManager().register(this, new ModListener(this.config, execUtil, msgUtil));
-    this.server.getEventManager().register(this, new PlayerJoinListener(this.config));
-    this.server.getEventManager().register(this, new TabCompletionListener(this.config));
+    this.server.getEventManager().register(this, new BrigadierListener());
+    /*
+    this.server.getEventManager().register(this, new CustomCommands(msgUtil));
+    this.server.getEventManager().register(this, new FakeCommands(msgUtil));
+    this.server.getEventManager().register(this, new HiddenSyntaxes(msgUtil));
+    this.server.getEventManager().register(this, new ModListener(execUtil, msgUtil));
+    this.server.getEventManager().register(this, new PlayerJoinListener());
+    */
+    //new TabCompletionListener(this.server);
 
     // Register channel identifiers
     this.server.getChannelRegistrar().register(
@@ -101,5 +88,10 @@ public class VelocityPlugin {
         new LegacyChannelIdentifier("WDL|INIT"),
         new LegacyChannelIdentifier("WDL|CONTROL")
     );
+  }
+
+  @Override
+  public Logger getPluginLogger() {
+    return this.logger;
   }
 }

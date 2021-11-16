@@ -9,24 +9,21 @@ plugins {
     id "org.cadixdev.licenser" version "0.6.1"
 }
 
-group = "com.github.donotspampls.ezprotector"
-version = "2.0"
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+group = "net.elytrium.ezprotector"
+version = "2.0.0"
 
 compileJava.options.encoding = "UTF-8"
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
 
 repositories {
     mavenCentral()
     maven {
         name = "paper-repo"
         url = "https://papermc.io/repo/repository/maven-public/"
-    }
-    maven {
-        name = "sponge-repo"
-        url = "https://repo.spongepowered.org/maven/"
     }
     maven {
         name = "velocitypowered-repo"
@@ -39,17 +36,15 @@ repositories {
 }
 
 dependencies {
-    compileOnly "com.velocitypowered:velocity-api:3.+"
+    compileOnly files("libs/3.0.0.jar")
     annotationProcessor "com.velocitypowered:velocity-api:3.+"
 
     compileOnly "io.github.waterfallmc:waterfall-api:1.17-R0.1-SNAPSHOT"
 
-    compileOnly "org.spongepowered:spongeapi:7.3.0"
-
     compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT" // TODO: 1.17 api
     compileOnly "me.clip:placeholderapi:2.10.10"
 
-    compileOnly "com.github.spotbugs:spotbugs-annotations:4.4.1"
+    compileOnly "com.github.spotbugs:spotbugs-annotations:4.4.2"
 }
 
 processResources {
@@ -81,14 +76,11 @@ tasks.withType(SpotBugsTask) {
 }
 
 sourceSets.main.java.srcDir(tasks.register("generateTemplates", Copy) { task ->
-    def props = [
-            "version": project.version
-    ]
-    task.inputs.properties props
+    task.inputs.properties "version": project.version
 
     task.from file("src/main/templates")
     task.into layout.buildDirectory.dir("../build/generated/sources/templates")
-    task.expand props
+    task.expand "version": project.version
 }.map {
     it.outputs
 })

@@ -17,7 +17,7 @@
 
 package net.elytrium.ezprotector.waterfall.listeners;
 
-import net.elytrium.ezprotector.shared.config.Settings;
+import net.elytrium.ezprotector.shared.Settings;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -52,8 +52,10 @@ public class CustomCommands implements Listener {
             player.sendMessage(TextComponent.fromLegacyText(this.msgUtil.placeholders(errorMessage, player, null, command)));
           }
 
+          /*
           this.msgUtil.punishPlayers(Settings.IMP.CUSTOM_COMMANDS.PUNISH_PLAYER, player, errorMessage, command);
           this.msgUtil.notifyAdmins(Settings.IMP.CUSTOM_COMMANDS, player, command, "command.custom");
+          */
 
           break;
         }

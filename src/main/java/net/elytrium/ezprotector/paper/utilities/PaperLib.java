@@ -24,17 +24,25 @@ import org.bukkit.plugin.Plugin;
 // https://github.com/PaperMC/PaperLib/blob/master/src/main/java/io/papermc/lib/PaperLib.java#L266
 public class PaperLib {
 
+  private static boolean isPaper() {
+    try {
+      Class.forName("com.destroystokyo.paper.PaperConfig");
+      return true;
+    } catch (ClassNotFoundException e) {
+      return false;
+    }
+  }
+
   public static void suggestPaper(Plugin plugin) {
     if (isPaper()) {
       return;
     }
 
-    final String benefitsProperty = "paperlib.shown-benefits";
-    final String pluginName = plugin.getDescription().getName();
-    final Logger logger = plugin.getLogger();
+    Logger logger = plugin.getLogger();
     logger.warning("====================================================");
-    logger.warning(" " + pluginName + " works better if you use Paper ");
+    logger.warning(" " + plugin.getDescription().getName() + " works better if you use Paper ");
     logger.warning(" as your server software. ");
+    String benefitsProperty = "paperlib.shown-benefits";
     if (System.getProperty(benefitsProperty) == null) {
       System.setProperty(benefitsProperty, "1");
       logger.warning("  ");
@@ -52,14 +60,4 @@ public class PaperLib {
     }
     logger.warning("====================================================");
   }
-
-  private static boolean isPaper() {
-    try {
-      Class.forName("com.destroystokyo.paper.PaperConfig");
-      return true;
-    } catch (ClassNotFoundException e) {
-      return false;
-    }
-  }
-
 }

@@ -18,10 +18,10 @@
 package net.elytrium.ezprotector.waterfall.listeners;
 
 import java.nio.charset.StandardCharsets;
-import net.elytrium.ezprotector.shared.config.Settings;
+import net.elytrium.ezprotector.shared.Settings;
+import net.elytrium.ezprotector.shared.utils.PacketUtil;
 import net.elytrium.ezprotector.waterfall.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
-import net.elytrium.ezprotector.waterfall.utilities.PacketUtil;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -145,7 +145,7 @@ public class ByteMessageListener implements Listener {
   private void blockSchematica(ProxiedPlayer player, PluginMessageEvent e) {
     if (!player.hasPermission("ezprotector.bypass.mod.schematica")) {
       if (player.getPendingConnection().getVersion() <= 340 && e.getTag().equalsIgnoreCase("schematica")) {
-        player.sendData("schematica", PacketUtil.getSchematicaPayload());
+        player.sendData("schematica", PacketUtil.createSchematicaPacket());
       }
     }
   }

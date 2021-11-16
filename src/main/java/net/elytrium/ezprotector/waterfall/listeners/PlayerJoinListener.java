@@ -17,7 +17,7 @@
 
 package net.elytrium.ezprotector.waterfall.listeners;
 
-import net.elytrium.ezprotector.shared.config.Settings;
+import net.elytrium.ezprotector.shared.Settings;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;

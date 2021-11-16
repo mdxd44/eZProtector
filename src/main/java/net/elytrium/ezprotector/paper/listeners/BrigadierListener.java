@@ -17,40 +17,39 @@
 
 package net.elytrium.ezprotector.paper.listeners;
 
-import java.util.List;
-import net.elytrium.ezprotector.paper.PaperPlugin;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
+import java.util.function.Predicate;
+import net.elytrium.ezprotector.shared.handlers.tab.PlatformTabCompletion;
+import net.elytrium.ezprotector.shared.handlers.tab.TabCompletionHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
-public class BrigadierListener implements Listener {
+@SuppressWarnings("unchecked")
+public class BrigadierListener implements Listener, PlatformTabCompletion {
 
-  private final PaperPlugin plugin;
+  private final TabCompletionHandler handler = new TabCompletionHandler(this);
 
-  public BrigadierListener(PaperPlugin plugin) {
-    this.plugin = plugin;
-  }
-
-  /**
-   * Removes forbidden commands from Brigadier's command tree (1.13)
-   *
-   * @param event The event which removes the tab completions from the client.
-   */
   @EventHandler
   public void onCommandSend(PlayerCommandSendEvent event) {
-    FileConfiguration config = this.plugin.getConfig();
-
-    if (config.getBoolean("tab-completion.blocked")) {
-      Player player = event.getPlayer();
-      List<String> blocked = config.getStringList("tab-completion.commands");
-
-      if (!config.getBoolean("tab-completion.whitelist")) {
-        event.getCommands().removeIf(cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd) && blocked.contains(cmd));
-      } else {
-        event.getCommands().removeIf(cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd) && !blocked.contains(cmd));
-      }
+    if (event.getCommands().isEmpty()) {
+      return;
     }
+
+    this.handler.handle(event);
+  }
+
+  @Override
+  public <E, C> Object blockCommand(E event, Predicate<? super C> filter) {
+    return ((PlayerCommandSendEvent) event).getCommands().removeIf((Predicate<? super String>) filter);
+  }
+
+  @Override
+  public <C> String getCommandName(C command) {
+    return (String) command;
+  }
+
+  @Override
+  public <E> boolean hasPermission(E event, String permission) {
+    return ((PlayerCommandSendEvent) event).getPlayer().hasPermission(permission);
   }
 }

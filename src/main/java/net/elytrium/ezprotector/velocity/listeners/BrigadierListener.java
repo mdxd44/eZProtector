@@ -17,39 +17,39 @@
 
 package net.elytrium.ezprotector.velocity.listeners;
 
-import com.moandjiezana.toml.Toml;
+import com.mojang.brigadier.tree.CommandNode;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.PlayerAvailableCommandsEvent;
-import com.velocitypowered.api.proxy.Player;
-import java.util.List;
+import java.util.function.Predicate;
+import net.elytrium.ezprotector.shared.handlers.tab.TabCompletionHandler;
+import net.elytrium.ezprotector.shared.handlers.tab.PlatformTabCompletion;
 
-public class BrigadierListener {
+@SuppressWarnings({"UnstableApiUsage", "unchecked"})
+public class BrigadierListener implements PlatformTabCompletion {
 
-  private final Toml config;
+  private final TabCompletionHandler handler = new TabCompletionHandler(this);
 
-  public BrigadierListener(Toml config) {
-    this.config = config;
+  @Subscribe
+  public void onCommandSend(PlayerAvailableCommandsEvent event) {
+    if (event.getRootNode().getChildren().isEmpty()) {
+      return;
+    }
+
+    this.handler.handle(event);
   }
 
-  /**
-   * Removes forbidden commands from Brigadier's command tree (1.13)
-   *
-   * @param event The event which removes the tab completions from the client.
-   */
-  @Subscribe
-  @SuppressWarnings({"UnstableApiUsage"})
-  public void onCommandSend(final PlayerAvailableCommandsEvent event) {
-    if (this.config.getBoolean("tab-completion.blocked")) {
-      final Player player = event.getPlayer();
-      final List<String> blocked = this.config.getList("tab-completion.commands");
+  @Override
+  public <E, C> Object blockCommand(E event, Predicate<? super C> filter) {
+    return ((PlayerAvailableCommandsEvent) event).getRootNode().getChildren().removeIf((Predicate<? super CommandNode<?>>) filter);
+  }
 
-      if (!this.config.getBoolean("tab-completion.whitelist")) {
-        event.getRootNode().getChildren().removeIf(cmd ->
-            !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && blocked.contains(cmd.getName()));
-      } else {
-        event.getRootNode().getChildren().removeIf(cmd ->
-            !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && !blocked.contains(cmd.getName()));
-      }
-    }
+  @Override
+  public <C> String getCommandName(C command) {
+    return ((CommandNode<?>) command).getName();
+  }
+
+  @Override
+  public <E> boolean hasPermission(E event, String permission) {
+    return ((PlayerAvailableCommandsEvent) event).getPlayer().hasPermission(permission);
   }
 }

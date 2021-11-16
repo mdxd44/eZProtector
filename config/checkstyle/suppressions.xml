@@ -8,6 +8,8 @@
     <suppress files=".*[\\/]net[\\/]elytrium[\\/].*" checks="MissingJavadocType"/>
     <suppress files=".*[\\/]net[\\/]elytrium[\\/].*" checks="MissingJavadocMethod"/>
 
+    <suppress files=".*[\\/]net[\\/]elytrium[\\/].*[\\/]Settings.java" checks="AbbreviationAsWordInName"/>
+
     <!-- temp -->
     <suppress files=".*[\\/]net[\\/]elytrium[\\/].*" checks="AbbreviationAsWordInName"/>
 </suppressions>

@@ -18,38 +18,41 @@
 package net.elytrium.ezprotector.waterfall.listeners;
 
 import io.github.waterfallmc.waterfall.event.ProxyDefineCommandsEvent;
-import java.util.List;
-import net.elytrium.ezprotector.shared.config.Settings;
+import java.util.function.Predicate;
+import net.elytrium.ezprotector.shared.handlers.tab.PlatformTabCompletion;
+import net.elytrium.ezprotector.shared.handlers.tab.TabCompletionHandler;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-public class BrigadierListener implements Listener {
+// TODO: Block commands from internal servers via reflection without waterfall event.
+@SuppressWarnings("unchecked")
+public class BrigadierListener implements Listener, PlatformTabCompletion {
 
-  /**
-   * Removes forbidden commands from Brigadier's command tree (1.13)
-   *
-   * @param event The event which removes the tab completions from the client.
-   */
+  private final TabCompletionHandler handler = new TabCompletionHandler(this);
+
   @EventHandler
   public void onCommandSend(ProxyDefineCommandsEvent event) {
-    if (!(event.getReceiver() instanceof ProxiedPlayer)) {
+    if (!(event.getReceiver() instanceof ProxiedPlayer) || event.getCommands().isEmpty()) {
       return;
     }
 
-    if (Settings.IMP.TAB_COMPLETION.BLOCKED) {
-      ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
-      List<String> blocked = Settings.IMP.TAB_COMPLETION.COMMANDS;
+    this.handler.handle(event);
+  }
 
-      if (!Settings.IMP.TAB_COMPLETION.WHITELIST) {
-        event.getCommands().values().removeIf(
-            cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && blocked.contains(cmd.getName())
-        );
-      } else {
-        event.getCommands().values().removeIf(
-            cmd -> !player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd.getName()) && !blocked.contains(cmd.getName())
-        );
-      }
-    }
+  @Override
+  public <E, C> Object blockCommand(E event, Predicate<? super C> filter) {
+    return ((ProxyDefineCommandsEvent) event).getCommands().values().removeIf((Predicate<? super Command>) filter);
+  }
+
+  @Override
+  public <C> String getCommandName(C command) {
+    return ((Command) command).getName();
+  }
+
+  @Override
+  public <E> boolean hasPermission(E event, String permission) {
+    return ((ProxiedPlayer) ((ProxyDefineCommandsEvent) event).getReceiver()).hasPermission(permission);
   }
 }

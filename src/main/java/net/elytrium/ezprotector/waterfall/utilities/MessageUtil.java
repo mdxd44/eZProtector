@@ -17,7 +17,6 @@
 
 package net.elytrium.ezprotector.waterfall.utilities;
 
-import net.elytrium.ezprotector.shared.config.Settings;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -38,6 +37,7 @@ public class MessageUtil {
     return ChatColor.translateAlternateColorCodes('&', cargs);
   }
 
+  /*
   public void punishPlayers(Settings.PUNISH_PLAYER module, ProxiedPlayer player, String errorMessage, String command) {
     if (module.ENABLED) {
       String punishCommand = this.config.getString(module + ".punish-player.command");
@@ -53,4 +53,5 @@ public class MessageUtil {
       this.execUtil.notifyAdmins(notifyMessage, "ezprotector.notify." + perm);
     }
   }
+  */
 }

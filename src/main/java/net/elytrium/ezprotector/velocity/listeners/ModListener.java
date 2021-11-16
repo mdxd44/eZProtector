@@ -23,19 +23,18 @@ import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import net.elytrium.ezprotector.shared.utils.PacketUtil;
 import net.elytrium.ezprotector.velocity.utilities.ExecutionUtil;
 import net.elytrium.ezprotector.velocity.utilities.MessageUtil;
-import net.elytrium.ezprotector.velocity.utilities.PacketUtil;
 import net.kyori.adventure.text.TextComponent;
 
 public class ModListener {
 
-  private final Toml config;
+  private Toml config;
   private final ExecutionUtil execUtil;
   private final MessageUtil msgUtil;
 
-  public ModListener(Toml config, ExecutionUtil execUtil, MessageUtil msgUtil) {
-    this.config = config;
+  public ModListener(ExecutionUtil execUtil, MessageUtil msgUtil) {
     this.execUtil = execUtil;
     this.msgUtil = msgUtil;
   }
@@ -167,15 +166,12 @@ public class ModListener {
 
         for (byte[] packet : packets) {
           if (version <= 340) {
-            player.sendPluginMessage(
-                new LegacyChannelIdentifier("WDL|CONTROL"), packet);
+            player.sendPluginMessage(new LegacyChannelIdentifier("WDL|CONTROL"), packet);
           } else {
-            player.sendPluginMessage(
-                MinecraftChannelIdentifier.create("wdl", "control"), packet);
+            player.sendPluginMessage(MinecraftChannelIdentifier.create("wdl", "control"), packet);
           }
         }
       }
     }
   }
-
 }

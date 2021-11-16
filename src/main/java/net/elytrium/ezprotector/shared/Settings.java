@@ -15,12 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.elytrium.ezprotector.shared.config;
+package net.elytrium.ezprotector.shared;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import net.elytrium.ezprotector.BuildConstants;
+import net.elytrium.ezprotector.shared.config.Config;
 
 public class Settings extends Config {
 
@@ -49,14 +50,21 @@ public class Settings extends Config {
       "This module blocks certain commands from being tab completed."
   })
   public static class TAB_COMPLETION {
+
     public boolean BLOCKED = true;
+    public boolean DEBUG = false;
     @Comment("If this is set to true, the commands in the list will be THE ONLY ones to be tab completed.")
     public boolean WHITELIST = false;
+    @Comment({
+        "WARNING:",
+        "If you using waterfall version, put here ONLY proxy commands, commands from backend servers won't be blocked!"
+    })
     public List<String> COMMANDS = Arrays.asList("?", "about", "bukkit:?", "bukkit:about", "bukkit:help", "bukkit:pl", "bukkit:plugins", "bukkit:ver", "bukkit:version", "help", "icanhasbukkit", "pl", "plugins", "ver", "version");
   }
 
   @Comment("This blocks players from using commands such as /bukkit:help or /essentials:warp, since they be used to bypass blocks.")
   public static class HIDDEN_SYNTAXES {
+
     public boolean BLOCKED = true;
     public String ERROR_MESSAGE = "{PRFX} That command syntax is forbidden!";
     @Comment("If you add a command to this list, it will not be blocked.")
@@ -64,7 +72,9 @@ public class Settings extends Config {
 
     @Create
     public NOTIFY_ADMINS NOTIFY_ADMINS;
+
     public static class NOTIFY_ADMINS {
+
       public boolean ENABLED = true;
       @Comment({
           "{0} - Player nickname",
@@ -75,7 +85,9 @@ public class Settings extends Config {
 
     @Create
     public PUNISH_PLAYER PUNISH_PLAYER;
+
     public static class PUNISH_PLAYER {
+
       public boolean ENABLED = false;
       @Comment({
           "{0} - Player nickname",
@@ -87,13 +99,16 @@ public class Settings extends Config {
 
   @Comment("This option allows you to set a custom list of plugins that will be shown if players do /plugins")
   public static class CUSTOM_PLUGINS {
+
     public boolean ENABLED = true;
     public String PLUGINS = "Fully, Custom, Plugins";
 
     @Create
     public Settings.CUSTOM_PLUGINS.NOTIFY_ADMINS NOTIFY_ADMINS;
+
     @Comment("The player will not see an error message, but admins can still be notified.")
     public static class NOTIFY_ADMINS {
+
       public boolean ENABLED = true;
       @Comment("{0} - Player nickname")
       public String MESSAGE = "{PRFX} &e{0} &ftried to see the server plugins.";
@@ -102,14 +117,17 @@ public class Settings extends Config {
 
   @Comment("Same deal as with the custom plugins above, but for the /version command!")
   public static class CUSTOM_VERSION {
+
     public boolean ENABLED = true;
     @Comment("It shows up as \"This server is running server version Custom Version\"")
     public String VERSION = "Custom Version";
 
     @Create
     public NOTIFY_ADMINS NOTIFY_ADMINS;
+
     @Comment("The player will not see an error message, but admins can still be notified.")
     public static class NOTIFY_ADMINS {
+
       public boolean ENABLED = true;
       @Comment("{0} - Player nickname")
       public String MESSAGE = "{PRFX} &e{0} &ftried to see the server version.";
@@ -118,6 +136,7 @@ public class Settings extends Config {
 
   @Comment("This option allows you to block any command you wish by adding it to the list!")
   public static class CUSTOM_COMMANDS {
+
     public boolean BLOCKED = true;
     @Comment("{0} - Used command")
     public String ERROR_MESSAGE = "{PRFX} You don't have the permission to use this command! &4({0})";
@@ -131,7 +150,9 @@ public class Settings extends Config {
 
     @Create
     public NOTIFY_ADMINS NOTIFY_ADMINS;
+
     public static class NOTIFY_ADMINS {
+
       public boolean ENABLED = true;
       @Comment({
           "{0} - Player nickname",
@@ -142,7 +163,9 @@ public class Settings extends Config {
 
     @Create
     public PUNISH_PLAYER PUNISH_PLAYER;
+
     public static class PUNISH_PLAYER {
+
       public boolean ENABLED = false;
       @Comment({
           "{0} - Player nickname",
@@ -154,28 +177,37 @@ public class Settings extends Config {
 
   @Comment("This section allows you to block various mods (and even punish players for some of them!).")
   public static class MODS {
+
     @Create
     public FIVE_ZIG FIVE_ZIG;
+
     public static class FIVE_ZIG {
+
       public boolean BLOCK = false;
     }
 
     @Create
     public BETTERPVP BETTERPVP;
+
     @Comment("This option also blocks Xaero's Minimap.")
     public static class BETTERPVP {
+
       public boolean BLOCK = false;
     }
 
     @Create
     public BETTERSPRINTING BETTERSPRINTING;
+
     public static class BETTERSPRINTING {
+
       public boolean BLOCK = false;
     }
 
     @Create
     public FABRIC FABRIC;
+
     public static class FABRIC {
+
       public boolean BLOCK = false;
       @Comment({
           "{0} - Player nickname"
@@ -186,7 +218,9 @@ public class Settings extends Config {
 
     @Create
     public FORGE FORGE;
+
     public static class FORGE {
+
       public boolean BLOCK = false;
       @Comment({
           "{0} - Player nickname"
@@ -197,7 +231,9 @@ public class Settings extends Config {
 
     @Create
     public LITELOADER LITELOADER;
+
     public static class LITELOADER {
+
       public boolean BLOCK = false;
       @Comment({
           "{0} - Player nickname"
@@ -208,7 +244,9 @@ public class Settings extends Config {
 
     @Create
     public RIFT RIFT;
+
     public static class RIFT {
+
       public boolean BLOCK = false;
       @Comment({
           "{0} - Player nickname"
@@ -219,28 +257,34 @@ public class Settings extends Config {
 
     @Create
     public SCHEMATICA SCHEMATICA;
+
     public static class SCHEMATICA {
+
       public boolean BLOCK = false;
     }
 
     @Create
     public VOXELMAP VOXELMAP;
+
     public static class VOXELMAP {
+
       public boolean BLOCK = false;
     }
 
     @Create
     public WDL WDL;
+
     public static class WDL {
+
       public boolean BLOCK = false;
     }
   }
 
   public void reload(File file) {
     if (this.load(file, this.PREFIX)) {
-      this.save(file, this.PREFIX);
+      this.save(file);
     } else {
-      this.save(file, this.PREFIX);
+      this.save(file);
       this.load(file, this.PREFIX);
     }
   }

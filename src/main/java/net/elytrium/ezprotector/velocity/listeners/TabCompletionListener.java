@@ -17,52 +17,69 @@
 
 package net.elytrium.ezprotector.velocity.listeners;
 
-import com.moandjiezana.toml.Toml;
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.player.TabCompleteEvent;
-import java.util.List;
+/*
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.context.CommandContextBuilder;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestion;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.proxy.command.VelocityCommandManager;
+import java.lang.reflect.Field;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
+import net.elytrium.ezprotector.shared.handlers.tab.TabCompletionHandler;
+import net.elytrium.ezprotector.shared.handlers.tab.PlatformTabCompletion;
+*/
 
-public class TabCompletionListener {
+/*
+ * Stupid shit.
+ */
+@SuppressWarnings("unchecked")
+public class TabCompletionListener /*extends CommandContextBuilder<CommandSource> implements PlatformTabCompletion */{
+/*
+  private final TabCompletionHandler handler = new TabCompletionHandler(this);
+  private SuggestionProvider<CommandSource> defaultProvider;
 
-  private final Toml config;
+  public TabCompletionListener(ProxyServer server) {
+    try {
+      Field suggestionsProviderField = VelocityCommandManager.class.getDeclaredField("suggestionsProvider");
+      suggestionsProviderField.setAccessible(true);
+      this.defaultProvider = (SuggestionsProvider<CommandSource>) suggestionsProviderField.get(server.getCommandManager());
+      suggestionsProviderField.set(server.getCommandManager(), this);
 
-  public TabCompletionListener(Toml config) {
-    this.config = config;
-  }
-
-  /**
-   * Checks if a player is tab completing a forbidden command. (1.12)
-   *
-   * @param event The tab complete event from which other information is gathered.
-   */
-  @Subscribe
-  @SuppressWarnings("unused")
-  public void onTabComplete(final TabCompleteEvent event) {
-    if (this.config.getBoolean("tab-completion.blocked")) {
-      final String cmd = event.getPartialMessage().replace(" ", "");
-      final List<String> completions = event.getSuggestions();
-      final List<String> blocked = this.config.getList("tab-completion.commands");
-
-      if (completions.isEmpty()) {
-        return;
-      }
-
-      if (!event.getPlayer().hasPermission("ezprotector.bypass.command.tabcomplete." + cmd)) {
-        if (!this.config.getBoolean("tab-completion.whitelist")) {
-          completions.removeIf(blocked::contains);
-          if (blocked.contains(cmd)) {
-            completions.clear();
-          }
-        } else {
-          completions.removeIf(lcmd -> !blocked.contains(lcmd));
-          for (String lcmd : blocked) {
-            if (lcmd.equalsIgnoreCase(cmd)) {
-              completions.clear();
-            }
-          }
-        }
-      }
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+      e.printStackTrace();
     }
   }
 
+  @Override
+  public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSource> ctx, SuggestionsBuilder builder) throws CommandSyntaxException {
+    return (CompletableFuture<Suggestions>) this.handler.onCommandSend(this.defaultProvider.getSuggestions(ctx, builder), ctx);
+  }
+
+  @Override
+  public <E, C> Object blockCommand(E event, Predicate<? super C> filter) {
+    try {
+      return ((CompletableFuture<Suggestions>) event).get().getList().removeIf((Predicate<? super Suggestion>) filter);
+    } catch (InterruptedException | ExecutionException e) {
+      return event;
+    }
+  }
+
+  @Override
+  public <C> String getCommandName(C command) {
+    return ((Suggestion) command).getText();
+  }
+
+  @Override
+  public <E> boolean hasPermission(E event, String permission) {
+    return ((Player) ((CommandContext<CommandSource>) event).getSource()).hasPermission(permission);
+  }
+*/
 }

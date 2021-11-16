@@ -19,13 +19,13 @@ package net.elytrium.ezprotector.shared;
 
 public class PluginImpl {
 
-  private static IPlatform platform;
+  private static Platform platform;
 
-  public PluginImpl(IPlatform platform) {
+  public static void setInstance(Platform platform) {
     PluginImpl.platform = platform;
   }
 
-  public static IPlatform getInstance() {
+  public static Platform getInstance() {
     return platform;
   }
 }

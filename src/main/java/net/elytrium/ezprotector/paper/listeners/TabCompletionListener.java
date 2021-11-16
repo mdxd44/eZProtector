@@ -17,56 +17,47 @@
 
 package net.elytrium.ezprotector.paper.listeners;
 
-import java.util.List;
-import net.elytrium.ezprotector.paper.PaperPlugin;
-import org.bukkit.configuration.file.FileConfiguration;
+import java.util.function.Predicate;
+import net.elytrium.ezprotector.shared.handlers.tab.PlatformTabCompletion;
+import net.elytrium.ezprotector.shared.handlers.tab.TabCompletionHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.TabCompleteEvent;
 
-public class TabCompletionListener implements Listener {
+@SuppressWarnings("unchecked")
+public class TabCompletionListener implements Listener, PlatformTabCompletion {
 
-  private final PaperPlugin plugin;
+  private final TabCompletionHandler handler = new TabCompletionHandler(this);
 
-  public TabCompletionListener(PaperPlugin plugin) {
-    this.plugin = plugin;
-  }
-
-  /**
-   * Checks if a player is tab completing a forbidden command. (1.12)
-   *
-   * @param event The tab complete event from which other information is gathered.
-   */
   @EventHandler
   public void onTabComplete(TabCompleteEvent event) {
-    FileConfiguration config = this.plugin.getConfig();
-
-    if (config.getBoolean("tab-completion.blocked") && event.getSender() instanceof Player) {
-      Player player = (Player) event.getSender();
-      String cmd = event.getBuffer().split(" ")[0].replace("/", "");
-      List<String> completions = event.getCompletions();
-      List<String> blocked = config.getStringList("tab-completion.commands");
-
-      if (completions.isEmpty()) {
-        return;
-      }
-
-      if (!player.hasPermission("ezprotector.bypass.command.tabcomplete." + cmd)) {
-        if (!config.getBoolean("tab-completion.whitelist")) {
-          completions.removeIf(lcmd -> blocked.contains(lcmd.replace("/", "")));
-          if (blocked.contains(cmd)) {
-            event.setCancelled(true);
-          }
-        } else {
-          if (completions.get(0).startsWith("/")) {
-            completions.removeIf(lcmd -> !blocked.contains(lcmd.replace("/", "")));
-          } else if (!blocked.contains(cmd)) {
-            event.setCancelled(true);
-          }
-        }
-        event.setCompletions(completions);
-      }
+    if (!(event.getSender() instanceof Player) || event.getCompletions().isEmpty()) {
+      return;
     }
+
+    this.handler.handle(event);
+  }
+
+  @Override
+  public <E, C> Object blockCommand(E event, Predicate<? super C> filter) {
+    TabCompleteEvent event0 = (TabCompleteEvent) event;
+    Predicate<? super String> filter0 = (Predicate<? super String>) filter;
+    if (event0.getCompletions().removeIf(filter0) || filter0.test(event0.getBuffer())) {
+      event0.setCancelled(true);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public <C> String getCommandName(C command) {
+    return ((String) command).replace("/", "").split(" ")[0];
+  }
+
+  @Override
+  public <E> boolean hasPermission(E event, String permission) {
+    return ((TabCompleteEvent) event).getSender().hasPermission(permission);
   }
 }

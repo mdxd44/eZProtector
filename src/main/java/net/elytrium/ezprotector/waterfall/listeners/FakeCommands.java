@@ -17,10 +17,7 @@
 
 package net.elytrium.ezprotector.waterfall.listeners;
 
-import net.elytrium.ezprotector.shared.config.Settings;
 import net.elytrium.ezprotector.waterfall.utilities.MessageUtil;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -46,7 +43,7 @@ public class FakeCommands implements Listener {
     if (event.isCancelled()) {
       return;
     }
-
+/*
     if (!player.hasPermission("ezprotector.bypass.command.fake")) {
       if (Settings.IMP.CUSTOM_PLUGINS.ENABLED) {
         String version = Settings.IMP.CUSTOM_VERSION.VERSION;
@@ -82,5 +79,6 @@ public class FakeCommands implements Listener {
         this.msgUtil.notifyAdmins("custom-plugins", player, command, "command.plugins");
       }
     }
+    */
   }
 }
